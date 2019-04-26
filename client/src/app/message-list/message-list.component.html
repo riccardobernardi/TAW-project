@@ -1,0 +1,28 @@
+
+<app-message-editor (posted)="get_messages()" ></app-message-editor>
+
+<div *ngFor="let message of messages" class="card" style="margin: 5px" > 
+    <div class="card-body">
+        <h5 class="card-title"><i class="far fa-envelope"></i>&nbsp;{{message.authormail}}</h5>        
+        <h6 class="card-subtitle mb-2 text-muted">{{message.timestamp | date}} / {{message.timestamp | date:'shortTime'}}</h6>
+        <p class="card-text">{{ message.content }}</p>
+        <span *ngFor="let tag of message.tags" class="badge badge-secondary tag">{{tag}}</span>
+    </div>
+</div>
+
+<ul class="nav justify-content-end bottomfooter">
+  <li class="nav-item">
+    <div class="btn-group dropup">
+      <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{us.get_username()}}
+      </button>
+      <div class="dropdown-menu">
+        <div class="dropdown-item" href="#">{{us.get_mail()}}</div>
+        <div *ngIf="us.is_admin()" class="dropdown-item" href="#"><i class="fas fa-check"></i> Admin role</div>
+        <div *ngIf="us.is_moderator()" class="dropdown-item" href="#"><i class="fas fa-check"></i> Moderator role</div>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item nav-link" (click)="logout()" >Logout</a>
+      </div>
+    </div>
+  </li>
+</ul>
