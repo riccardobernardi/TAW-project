@@ -1,9 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { tap, catchError } from 'rxjs/operators';
-import { Observable } from 'rxjs/Observable';
-import jwtdecode = require('jwt-decode');
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+
+import { throwError } from 'rxjs';
+
+
+import * as jwtdecode from 'jsonwebtoken';
+
+
+
+// import { Observable } from 'rxjs/Observable';
+// import jwtdecode = require('jwt-decode');
+// import { ErrorObservable } from 'rxjs/observable';
+
+import 'rxjs/observable/';
+import {Observable} from 'rxjs';
 
 @Injectable()
 export class UserHttpService {
@@ -41,7 +52,7 @@ export class UserHttpService {
 
     const tk = localStorage.getItem('postmessages_token');
     if ( !tk || tk.length < 1 ) {
-      return new ErrorObservable({error: {errormessage: 'No token found in local storage'}});
+      return throwError({error: {errormessage: 'No token found in local storage'}});
     }
 
     const options = {
@@ -57,8 +68,8 @@ export class UserHttpService {
       tap( (data) => {
         console.log(JSON.stringify(data));
         this.token = data.token;
-          localStorage.setItem('postmessages_token', this.token );
-    }));
+        localStorage.setItem('postmessages_token', this.token );
+      }));
   }
 
   logout() {

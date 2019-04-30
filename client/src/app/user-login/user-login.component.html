@@ -6,23 +6,23 @@
 
     <label for="inputEmail" class="sr-only">Email address</label>
     <input type="email" #mailtxt id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-    
+
     <label for="inputPassword" class="sr-only">Password</label>
     <input type="password" #passwdtxt id="inputPassword" class="form-control" placeholder="Password" required>
-    
+
     <div class="checkbox mb-3">
       <label>
         <input type="checkbox" #checkr value="remember-me"> Remember me
       </label>
     </div>
-    
+
     <div *ngIf="errmessage" class="alert alert-danger" role="alert">
       Login error: {{errmessage}}
     </div>
-    
+
     <button class="btn btn-lg btn-primary btn-block" (click)="login( mailtxt.value, passwdtxt.value, checkr.checked );" >Sign in</button>
     <p><a routerLink="/signup">Sign-up new user</a></p>
-    
+
     <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
   </div>
 </div>

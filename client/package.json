@@ -2,8 +2,9 @@
   "name": "client",
   "version": "0.0.0",
   "scripts": {
+    "postinstall": "node patch.js",
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --open",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -19,8 +20,11 @@
     "@angular/platform-browser": "~7.2.0",
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
+    "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
+    "jsonwebtoken": "latest",
     "rxjs": "~6.3.3",
+    "rxjs-compat": "^6.5.1",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26"
   },
