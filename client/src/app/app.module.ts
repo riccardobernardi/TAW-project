@@ -17,6 +17,7 @@ import { UserLoginComponent } from './user-login/user-login.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { UserSignupComponent } from './user-signup/user-signup.component';
 import {UserHttpService} from './user-http.service';
+import { DashboardComponent } from './dashboard/dashboard.component';
 // import { SocketioService } from './socketio.service';
 
 
@@ -26,7 +27,8 @@ import {UserHttpService} from './user-http.service';
     // MessageEditorComponent,
     // MessageListComponent,
     UserLoginComponent,
-    UserSignupComponent
+    UserSignupComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
