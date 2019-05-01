@@ -13,19 +13,7 @@ export class DashboardComponent implements OnInit {
   constructor( private us: UserService, private router: Router  ) { }
 
   ngOnInit() {
-    this.us.get_username().subscribe(
-      (data) => {
-        console.log('username:' + data);
-      } , (err) => {
-        this.us.renew().subscribe( (data) => {
-          // Succeeded
-          console.log('username:' + data);
-        }, (err2) => {
-          // Error again, we really need to logout
-          this.logout();
-        } );
-      }
-    );
+    this.us.get_token()
   }
 
   logout() {

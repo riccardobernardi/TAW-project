@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 import * as jwtdecode from 'jsonwebtoken';
 import {Observable} from 'rxjs';
 import {of} from 'rxjs/internal/observable/of';
-// import jwtdecode = require('jwt-decode');
+// import jwt_decode = require('jwt-decode');
 // import { of } from 'rxjs/observable/of';
 // import { Observable } from 'rxjs/Observable';
 

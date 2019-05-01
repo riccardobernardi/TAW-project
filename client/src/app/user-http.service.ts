@@ -5,12 +5,12 @@ import { tap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
 
-import * as jwtdecode from 'jsonwebtoken';
+import * as jwt_decode from 'jwt-decode';
 
 
 
 // import { Observable } from 'rxjs/Observable';
-// import jwtdecode = require('jwt-decode');
+// import jwt_decode = require('jwt-decode');
 // import { ErrorObservable } from 'rxjs/observable';
 
 import 'rxjs/observable/';
@@ -99,19 +99,19 @@ export class UserHttpService {
   }
 
   get_username() {
-    return jwtdecode(this.token).username;
+    return jwt_decode(this.token).username;
   }
 
   get_mail() {
-    return jwtdecode(this.token).mail;
+    return jwt_decode(this.token).mail;
   }
 
   get_id() {
-    return jwtdecode(this.token).id;
+    return jwt_decode(this.token).id;
   }
 
   is_admin(): boolean {
-    const roles = jwtdecode(this.token).roles;
+    const roles = jwt_decode(this.token).roles;
     for ( let idx = 0; idx < roles.length; ++idx ) {
       if ( roles[idx] === 'ADMIN' ) {
         return true;
@@ -121,7 +121,7 @@ export class UserHttpService {
   }
 
   is_moderator(): boolean {
-    const roles = jwtdecode(this.token).roles;
+    const roles = jwt_decode(this.token).roles;
     for ( let idx = 0; idx < roles.length; ++idx ) {
       if ( roles[idx] === 'MODERATOR' ) {
         return true;

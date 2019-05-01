@@ -1,4 +1,11 @@
-<div>
-  <p>Dashboard works</p>
-  <button class="btn btn-lg btn-primary btn-block" (click)="logout()" >Logout</button>
+<div class="container" style="width: 400px; margin-top: 20px;" >
+
+  <form>
+
+    <div class="form-group">
+      <label for="button">Dashboard works, your username is {{this.us.get_username()}}</label>
+      <button id = "button" class="btn btn-lg btn-primary btn-block" (click)="logout()" >Logout</button>
+    </div>
+
+  </form>
 </div>

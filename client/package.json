@@ -23,6 +23,7 @@
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
     "jsonwebtoken": "latest",
+    "jwt-decode": "^2.2.0",
     "rxjs": "~6.3.3",
     "rxjs-compat": "^6.5.1",
     "tslib": "^1.9.0",
