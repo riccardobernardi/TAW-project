@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from '../user.service';
 import {Router} from '@angular/router';
-import {SendOrderService} from '../send-order.service';
+import {OrderService} from '../order.service';
 
 @Component({
   selector: 'app-waiter',
@@ -11,7 +11,7 @@ import {SendOrderService} from '../send-order.service';
 export class WaiterComponent implements OnInit {
 
   private errmessage = undefined;
-  constructor( private us: UserService, private router: Router  ) { }
+  constructor( private us: UserService, private router: Router, private order: OrderService  ) { }
   private tables = [1, 2];
   private menu = ['pasta', 'riso'];
   private selTable = undefined;
@@ -29,6 +29,6 @@ export class WaiterComponent implements OnInit {
   }
 
   send() {
-    SendOrderService.send(this.us.get_nick(), this.selTable, this.selMenuEntry);
+    this.order.send(this.us.get_nick(), this.selTable, this.selMenuEntry);
   }
 }

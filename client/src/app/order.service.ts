@@ -3,11 +3,18 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class SendOrderService {
+export class OrderService {
 
   constructor() { }
 
-  static send(nick: any, selTable: any, selMenuEntry: any) {
+  public orders = [];
+
+  send(nick: any, selTable: any, selMenuEntry: any) {
+    this.orders.push({nick , selTable, selMenuEntry});
     console.log('you have sent to server your order from ' + nick + ' by table ' + selTable + ' with ' + selMenuEntry);
+  }
+
+  get() {
+    return this.orders;
   }
 }
