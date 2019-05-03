@@ -18,7 +18,7 @@ export class UserSignupComponent implements OnInit {
   }
 
   signup() {
-    this.us.register( this.user ).subscribe( (d) => {
+    /*UserService.register( this.user ).subscribe( (d) => {
       console.log('Registration ok: ' + JSON.stringify(d) );
       this.errmessage = undefined;
       this.router.navigate(['/login']);
@@ -26,7 +26,7 @@ export class UserSignupComponent implements OnInit {
       console.log('Signup error: ' + JSON.stringify(err.error.errormessage) );
       this.errmessage = err.error.errormessage || err.error.message;
 
-    });
+    });*/
 
   }
 

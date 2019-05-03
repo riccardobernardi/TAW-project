@@ -4,7 +4,7 @@
 // })
 
 import { Injectable } from '@angular/core';
-import * as jwtdecode from 'jsonwebtoken';
+import * as jwt_decode from 'jwt-decode';
 import {Observable} from 'rxjs';
 import {of} from 'rxjs/internal/observable/of';
 // import jwt_decode = require('jwt-decode');
@@ -19,11 +19,11 @@ export class UserService {
   private token = '';
   public url = '';
 
-  login( mail: string, password: string, remember: boolean ): Observable<any> {
-    console.log('Login: ' + mail + ' ' + password );
+  login( nick: string, password: string ): Observable<any> {
+    console.log('Login: ' + nick + ' ' + password );
 
     // tslint:disable-next-line:max-line-length
-    this.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicm9sZXMiOlsiQURNSU4iLCJNT0RFUkFUT1IiXSwibWFpbCI6ImFkbWluQHBvc3RtZXNzYWdlcy5pdCIsImlkIjoiNWFjNGRkYzcxMWUwMzYwYmEyZGYzZjQ4IiwiaWF0IjoxNTIyODU2MjU3LCJleHAiOjE1MjI4NTk4NTd9.3p6TmJAMqL19h4-b_r2pBdyerdbHh_l3zA87ZTfqeYk';
+    this.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxMjM0NTY3ODkiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IndhaXRlciIsIm5pY2siOiJwYW9sbyIsImlhdCI6MTUyMjg1NjI1NywiZXhwIjoxNTIyODU5ODU3fQ._sB89biEzNjcOK4a-MI2QeKKwK_IzrxQLHkriGarebg';
     return of( {} );
   }
 
@@ -31,7 +31,7 @@ export class UserService {
     return of( {} );
   }
 
-  register( user ): Observable<any> {
+  register(user ): Observable<any> {
     return of( {} );
   }
 
@@ -43,36 +43,15 @@ export class UserService {
     return this.token;
   }
 
-  get_username() {
-    return jwtdecode(this.token).username;
+  get_role() {
+    return jwt_decode(this.token).role;
   }
 
-  get_mail() {
-    return jwtdecode(this.token).mail;
+  get_nick() {
+    return jwt_decode(this.token).nick;
   }
 
   get_id() {
-    return jwtdecode(this.token).id;
+    return jwt_decode(this.token).id;
   }
-
-  is_admin(): boolean {
-    const roles = jwtdecode(this.token).roles;
-    for ( let idx = 0; idx < roles.length; ++idx ) {
-      if ( roles[idx] === 'ADMIN' ) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  is_moderator(): boolean {
-    const roles = jwtdecode(this.token).roles;
-    for ( let idx = 0; idx < roles.length; ++idx ) {
-      if ( roles[idx] === 'MODERATOR' ) {
-        return true;
-      }
-    }
-    return false;
-  }
-
 }

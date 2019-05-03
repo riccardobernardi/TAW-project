@@ -13,22 +13,27 @@ export class UserLoginComponent implements OnInit {
 
   private errmessage = undefined;
   constructor( private us: UserService, private router: Router  ) { }
+  private role = undefined
 
   ngOnInit() {
     this.us.renew().subscribe( (d) => {
       console.log('Renew succeded: ' + JSON.stringify(d) );
-      this.router.navigate(['/dashboard']);
+      // this.role = this.us.get_role();
+      // console.log('going to: ' + '/' + this.role );
+      //this.router.navigate(['/' + this.role]);
     }, (err) => {
       console.log('Renew error: ' + JSON.stringify(err.error.errormessage) );
     });
   }
 
-  login( mail: string, password: string, remember: boolean ) {
-    this.us.login( mail, password, remember).subscribe( (d) => {
+  login( mail: string, password: string ) {
+    this.us.login( mail, password).subscribe( (d) => {
       console.log('Login granted: ' + JSON.stringify(d) );
       console.log('User service token: ' + this.us.get_token() );
+      this.role = this.us.get_role();
       this.errmessage = undefined;
-      this.router.navigate(['/dashboard']);
+      console.log('going to: ' + '/' + this.role );
+      this.router.navigate(['/' + this.role]);
     }, (err) => {
       console.log('Login error: ' + JSON.stringify(err.error.errormessage) );
       this.errmessage = err.error.errormessage;

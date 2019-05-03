@@ -14,9 +14,9 @@ import { AppComponent } from './app.component';
 import { UserService } from './user.service';
 // import { UserHttpService } from './user-http.service';
 import { UserLoginComponent } from './user-login/user-login.component';
-import { AppRoutingModule } from './/app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { UserSignupComponent } from './user-signup/user-signup.component';
-import {UserHttpService} from './user-http.service';
+import { UserHttpService } from './user-http.service';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { WaiterComponent } from './waiter/waiter.component';
 import { PaydeskComponent } from './paydesk/paydesk.component';
@@ -45,7 +45,7 @@ import { BarmanComponent } from './barman/barman.component';
     AppRoutingModule
   ],
   providers: [
-    {provide: UserService, useClass: UserHttpService },
+    {provide: UserService, useClass: UserService },
     // {provide: SocketioService, useClass: SocketioService },
     // {provide: MessageService, useClass: MessageHttpService /* Here we can select the specifc service instance */}
   ],

@@ -27,12 +27,12 @@ export class UserHttpService {
   public token = '';
   public url = 'http://localhost:8080';
 
-  login( mail: string, password: string, remember: boolean ): Observable<any> {
+  login( nick: string, password: string ): Observable<any> {
 
-    console.log('Login: ' + mail + ' ' + password );
+    console.log('Login: ' + nick + ' ' + password );
     const options = {
       headers: new HttpHeaders({
-        authorization: 'Basic ' + btoa( mail + ':' + password),
+        authorization: 'Basic ' + btoa( nick + ':' + password),
         'cache-control': 'no-cache',
         'Content-Type':  'application/x-www-form-urlencoded',
       })
@@ -42,9 +42,7 @@ export class UserHttpService {
       tap( (data) => {
         console.log(JSON.stringify(data));
         this.token = data.token;
-        if ( remember ) {
-          localStorage.setItem('postmessages_token', this.token );
-        }
+        localStorage.setItem('postmessages_token', this.token );
       }));
   }
 
@@ -98,35 +96,15 @@ export class UserHttpService {
     return this.token;
   }
 
-  get_username() {
-    return jwt_decode(this.token).username;
+  get_nick() {
+    return jwt_decode(this.token).nick;
   }
 
-  get_mail() {
-    return jwt_decode(this.token).mail;
+  get_role() {
+    return jwt_decode(this.token).role;
   }
 
   get_id() {
     return jwt_decode(this.token).id;
-  }
-
-  is_admin(): boolean {
-    const roles = jwt_decode(this.token).roles;
-    for ( let idx = 0; idx < roles.length; ++idx ) {
-      if ( roles[idx] === 'ADMIN' ) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  is_moderator(): boolean {
-    const roles = jwt_decode(this.token).roles;
-    for ( let idx = 0; idx < roles.length; ++idx ) {
-      if ( roles[idx] === 'MODERATOR' ) {
-        return true;
-      }
-    }
-    return false;
   }
 }
