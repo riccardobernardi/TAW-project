@@ -18,6 +18,10 @@ import { AppRoutingModule } from './/app-routing.module';
 import { UserSignupComponent } from './user-signup/user-signup.component';
 import {UserHttpService} from './user-http.service';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { WaiterComponent } from './waiter/waiter.component';
+import { PaydeskComponent } from './paydesk/paydesk.component';
+import { CookComponent } from './cook/cook.component';
+import { BarmanComponent } from './barman/barman.component';
 // import { SocketioService } from './socketio.service';
 
 
@@ -28,7 +32,11 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     // MessageListComponent,
     UserLoginComponent,
     UserSignupComponent,
-    DashboardComponent
+    DashboardComponent,
+    WaiterComponent,
+    PaydeskComponent,
+    CookComponent,
+    BarmanComponent,
   ],
   imports: [
     BrowserModule,
