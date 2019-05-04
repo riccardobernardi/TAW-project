@@ -13,7 +13,7 @@
 
       <p [style.display]="selTable === undefined?'none':'inherit'">Hai selezionato il tavolo {{selTable}}</p>
 
-      <label for="menu">Seleziona un prodotto da aggiungere</label>
+      <label for="ordini">Seleziona un prodotto da aggiungere</label>
       <select class="form-control" [(ngModel)]="selMenuEntry" name="ordini" id="ordini">
         <option *ngFor="let product of menu" value="{{product}}">{{product}}</option>
       </select>
@@ -23,9 +23,11 @@
       <button id = "send" class="btn btn-lg btn-primary btn-block" (click)="send()" >Invia</button>
 
       <label for="ordini">Ordini già evasi per questo tavolo</label>
-      <select class="form-control" [(ngModel)]="order.orders" name="menu" id="menu">
-        <option *ngFor="let ord of order.orders" value="{{ord}}">{{ord.nick}}</option>
+      <select class="form-control" [(ngModel)]="deleteOrder" name="menu" id="menu">
+        <option *ngFor="let ord of order.get(selTable)" value="{{ord.id}}">{{ord.id + " " + ord.selMenuEntry}}</option>
       </select>
+
+      <button id = "delete" class="btn btn-lg btn-primary btn-block" (click)="delete()" >Delete</button>
 
       <button id = "logout" class="btn btn-lg btn-primary btn-block" (click)="logout()" >Logout</button>
     </div>

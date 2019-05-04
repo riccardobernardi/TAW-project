@@ -16,6 +16,7 @@ export class WaiterComponent implements OnInit {
   private menu = ['pasta', 'riso'];
   private selTable = undefined;
   private selMenuEntry = undefined;
+  private deleteOrder = undefined;
 
   ngOnInit() {
     if (this.us.get_token() === undefined || this.us.get_token() === '') {
@@ -30,5 +31,9 @@ export class WaiterComponent implements OnInit {
 
   send() {
     this.order.send(this.us.get_nick(), this.selTable, this.selMenuEntry);
+  }
+
+  delete() {
+    this.order.delete(this.deleteOrder);
   }
 }
