@@ -41,7 +41,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   | /users?Role="Cuoco"                  |
 | Note:     | Codice di esempio                    |
 
-###Inserimento utente
+### Inserimento utente
 | Titolo    | Inserisci un utente                                                                         |
 |-----------|---------------------------------------------------------------------------------------------|
 | URL       | /users                                                                                      |
@@ -54,7 +54,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |  /users Body: {   ID: "prova",  Nickname: "prova1",  Password: "a",  Ruolo: "Simpaticone" } |
 | Note:     | Codice di esempio                                                                           |                     |
 
-###Rimozione utente
+### Rimozione utente
 | Titolo    | Rimozione utente                     |
 |-----------|--------------------------------------|
 | URL       | /users                               |
@@ -67,7 +67,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |  /users?Nick=prova                   |
 | Note:     | Codice di esempio                    |
 
-###Login personale
+### Login personale
 | Titolo    | Login                                                    |
 |-----------|----------------------------------------------------------|
 | URL       | /login                                                   |
@@ -80,9 +80,9 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |   /users?  Body: {  Username: "prova1",  Password: "a" } |
 | Note:     | Codice di esempio                                        |
 
-##Gestione tavoli
+## Gestione tavoli
 
-###Lista tavoli
+### Lista tavoli
 | Titolo    | Fornire lista tavoli                 |
 |-----------|--------------------------------------|
 | URL       | /tavoli                              |
@@ -95,7 +95,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |   /tavoli                            |
 | Note:     | Codice di esempio                    |
 
-###Tavolo al dettaglio
+### Tavolo al dettaglio
 | Titolo    | Fornire un tavolo specifico          |
 |-----------|--------------------------------------|
 | URL       | /tavoli/:n                           |
@@ -108,7 +108,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |   /tavoli/1                          |
 | Note:     | Codice di esempio                    |
 
-###Modifica agli attributi di un tavolo
+### Modifica agli attributi di un tavolo
 | Titolo    | Fornire un tavolo specifico          |
 |-----------|--------------------------------------|
 | URL       | /tavoli/:n                           |
@@ -121,8 +121,8 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |    /tavoli/1 Body: ?                 |
 | Note:     | Codice di esempio                    |
 
-##Gestione del menu
-###Fornire la lista dei prodotti servibili
+## Gestione del menu
+### Fornire la lista dei prodotti servibili
 | Titolo    | Fornire la lista dei prodotti        |
 |-----------|--------------------------------------|
 | URL       | /menu                                |
@@ -135,7 +135,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   | /menu?Type=bibite                    |
 | Note:     | Codice di esempio                    |
 
-###Fornire un prodotto specifico
+### Fornire un prodotto specifico
 | Titolo    | Fornire un prodotto specifico        |
 |-----------|--------------------------------------|
 | URL       | /menu/:id                            |
@@ -148,7 +148,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   | /menu/1                              |
 | Note:     | Codice di esempio                    |
 
-###Fornire un prodotto specifico
+### Fornire un prodotto specifico
 
 ## Modelli per la documentazione 
 Come modelli per la stesura della documentazione, abbiamo utilizzato le seguenti risorse:
