@@ -5,10 +5,11 @@ import { Injectable } from '@angular/core';
 })
 export class OrderService {
 
-  constructor() { }
+  public orders = [{id: 1, nick : '--' , selTable : '--' , selMenuEntry : '--'}];
+  private id = 2;
 
-  public orders = [];
-  private id = 0;
+  constructor() {
+  }
 
   send(nick: any, selTable: any, selMenuEntry: any) {
     this.orders.push({id: this.id, nick , selTable, selMenuEntry});
@@ -20,13 +21,22 @@ export class OrderService {
     return this.orders.filter(obj => obj.selTable === val);
   }
 
-  delete(id) {
-    if(id == undefined){
-      id = 0;
-    }
-    this.orders.forEach( (item, index) => {
-      if (item.id == id) {this.orders.splice(index, 1 ); }
+  arrayRemove(arr, value) {
+
+    return arr.filter(function(ele){
+      if(ele.id == 1){
+        return true;
+      }
+      return ele.id != value;
     });
-    console.log('you have deleted to server your order num ' + id);
+
+  }
+
+  delete(value) {
+    /*this.orders.forEach( (item, index) => {
+      if (item.id == id) {this.orders.splice(index, 1 ); }
+    });*/
+    this.orders = this.arrayRemove(this.orders, value );
+    console.log('you have deleted to server your order num ' + value);
   }
 }

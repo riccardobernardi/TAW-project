@@ -27,6 +27,8 @@
         <option *ngFor="let ord of order.get(selTable)" value="{{ord.id}}">{{ord.id + " " + ord.selMenuEntry}}</option>
       </select>
 
+      <p [style.display]="deleteOrder === undefined?'none':'inherit'">Stai eliminando la comanda {{deleteOrder}}</p>
+
       <button id = "delete" class="btn btn-lg btn-primary btn-block" (click)="delete()" >Delete</button>
 
       <button id = "logout" class="btn btn-lg btn-primary btn-block" (click)="logout()" >Logout</button>
