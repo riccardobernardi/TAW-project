@@ -148,7 +148,190 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   | /menu/1                              |
 | Note:     | Codice di esempio                    |
 
-### Fornire un prodotto specifico
+###Inserire un prodotto
+| Titolo    | Inserire un prodotto specifico                                                                                                                                    |
+|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| URL       | /menu/:id                                                                                                                                                         |
+| Metodo    | POST                                                                                                                                                              |
+| Parametri |                                                                                                                                                                   |
+| Corpo     | {Nome, Tipo, Ingr, Descr, Prezzo}                                                                                                                                 |
+| Successo  |  Codice: 200 Contenuto:                                                                                                                                           |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                                                                                                                              |
+| Errore    | Altri errori                                                                                                                                                      |
+| Esempio   |  /menu/1  Body: {   Nome: Spaghetti al pomodoro,   Tipo: piatto,  Ingredienti: [{Spaghetti}, {Pomodoro}],   Descrizione: "Spaghetti al pomodoro,  Prezzo: 6.00  } |
+| Note:     | Codice di esempio                                                                                                                                                 |
+
+### Modificare un prodotto specifico
+| Titolo    | Modificare un prodotto specifico     |
+|-----------|--------------------------------------|
+| URL       | /menu/:id                            |
+| Metodo    | PUT                                  |
+| Parametri |                                      |
+| Corpo     | {parametri del piatto}               |
+| Successo  |  Codice: 200 Contenuto:              |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
+| Errore    | Altri errori                         |
+| Esempio   |  /menu/1 Body: { ? }                 |
+| Note:     | Codice di esempio                    |
+
+### Eliminare un prodotto
+| Titolo    | Eliminare un prodotto specifico      |
+|-----------|--------------------------------------|
+| URL       | /menu/:id                            |
+| Metodo    | DELETE                               |
+| Parametri |                                      |
+| Corpo     |                                      |
+| Successo  |  Codice: 200 Contenuto:              |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
+| Errore    | Altri errori                         |
+| Esempio   | /menu/1                              |
+| Note:     | Codice di esempio                    |
+
+##Gestione degli ordini
+
+###Inserimento di un ordine 
+| Titolo    | Inserimento di un ordine                                                 |
+|-----------|--------------------------------------------------------------------------|
+| URL       | /ordini                                                                  |
+| Metodo    | POST                                                                     |
+| Parametri |                                                                          |
+| Corpo     | {id_cam, id_tav, ora_inizio}                                             |
+| Successo  |  Codice: 200 Contenuto:                                                  |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                                     |
+| Errore    | Altri errori                                                             |
+| Esempio   |  /ordini  Body: {  id_cam: 1,  id_tav: 1,  ora_inizio: timestamp(now) }  |
+| Note:     | Codice di esempio                                                        |
+
+###Recupero info di un ordine	
+| Titolo    | Recupero info di un ordine                             |
+|-----------|--------------------------------------------------------|
+| URL       | /ordini                                                |
+| Metodo    | GET                                                    |
+| Parametri | Date=[data]&Cam=[id_cam]&Tav=[id_tavolo]&Stato=[stato] |
+| Corpo     |                                                        |
+| Successo  |  Codice: 200 Contenuto:                                |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                   |
+| Errore    | Altri errori                                           |
+| Esempio   |  /ordini?Cam=1&Tav=1                                   |
+| Note:     | Codice di esempio                                      |
+
+###Recupero info di un ordine specifico
+| Titolo    | Recupero info di un ordine specifico |
+|-----------|--------------------------------------|
+| URL       | /ordini/:id                          |
+| Metodo    | GET                                  |
+| Parametri |                                      |
+| Corpo     |                                      |
+| Successo  |  Codice: 200 Contenuto:              |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
+| Errore    | Altri errori                         |
+| Esempio   |  /ordini/1                           |
+| Note:     | Codice di esempio                    |
+
+###Recupero comande relative ad un ordine
+| Titolo    | Recupero comande di un ordine specifico |
+|-----------|-----------------------------------------|
+| URL       | /ordini/:id/comande                     |
+| Metodo    | GET                                     |
+| Parametri |                                         |
+| Corpo     |                                         |
+| Successo  |  Codice: 200 Contenuto:                 |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto:    |
+| Errore    | Altri errori                            |
+| Esempio   |  /ordini/1/comande                      |
+| Note:     | Codice di esempio                       |
+
+###Inserimento di una comanda per un ordine
+| Titolo    | Inserimento comanda/e relative ad un ordine specifico                                                               |
+|-----------|---------------------------------------------------------------------------------------------------------------------|
+| URL       | /ordini/:id/comande                                                                                                 |
+| Metodo    | POST                                                                                                                |
+| Parametri |                                                                                                                     |
+| Corpo     | {id_piatto, prezzo, aggiunte, stato}                                                                                |
+| Successo  |  Codice: 200 Contenuto:                                                                                             |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                                                                                |
+| Errore    | Altri errori                                                                                                        |
+| Esempio   |  /ordini/1/comande   Body: {  id_piatto: 1,   prezzo: 7.00,  aggiunte: {doppio pomodoro},  stato: "da completare" } |
+| Note:     | Codice di esempio                                                                                                   |
+
+###Modifica di una comanda
+| Titolo    | Modifica comanda                                      |
+|-----------|-------------------------------------------------------|
+| URL       | /ordini/:id/comande/:id                               |
+| Metodo    | PUT                                                   |
+| Parametri |                                                       |
+| Corpo     | {Campi da decidere}                                   |
+| Successo  |  Codice: 200 Contenuto:                               |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                  |
+| Errore    | Altri errori                                          |
+| Esempio   |  /ordini/1/comande   Body: {  ? }                     |
+| Note:     | Codice di esempio                                     |
+
+###Cancellazione di una comanda
+| Titolo    | Cancellazione comanda                |
+|-----------|--------------------------------------|
+| URL       | /ordini/:id/comande/:id              |
+| Metodo    | DELETE                               |
+| Parametri |                                      |
+| Corpo     |                                      |
+| Successo  |  Codice: 200 Contenuto:              |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
+| Errore    | Altri errori                         |
+| Esempio   |  /ordini/1/comande                   |
+| Note:     | Codice di esempio                    |
+
+##Report
+###Fornire un Report
+| Titolo    | Fornire un report                    |
+|-----------|--------------------------------------|
+| URL       | /report                              |
+| Metodo    | GET                                  |
+| Parametri | Date=[data]                          |
+| Corpo     |                                      |
+| Successo  |  Codice: 200 Contenuto:              |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
+| Errore    | Altri errori                         |
+| Esempio   |  /report?Date=[timestamp(now)]       |
+| Note:     | Codice di esempio                    |
+
+###Inserire un report
+| Titolo    | Inserire un report                   |
+|-----------|--------------------------------------|
+| URL       | /report                              |
+| Metodo    | POST                                 |
+| Parametri |                                      |
+| Corpo     | {Parametri del report}               |
+| Successo  |  Codice: 200 Contenuto:              |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
+| Errore    | Altri errori                         |
+| Esempio   |   /report  Body: {da decidere}       |
+| Note:     | Codice di esempio                    |
+
+###Cancellare un report
+| Titolo    | Cancellare un report                 |
+|-----------|--------------------------------------|
+| URL       | /report/:id                          |
+| Metodo    | DELETE                               |
+| Parametri |                                      |
+| Corpo     |                                      |
+| Successo  |  Codice: 200 Contenuto:              |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
+| Errore    | Altri errori                         |
+| Esempio   |   /report/1                          |
+| Note:     | Codice di esempio                    |
+
+###Modifica di un report
+| Titolo    | Modifica di un report                |
+|-----------|--------------------------------------|
+| URL       | /report/:id                          |
+| Metodo    | PUT                                  |
+| Parametri |                                      |
+| Corpo     | {campi da cambiare}                  |
+| Successo  |  Codice: 200 Contenuto:              |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
+| Errore    | Altri errori                         |
+| Esempio   |   /report/1   Body: {da decidere}    |
+| Note:     | Codice di esempio                    |
 
 ## Modelli per la documentazione 
 Come modelli per la stesura della documentazione, abbiamo utilizzato le seguenti risorse:
