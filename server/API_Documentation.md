@@ -148,7 +148,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   | /menu/1                              |
 | Note:     | Codice di esempio                    |
 
-###Inserire un prodotto
+### Inserire un prodotto
 | Titolo    | Inserire un prodotto specifico                                                                                                                                    |
 |-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | URL       | /menu/:id                                                                                                                                                         |
@@ -187,9 +187,9 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   | /menu/1                              |
 | Note:     | Codice di esempio                    |
 
-##Gestione degli ordini
+## Gestione degli ordini
 
-###Inserimento di un ordine 
+### Inserimento di un ordine 
 | Titolo    | Inserimento di un ordine                                                 |
 |-----------|--------------------------------------------------------------------------|
 | URL       | /ordini                                                                  |
@@ -202,7 +202,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |  /ordini  Body: {  id_cam: 1,  id_tav: 1,  ora_inizio: timestamp(now) }  |
 | Note:     | Codice di esempio                                                        |
 
-###Recupero info di un ordine	
+### Recupero info di un ordine	
 | Titolo    | Recupero info di un ordine                             |
 |-----------|--------------------------------------------------------|
 | URL       | /ordini                                                |
@@ -215,7 +215,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |  /ordini?Cam=1&Tav=1                                   |
 | Note:     | Codice di esempio                                      |
 
-###Recupero info di un ordine specifico
+### Recupero info di un ordine specifico
 | Titolo    | Recupero info di un ordine specifico |
 |-----------|--------------------------------------|
 | URL       | /ordini/:id                          |
@@ -228,7 +228,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |  /ordini/1                           |
 | Note:     | Codice di esempio                    |
 
-###Recupero comande relative ad un ordine
+### Recupero comande relative ad un ordine
 | Titolo    | Recupero comande di un ordine specifico |
 |-----------|-----------------------------------------|
 | URL       | /ordini/:id/comande                     |
@@ -241,7 +241,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |  /ordini/1/comande                      |
 | Note:     | Codice di esempio                       |
 
-###Inserimento di una comanda per un ordine
+### Inserimento di una comanda per un ordine
 | Titolo    | Inserimento comanda/e relative ad un ordine specifico                                                               |
 |-----------|---------------------------------------------------------------------------------------------------------------------|
 | URL       | /ordini/:id/comande                                                                                                 |
@@ -254,7 +254,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |  /ordini/1/comande   Body: {  id_piatto: 1,   prezzo: 7.00,  aggiunte: {doppio pomodoro},  stato: "da completare" } |
 | Note:     | Codice di esempio                                                                                                   |
 
-###Modifica di una comanda
+### Modifica di una comanda
 | Titolo    | Modifica comanda                                      |
 |-----------|-------------------------------------------------------|
 | URL       | /ordini/:id/comande/:id                               |
@@ -267,7 +267,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |  /ordini/1/comande   Body: {  ? }                     |
 | Note:     | Codice di esempio                                     |
 
-###Cancellazione di una comanda
+### Cancellazione di una comanda
 | Titolo    | Cancellazione comanda                |
 |-----------|--------------------------------------|
 | URL       | /ordini/:id/comande/:id              |
@@ -280,8 +280,8 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |  /ordini/1/comande                   |
 | Note:     | Codice di esempio                    |
 
-##Report
-###Fornire un Report
+## Report
+### Fornire un Report
 | Titolo    | Fornire un report                    |
 |-----------|--------------------------------------|
 | URL       | /report                              |
@@ -294,7 +294,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |  /report?Date=[timestamp(now)]       |
 | Note:     | Codice di esempio                    |
 
-###Inserire un report
+### Inserire un report
 | Titolo    | Inserire un report                   |
 |-----------|--------------------------------------|
 | URL       | /report                              |
@@ -307,7 +307,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |   /report  Body: {da decidere}       |
 | Note:     | Codice di esempio                    |
 
-###Cancellare un report
+### Cancellare un report
 | Titolo    | Cancellare un report                 |
 |-----------|--------------------------------------|
 | URL       | /report/:id                          |
@@ -320,7 +320,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |   /report/1                          |
 | Note:     | Codice di esempio                    |
 
-###Modifica di un report
+### Modifica di un report
 | Titolo    | Modifica di un report                |
 |-----------|--------------------------------------|
 | URL       | /report/:id                          |
