@@ -10,6 +10,10 @@ export class CookComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    /*this.get_messages();
+    this.sio.connect().subscribe( (m) => {
+      this.get_messages();
+    });*/
   }
 
 }

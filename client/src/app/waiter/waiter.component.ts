@@ -31,6 +31,7 @@ export class WaiterComponent implements OnInit {
 
   send() {
     this.order.send(this.us.get_nick(), this.selTable, this.selMenuEntry);
+    //ios.
   }
 
   delete() {

@@ -5,10 +5,11 @@ import { Injectable } from '@angular/core';
 })
 export class OrderService {
 
-  public orders = [{id: 1, nick : '--' , selTable : '--' , selMenuEntry : '--'}];
+  public orders = [];
   private id = 2;
 
   constructor() {
+    this.orders.push({id: 1, nick : '--' , selTable : '--' , selMenuEntry : '--'});
   }
 
   send(nick: any, selTable: any, selMenuEntry: any) {
@@ -18,13 +19,17 @@ export class OrderService {
   }
 
   get(val) {
-    return this.orders.filter(obj => obj.selTable === val);
+    return this.orders.filter(obj => (obj.selTable === val || obj.selTable === '--'));
+  }
+
+  orders_size() {
+    return this.orders.length;
   }
 
   arrayRemove(arr, value) {
 
-    return arr.filter(function(ele){
-      if(ele.id == 1){
+    return arr.filter((ele) => {
+      if (ele.id == 1) {
         return true;
       }
       return ele.id != value;
