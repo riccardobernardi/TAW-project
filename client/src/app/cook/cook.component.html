@@ -1,3 +1,8 @@
-<p>
-  cook works!
-</p>
+<div *ngFor="let message of orders" class="card" style="margin: 5px" >
+  <div class="card-body">
+    <h5 class="card-title"><i class="far fa-envelope"></i>&nbsp;{{orders.selMenuEntry}}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">{{message.timestamp | date}} / {{message.timestamp | date:'shortTime'}}</h6>
+    <p class="card-text">{{ message.selTable }}</p>
+    <!--<span *ngFor="let tag of message.tags" class="badge badge-secondary tag">{{tag}}</span>-->
+  </div>
+</div>

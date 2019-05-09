@@ -24,7 +24,7 @@
 
       <label for="ordini">Ordini già evasi per questo tavolo</label>
       <select class="form-control" [(ngModel)]="deleteOrder" name="menu" id="menu">
-        <option #dele *ngFor="let ord of order.get(selTable)" value="{{ord.id}}">{{ord.id + " " + ord.selMenuEntry}}</option>
+        <option #dele *ngFor="let ord of get_data()" value="{{ord.id}}">{{ord.id + " " + ord.selMenuEntry}}</option>
       </select>
 
       <p [style.display]="deleteOrder === undefined?'none':'inherit'">Stai eliminando la comanda {{deleteOrder}}</p>
