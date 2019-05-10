@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {UserService} from '../user.service';
 import {Router} from '@angular/router';
 import {OrderService} from '../order.service';
+import {Order} from '../Order';
 
 @Component({
   selector: 'app-waiter',
@@ -18,6 +19,8 @@ export class WaiterComponent implements OnInit {
   private selMenuEntry = undefined;
   private deleteOrder = undefined;
 
+  @Output() posted = new EventEmitter<Order>();
+
   ngOnInit() {
     if (this.us.get_token() === undefined || this.us.get_token() === '') {
       this.logout();
@@ -30,10 +33,19 @@ export class WaiterComponent implements OnInit {
   }
 
   send() {
-    this.order.send(this.us.get_nick(), this.selTable, this.selMenuEntry);
+    const o = {nick: this.us.get_nick(), selTable: this.selTable, selMenuEntry: this.selMenuEntry,
+      ready: false, id: this.order.get_id(), in_progress: false, timestamp: Date.now()};
+    this.order.send(o);
+    this.posted.emit(o);
   }
 
   delete() {
     this.order.delete(this.deleteOrder);
+  }
+
+  get_data() {
+    let m = this.order.get(this.selTable).subscribe((data) => data);
+    console.log(m)
+    return this.order.get(this.selTable).subscribe((data) => data);
   }
 }
