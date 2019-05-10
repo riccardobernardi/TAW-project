@@ -19,7 +19,7 @@ export class WaiterComponent implements OnInit {
   private selMenuEntry = undefined;
   private deleteOrder = undefined;
 
-  @Output() posted = new EventEmitter<Order>();
+  // @Output() posted = new EventEmitter<string>();
 
   ngOnInit() {
     if (this.us.get_token() === undefined || this.us.get_token() === '') {
@@ -36,16 +36,14 @@ export class WaiterComponent implements OnInit {
     const o = {nick: this.us.get_nick(), selTable: this.selTable, selMenuEntry: this.selMenuEntry,
       ready: false, id: this.order.get_id(), in_progress: false, timestamp: Date.now()};
     this.order.send(o);
-    this.posted.emit(o);
+    // this.posted.emit('broadcast');
+    console.log('event emitted');
+    const socket = io('http://localhost');
+    socket.emit('broadcast');
   }
 
   delete() {
     this.order.delete(this.deleteOrder);
   }
 
-  get_data() {
-    let m = this.order.get(this.selTable).subscribe((data) => data);
-    console.log(m)
-    return this.order.get(this.selTable).subscribe((data) => data);
-  }
 }

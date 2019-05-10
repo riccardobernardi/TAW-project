@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable, Output} from '@angular/core';
 import {Order} from './Order';
 import {catchError, tap} from 'rxjs/operators';
 import {UserService} from './user.service';
@@ -26,7 +26,7 @@ export class OrderService {
     console.log('you have sent to server your order from ' + o.nick + ' by table ' + o.selTable + ' with ' + o.selMenuEntry);
   }
 
-  private handleError(error: HttpErrorResponse) {
+/*  private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
       console.error('An error occurred:', error.error.message);
@@ -40,7 +40,7 @@ export class OrderService {
 
     // return an ErrorObservable with a user-facing error message
     return new Error('Something bad happened; please try again later.');
-  }
+  }*/
 
   get(val?) {
     let m;
@@ -54,7 +54,7 @@ export class OrderService {
       tap( (data) => console.log(JSON.stringify(data))) ,
       catchError( this.handleError )
     );*/
-    return of(m);
+    return m;
   }
 
   orders_size() {

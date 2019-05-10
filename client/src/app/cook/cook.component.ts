@@ -14,25 +14,15 @@ export class CookComponent implements OnInit {
   constructor(private us: UserService, private router: Router, private order: OrderService  ) { }
 
   ngOnInit() {
+    this.get_orders();
   }
 
   public get_orders() {
-    this.order.get().subscribe(
-      ( orders ) => {
-        this.orders = orders;
-
-      } , (err) => {
-
-        // Try to renew the token
-        this.us.renew().subscribe( () => {
-          // Succeeded
-          this.order.get();
-        }, (err2) => {
-          // Error again, we really need to logout
-          this.us.logout();
-        } );
-      }
-    );
+    console.log('received an emit');
+    this.order.get();
+    const socket = io('http://localhost:4200');
+    socket.on('broadcast', this.order.get);
+    console.log('event received');
   }
 
 }
