@@ -1,17 +1,18 @@
 import mongoose = require('mongoose');
 
 //Interface of table, we don't know how use it at the moment
-export interface order {
-    waiter: string,
-    table: string,
-    start: string,
-    end: number,
-    command: string
+export interface Menu {
+    name: string,
+    type: string,
+    price: number,
+    ingredients: [string],
+    required_time: number,
+    description: string
 }
 
 var type = ["dish, beverage"]; 
 
-var orderSchema = new mongoose.Schema( {
+var menuSchema = new mongoose.Schema( {
     name: {
         type: mongoose.SchemaTypes.String,
         required: true,
@@ -21,6 +22,10 @@ var orderSchema = new mongoose.Schema( {
         type: mongoose.SchemaTypes.String,
         required : true,
         enum: type,
+    },
+    price: {
+        type: mongoose.SchemaTypes.Number,
+        required: true
     },
     ingredients:  {
         type: [mongoose.SchemaTypes.String],
@@ -36,13 +41,13 @@ var orderSchema = new mongoose.Schema( {
     }
 })
 
-export function getOrderSchema() { return orderSchema; }
+export function getMenuSchema() { return menuSchema; }
 
 // Mongoose Model
-var orderModel;  // This is not exposed outside the model
+var menuModel;  // This is not exposed outside the model
 export function getUserModel() : mongoose.Model< mongoose.Document > { // Return Model as singleton
-    if( !orderModel ) {
-        orderModel = mongoose.model('Table', getOrderSchema() )
+    if( !menuModel ) {
+        menuModel = mongoose.model('Menu', getMenuSchema() )
     }
-    return orderModel;
+    return menuModel;
 }

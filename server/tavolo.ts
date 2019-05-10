@@ -1,6 +1,5 @@
 import mongoose = require('mongoose');
 
- 
 //Interface of table, we don't know how use it at the moment
 export interface Table {
     numero: number,

@@ -31,7 +31,7 @@ export function getUserSchema() { return userSchema; }
 var userModel;  // This is not exposed outside the model
 export function getUserModel() : mongoose.Model< mongoose.Document > { // Return Model as singleton
     if( !userModel ) {
-        userModel = mongoose.model('Table', getUserSchema() )
+        userModel = mongoose.model('User', getUserSchema() )
     }
     return userModel;
 }
