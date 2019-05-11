@@ -2,7 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {UserService} from '../user.service';
 import {Router} from '@angular/router';
 import {OrderService} from '../order.service';
-import {Order} from '../Order';
+import * as io from 'socket.io-client';
 
 @Component({
   selector: 'app-waiter',
@@ -10,14 +10,13 @@ import {Order} from '../Order';
   styleUrls: ['./waiter.component.css']
 })
 export class WaiterComponent implements OnInit {
-
-  private errmessage = undefined;
   constructor( private us: UserService, private router: Router, private order: OrderService  ) { }
   private tables = [1, 2];
   private menu = ['pasta', 'riso'];
   private selTable = undefined;
   private selMenuEntry = undefined;
   private deleteOrder = undefined;
+  // private socket = io('http://localhost:4200');
 
   // @Output() posted = new EventEmitter<string>();
 
@@ -38,8 +37,9 @@ export class WaiterComponent implements OnInit {
     this.order.send(o);
     // this.posted.emit('broadcast');
     console.log('event emitted');
-    const socket = io('http://localhost');
-    socket.emit('broadcast');
+    /*const socket = io('http://localhost:4200');
+    socket.emit('broadcast');*/
+    // this.socket.emit('broadcast');
   }
 
   delete() {
