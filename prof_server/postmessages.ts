@@ -61,7 +61,7 @@
  */
 
 
-const result = require('dotenv').config()     // The dotenv module will load a file named ".env"
+/*const result = require('dotenv').config()     // The dotenv module will load a file named ".env"
                                               // file and load all the key-value pairs into
                                               // process.env (environment variable)
 if (result.error) {
@@ -71,7 +71,7 @@ if (result.error) {
 if( !process.env.JWT_SECRET ) {
   console.log("\".env\" file loaded but JWT_SECRET=<secret> key-value pair was not found");
   process.exit(-1);
-}
+}*/
 
 import fs = require('fs');
 import http = require('http');                // HTTP module
@@ -112,7 +112,7 @@ var app = express();
 // If the token is valid, req.user will be set with the JSON object 
 // decoded to be used by later middleware for authorization and access control.
 //
-var auth = jwt( {secret: process.env.JWT_SECRET} );
+var auth = jwt( {secret: /*process.env.JWT_SECRET*/"AAAAAAAAA"} );
 
 
 app.use( cors() );
@@ -235,7 +235,7 @@ app.get('/users/:mail', auth, (req,res,next) => {
   user.getModel().findOne( {mail: req.params.mail }, {digest: 0, salt:0 }).then( (user)=> {
     return res.status(200).json( user );
   }).catch( (reason) => {
-    return next({ statusCode:404, error: true, errormessage: "DB error: "+reason });
+    return next({ statusCode:404, error: true, errormessage: "DB error: " + reason });
   })
 
 });
@@ -324,7 +324,6 @@ app.use( (req,res,next) => {
 })
 
 
-
 // Connect to mongodb and launch the HTTP server trough Express
 //
 mongoose.connect( 'mongodb://localhost:27017/postmessages' ).then( 
@@ -334,7 +333,7 @@ mongoose.connect( 'mongodb://localhost:27017/postmessages' ).then(
 
         var u = user.newUser( {
           username: "admin",
-          mail: "admin@postmessages.it"
+          mail: "admin@restaurant.com"
         } );
         u.setAdmin();
         u.setModerator();
