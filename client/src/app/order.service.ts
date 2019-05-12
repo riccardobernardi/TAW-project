@@ -12,11 +12,11 @@ import {Observable, of} from 'rxjs';
 })
 export class OrderService {
 
-  public orders = [];
+  public orders: Order[] = [];
   private id = 2;
 
   constructor(private us: UserService, private router: Router, private order: OrderService, private http: HttpClient  ) {
-    this.orders.push({id: 1, nick : '--' , selTable : '--' , selMenuEntry : '--'});
+    this.orders.push({id: 1, nick : '--' , selTable : -1 , selMenuEntry : -1, in_progress: false, ready: false, timestamp: Date.now()});
     console.log('Message service instantiated');
     console.log('User service token: ' + us.get_token() );
   }
@@ -43,19 +43,54 @@ export class OrderService {
   }*/
 
   get(val?) {
-    let m;
-    if (val == undefined) {
+    let m ;
+    if (val === undefined) {
       m = this.orders;
-    } else{
-      m = this.orders.filter(obj => (obj.selTable === val || obj.selTable === '--'));
+    } else {
+      m = this.orders.filter(obj => (obj.selTable === val || obj.selTable === -1));
     }
 
     /*return this.http.get<Order[]>( this.us.url + '/messages', this.create_options( {limit: '10', skip: '0'} ) ).pipe(
       tap( (data) => console.log(JSON.stringify(data))) ,
       catchError( this.handleError )
     );*/
-    return m;
+    return new Observable(m);
   }
+
+/*  private create_options( params = {} ) {
+    return  {
+      headers: new HttpHeaders({
+        authorization: 'Bearer ' + this.us.get_token(),
+        'cache-control': 'no-cache',
+        'Content-Type':  'application/json',
+      }),
+      params: new HttpParams( {fromObject: params} )
+    };
+
+  }*/
+
+  /*private handleError(error: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+      // A client-side or network error occurred. Handle it accordingly.
+      console.error('An error occurred:', error.error.message);
+    } else {
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong,
+      console.error(
+        `Backend returned code ${error.status}, ` +
+        'body was: ' + JSON.stringify(error.error));
+    }
+
+    // return an ErrorObservable with a user-facing error message
+    return new ErrorObservable('Something bad happened; please try again later.');
+  }*/
+
+/*  get_orders(): Observable<Order[]> {
+    return this.http.get<Order[]>( this.us.url + '/Orders', this.create_options( {limit: '10', skip: '0'} ) ).pipe(
+      tap( (data) => console.log(JSON.stringify(data))) ,
+      catchError( this.handleError )
+    );
+  }*/
 
   orders_size() {
     return this.orders.length;
@@ -64,10 +99,10 @@ export class OrderService {
   arrayRemove(arr, value) {
 
     return arr.filter((ele) => {
-      if (ele.id == 1) {
+      if (ele.id === 1) {
         return true;
       }
-      return ele.id != value;
+      return ele.id !== value;
     });
 
   }

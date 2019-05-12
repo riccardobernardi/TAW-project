@@ -22,6 +22,7 @@ import { WaiterComponent } from './waiter/waiter.component';
 import { PaydeskComponent } from './paydesk/paydesk.component';
 import { CookComponent } from './cook/cook.component';
 import { BarmanComponent } from './barman/barman.component';
+import {SocketioService} from './socketio.service';
 // import { SocketioService } from './socketio.service';
 
 
@@ -46,7 +47,7 @@ import { BarmanComponent } from './barman/barman.component';
   ],
   providers: [
     {provide: UserService, useClass: UserService },
-    // {provide: SocketioService, useClass: SocketioService },
+    {provide: SocketioService, useClass: SocketioService },
     // {provide: MessageService, useClass: MessageHttpService /* Here we can select the specifc service instance */}
   ],
   bootstrap: [AppComponent]
