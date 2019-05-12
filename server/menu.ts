@@ -16,7 +16,7 @@ var menuSchema = new mongoose.Schema( {
     name: {
         type: mongoose.SchemaTypes.String,
         required: true,
-        enum: 
+        enum: type
     },
     type: {
         type: mongoose.SchemaTypes.String,
