@@ -1,7 +1,7 @@
 import mongoose = require('mongoose');
 import crypto = require('crypto');
 
-var roles = ["WAITER, COOK, DESK, BARTENDER"];
+var roles = ["WAITER", "COOK", "DESK", "BARTENDER"];
 
 export interface User extends mongoose.Document {
     //readonly _id: mongoose.Schema.Types.ObjectId,
@@ -33,7 +33,7 @@ var userSchema = new mongoose.Schema( {
         required: true,
         enum: roles
     },*/
-    roles:  {
+    role:  {
         type: mongoose.SchemaTypes.String,
         required: true,
         enum: roles
@@ -106,7 +106,7 @@ userSchema.methods.hasCookRole = function(): boolean {
 }
 
 userSchema.methods.setCook = function() {
-    this.roles.push( "COOK" );
+    this.role = "COOK";
 }
 
 userSchema.methods.hasBartenderRole = function(): boolean {

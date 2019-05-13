@@ -92,51 +92,55 @@ app.delete("/users/:username", auth, (req, res, next) => {
    })
 });
 
-app.get("/tables", auth, (req, res, next) => {
+app.route("/tables").get(auth, (req, res, next) => {
 
    var sender = user.newUser(req.user);
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
-   table.getModel().find().then( (tableslist) => {
+   table.getModel().find({}, {number:1, max_people:1, _id: 0}).then( (tableslist) => {
       return res.status(200).json( tableslist ); 
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
    });
-});
-
-app.route("/tables/:id", auth).get((req, res, next) => {
-
-   var sender = user.newUser(req.user);
-   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
-
-   table.getModel().find({number: req.params.number}).then( (table) => {
-      return res.status(200).json( table ); 
-   }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
-   });
-}).post((req, res, next) => {
+}).post(auth, (req, res, next) => {
    var sender = user.newUser(req.user);
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
    var Table = table.getModel();
-   (new Table(req.body)).save().then( (data) => {
-      return res.status(200).json( data ); 
+   (new Table(req.body)).save().then( (data : table.Table) => {
+      return res.status(200).json( {
+         number: data.number,
+         max_people: data.number
+      }); 
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
    });
-});
+});;
+
+app.get("/tables/:number", auth, (req, res, next) => {
+
+   var sender = user.newUser(req.user);
+   
+   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+
+   table.getModel().find({number: req.params.number}, {number: 1, max_people: 1}).then( (table) => {
+      return res.status(200).json( table ); 
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   });
+})
 
 app.get('/renew', auth, (req,res,next) => {
    var tokendata = req.user;
    delete tokendata.iat;
    delete tokendata.exp;
    console.log("Renewing token for user " + JSON.stringify( tokendata ));
-   var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '1h' } );
+   var token_signed = jsonwebtoken.sign(tokendata, /*process.env.JWT_SECRET*/"AAAAAAAAA", { expiresIn: '30s' } );
    return res.status(200).json({ error: false, errormessage: "", token: token_signed });
- });
+});
 
 // Configure HTTP basic authentication strategy 
 // trough passport middleware.
@@ -178,7 +182,7 @@ app.get("/login", passport.authenticate('basic', { session: false }), (req,res,n
 
    var tokendata = {
       username: req.user.username,
-      roles: req.user.roles,
+      role: req.user.role,
       /*mail: req.user.mail,
       id: req.user.id*/
    };
@@ -232,14 +236,14 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
             var user2 = user.newUser({
                username: "cook1"
             })
-            user2.setWaiter();
+            user2.setCook();
             user2.setPassword("cook1");
             var pr2 = user2.save();
 
             var user3 = user.newUser({
                username: "bartender1"
             })
-            user3.setWaiter();
+            user3.setBartender();
             user3.setPassword("bartender1");
             var pr3 = user3.save();
 
@@ -265,32 +269,30 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
    var t1 = (new tableModel({number : 1, max_people: 4})).save();
    var t2 = (new tableModel({number : 2, max_people: 4})).save();
    var t3 = (new tableModel({number : 3, max_people: 6})).save();
-   Promise.all([t1, t2, t3])
-               .then(function () {
-               console.log("Table saved");
-            })
-               .catch(function (reason) {
-               console.log("Unable to save tables: " + reason);
-            });
+   Promise.all([t1, t2, t3]).then(function () {
+      console.log("Table saved");
+   }).catch(function (reason) {
+      console.log("Unable to save tables: " + reason);
+   });
 
-    // To start a standard HTTP server we directly invoke the "listen"
-    // method of express application
-    let server = http.createServer(app);
-    /*ios = io(server);
-    ios.on('connection', function (client) {
-        console.log("Socket.io client connected".green);
-    });*/
-    server.listen(8080, () => console.log("HTTP Server started on port 8080"));
-    // To start an HTTPS server we create an https.Server instance 
-    // passing the express application middleware. Then, we start listening
-    // on port 8443
-    //
-    /*
-    https.createServer({
-      key: fs.readFileSync('keys/key.pem'),
-      cert: fs.readFileSync('keys/cert.pem')
-    }, app).listen(8443);
-    */
+   // To start a standard HTTP server we directly invoke the "listen"
+   // method of express application
+   let server = http.createServer(app);
+   /*ios = io(server);
+   ios.on('connection', function (client) {
+      console.log("Socket.io client connected".green);
+   });*/
+   server.listen(8080, () => console.log("HTTP Server started on port 8080"));
+   // To start an HTTPS server we create an https.Server instance 
+   // passing the express application middleware. Then, we start listening
+   // on port 8443
+   //
+   /*
+   https.createServer({
+   key: fs.readFileSync('keys/key.pem'),
+   cert: fs.readFileSync('keys/cert.pem')
+   }, app).listen(8443);
+   */
 }, function onrejected() {
     console.log("Unable to connect to MongoDB");
     process.exit(-2);

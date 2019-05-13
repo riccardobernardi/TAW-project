@@ -1,7 +1,7 @@
 import mongoose = require('mongoose');
 
 //Interface of table, we don't know how use it at the moment
-export interface Table {
+export interface Table extends mongoose.Document {
     number: number,
     max_people: number,
     state: string

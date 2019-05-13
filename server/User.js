@@ -2,7 +2,7 @@
 exports.__esModule = true;
 var mongoose = require("mongoose");
 var crypto = require("crypto");
-var roles = ["WAITER, COOK, DESK, BARTENDER"];
+var roles = ["WAITER", "COOK", "DESK", "BARTENDER"];
 var userSchema = new mongoose.Schema({
     username: {
         type: mongoose.SchemaTypes.String,
@@ -14,7 +14,7 @@ var userSchema = new mongoose.Schema({
         required: true,
         enum: roles
     },*/
-    roles: {
+    role: {
         type: mongoose.SchemaTypes.String,
         required: true,
         "enum": roles
@@ -72,7 +72,7 @@ userSchema.methods.hasCookRole = function () {
     return this.role === 'COOK';
 };
 userSchema.methods.setCook = function () {
-    this.roles.push("COOK");
+    this.role = "COOK";
 };
 userSchema.methods.hasBartenderRole = function () {
     /*for( var roleidx in this.roles ) {

@@ -2,7 +2,7 @@ import mongoose = require('mongoose');
 
 //Interface of table, we don't know how use it at the moment
 //export interface order {
-export interface ticket {
+export interface Ticket extends mongoose.Document {
     _id: string,
     waiter: string,
     table: string,
