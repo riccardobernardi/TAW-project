@@ -92,7 +92,6 @@ app.delete("/users/:username", auth, (req, res, next) => {
    })
 });
 
-<<<<<<< HEAD
 /*app.get("/tables", auth, (req, res, next) => {
 =======
 app.route("/tables").get(auth, (req, res, next) => {
@@ -137,9 +136,6 @@ app.get("/tables/:number", auth, (req, res, next) => {
    });
 <<<<<<< HEAD
 });*/
-=======
-})
->>>>>>> 5ff4508ba0142111b514e5e9ac488600b5959cd7
 
 app.get('/renew', auth, (req,res,next) => {
    var tokendata = req.user;

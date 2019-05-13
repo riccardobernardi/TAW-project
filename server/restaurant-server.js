@@ -14,10 +14,7 @@ var passportHTTP = require("passport-http"); // implements Basic and Digest auth
 var jsonwebtoken = require("jsonwebtoken"); // JWT generation
 var jwt = require("express-jwt"); // JWT parsing middleware for express
 var cors = require("cors"); // Enable CORS middleware
-<<<<<<< HEAD
-=======
 var table = require("./Table");
->>>>>>> 5ff4508ba0142111b514e5e9ac488600b5959cd7
 var user = require("./User");
 var ios = undefined;
 var app = express();
@@ -78,88 +75,12 @@ app["delete"]("/users/:username", auth, function (req, res, next) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
 });
-<<<<<<< HEAD
-/*app.get("/tables", auth, (req, res, next) => {
-
-   var sender = user.newUser(req.user);
-   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
-
-   table.getModel().find().then( (tableslist) => {
-      return res.status(200).json( tableslist );
-   }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
-   });
-});
-
-app.route("/tables/:id", auth).get((req, res, next) => {
-
-   var sender = user.newUser(req.user);
-   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
-
-   table.getModel().find({number: req.params.number}).then( (table) => {
-      return res.status(200).json( table );
-   }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
-   });
-}).post((req, res, next) => {
-   var sender = user.newUser(req.user);
-   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
-
-   (new (table.getModel()))(req.body).save().then( (data) => {
-      return res.status(200).json( data );
-   }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
-   });
-});*/
-=======
-app.route("/tables").get(auth, function (req, res, next) {
-    var sender = user.newUser(req.user);
-    if (!sender.hasDeskRole() && !sender.hasWaiterRole())
-        return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
-    table.getModel().find({}, { number: 1, max_people: 1, _id: 0 }).then(function (tableslist) {
-        return res.status(200).json(tableslist);
-    })["catch"](function (reason) {
-        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
-    });
-}).post(auth, function (req, res, next) {
-    var sender = user.newUser(req.user);
-    if (!sender.hasDeskRole() && !sender.hasWaiterRole())
-        return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
-    var Table = table.getModel();
-    (new Table(req.body)).save().then(function (data) {
-        return res.status(200).json({
-            number: data.number,
-            max_people: data.number
-        });
-    })["catch"](function (reason) {
-        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
-    });
-});
-;
-app.get("/tables/:number", auth, function (req, res, next) {
-    var sender = user.newUser(req.user);
-    if (!sender.hasDeskRole() && !sender.hasWaiterRole())
-        return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
-    table.getModel().find({ number: req.params.number }, { number: 1, max_people: 1 }).then(function (table) {
-        return res.status(200).json(table);
-    })["catch"](function (reason) {
-        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
-    });
-});
->>>>>>> 5ff4508ba0142111b514e5e9ac488600b5959cd7
 app.get('/renew', auth, function (req, res, next) {
     var tokendata = req.user;
     delete tokendata.iat;
     delete tokendata.exp;
     console.log("Renewing token for user " + JSON.stringify(tokendata));
-<<<<<<< HEAD
-    var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '1h' });
-=======
     var token_signed = jsonwebtoken.sign(tokendata, /*process.env.JWT_SECRET*/ "AAAAAAAAA", { expiresIn: '30s' });
->>>>>>> 5ff4508ba0142111b514e5e9ac488600b5959cd7
     return res.status(200).json({ error: false, errormessage: "", token: token_signed });
 });
 // Configure HTTP basic authentication strategy 
@@ -193,11 +114,7 @@ app.get("/login", passport.authenticate('basic', { session: false }), function (
     // and return it as response
     var tokendata = {
         username: req.user.username,
-<<<<<<< HEAD
-        roles: req.user.roles
-=======
         role: req.user.role
->>>>>>> 5ff4508ba0142111b514e5e9ac488600b5959cd7
     };
     console.log("Login granted. Generating token");
     var token_signed = jsonwebtoken.sign(tokendata, /*process.env.JWT_SECRET*/ "AAAAAAAAA", { expiresIn: '1h' });
@@ -215,14 +132,11 @@ app.use(function (req, res, next) {
 });
 mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnected() {
     console.log("Connected to MongoDB");
-<<<<<<< HEAD
-=======
     user.getModel().deleteMany({}).then(function (data) {
         console.log("Database users pulito: " + data);
     })["catch"](function (err) {
         console.log("Errore nella pulizia del dataset utenti: " + err);
     });
->>>>>>> 5ff4508ba0142111b514e5e9ac488600b5959cd7
     var u = user.newUser({
         username: "admin"
     });
@@ -243,21 +157,13 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
                 var user2 = user.newUser({
                     username: "cook1"
                 });
-<<<<<<< HEAD
-                user2.setWaiter();
-=======
                 user2.setCook();
->>>>>>> 5ff4508ba0142111b514e5e9ac488600b5959cd7
                 user2.setPassword("cook1");
                 var pr2 = user2.save();
                 var user3 = user.newUser({
                     username: "bartender1"
                 });
-<<<<<<< HEAD
-                user3.setWaiter();
-=======
                 user3.setBartender();
->>>>>>> 5ff4508ba0142111b514e5e9ac488600b5959cd7
                 user3.setPassword("bartender1");
                 var pr3 = user3.save();
                 Promise.all([pr1, pr2, pr3])
@@ -271,8 +177,6 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
     })["catch"](function (err) {
         console.log("Unable to create desk user: " + err);
     });
-<<<<<<< HEAD
-=======
     table.getModel().deleteMany({}).then(function (data) {
         console.log("Database tables pulito: " + data);
     })["catch"](function (err) {
@@ -287,17 +191,12 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
     })["catch"](function (reason) {
         console.log("Unable to save tables: " + reason);
     });
->>>>>>> 5ff4508ba0142111b514e5e9ac488600b5959cd7
     // To start a standard HTTP server we directly invoke the "listen"
     // method of express application
     var server = http.createServer(app);
     /*ios = io(server);
     ios.on('connection', function (client) {
-<<<<<<< HEAD
-        console.log("Socket.io client connected".green);
-=======
        console.log("Socket.io client connected".green);
->>>>>>> 5ff4508ba0142111b514e5e9ac488600b5959cd7
     });*/
     server.listen(8080, function () { return console.log("HTTP Server started on port 8080"); });
     // To start an HTTPS server we create an https.Server instance 
@@ -306,13 +205,8 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
     //
     /*
     https.createServer({
-<<<<<<< HEAD
-      key: fs.readFileSync('keys/key.pem'),
-      cert: fs.readFileSync('keys/cert.pem')
-=======
     key: fs.readFileSync('keys/key.pem'),
     cert: fs.readFileSync('keys/cert.pem')
->>>>>>> 5ff4508ba0142111b514e5e9ac488600b5959cd7
     }, app).listen(8443);
     */
 }, function onrejected() {
