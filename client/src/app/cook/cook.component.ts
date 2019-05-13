@@ -23,12 +23,9 @@ export class CookComponent implements OnInit {
     }
     this.get_orders();
 
-    this.sio.connect().subscribe( (m) => {
+    /*this.sio.connect().subscribe( (m) => {
       this.get_orders();
-    });
-
-    /*const socket = io('http://localhost:4200');
-    socket.on('broadcast', this.order.get);*/
+    });*/
   }
 
   logout() {

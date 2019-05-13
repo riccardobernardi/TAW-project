@@ -14,7 +14,7 @@ import {mockorders} from '../mock-orders';
   styleUrls: ['./waiter.component.css']
 })
 export class WaiterComponent implements OnInit {
-  constructor( private sio: SocketioService, private us: UserService, private router: Router, private order: OrderService  ) { }
+  constructor( private sio: SocketioService, private us: UserService, private router: Router  ) { }
   private tables = [1, 2];
   private menu = ['pasta', 'riso'];
   private selTable = undefined;
@@ -30,9 +30,9 @@ export class WaiterComponent implements OnInit {
     }
     this.get_orders();
 
-    this.sio.connect().subscribe( (m) => {
+    /*this.sio.connect().subscribe( (m) => {
       this.get_orders();
-    });
+    });*/
     // tslint:disable-next-line:forin
   }
 
@@ -54,6 +54,7 @@ export class WaiterComponent implements OnInit {
   }
 
   public get_orders() {
+    this.orders = [];
     console.log('received an emit');
     /*this.orders = this.order.get();*/
     console.log(this.orders);

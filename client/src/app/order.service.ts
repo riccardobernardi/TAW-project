@@ -19,7 +19,7 @@ export class OrderService {
   /*private messageSource = new BehaviorSubject(this.orders);
   currentMessage = this.messageSource.asObservable();*/
 
-  constructor(private us: UserService, private router: Router, private order: OrderService, private http: HttpClient  ) {
+  constructor(private us: UserService, private router: Router, private http: HttpClient  ) {
     this.orders.push({id: 1, nick : '--' , selTable : -1 , selMenuEntry : -1, in_progress: false, ready: false, timestamp: Date.now()});
     console.log('Message service instantiated');
     console.log('User service token: ' + us.get_token() );

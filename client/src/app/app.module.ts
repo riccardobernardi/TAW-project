@@ -23,6 +23,7 @@ import { PaydeskComponent } from './paydesk/paydesk.component';
 import { CookComponent } from './cook/cook.component';
 import { BarmanComponent } from './barman/barman.component';
 import {SocketioService} from './socketio.service';
+import {OrderService} from './order.service';
 // import { SocketioService } from './socketio.service';
 
 
@@ -48,6 +49,7 @@ import {SocketioService} from './socketio.service';
   providers: [
     {provide: UserService, useClass: UserService },
     {provide: SocketioService, useClass: SocketioService },
+    {provide: OrderService, useClass: OrderService },
     // {provide: MessageService, useClass: MessageHttpService /* Here we can select the specifc service instance */}
   ],
   bootstrap: [AppComponent]
