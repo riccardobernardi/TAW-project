@@ -73,7 +73,7 @@ app.route("/users").get(auth, (req,res,next) => {
    u.setPassword( req.body.password );
 
    u.save().then( (data) => {
-   return res.status(200).json({ error: false, errormessage: "", id: data._id });
+      return res.status(200).json({ error: false, errormessage: "", id: data._id });
    }).catch( (reason) => {
    if( reason.code === 11000 )
       return next({statusCode:404, error:true, errormessage: "User already exists"} );
@@ -90,6 +90,42 @@ app.delete("/users/:username", auth, (req, res, next) => {
    }).catch( (reason)=> {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+reason });
    })
+});
+
+app.get("/tables", auth, (req, res, next) => {
+
+   var sender = user.newUser(req.user);
+   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+
+   table.getModel().find().then( (tableslist) => {
+      return res.status(200).json( tableslist ); 
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   });
+});
+
+app.route("/tables/:id", auth).get((req, res, next) => {
+
+   var sender = user.newUser(req.user);
+   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+
+   table.getModel().find({number: req.params.number}).then( (table) => {
+      return res.status(200).json( table ); 
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   });
+}).post((req, res, next) => {
+   var sender = user.newUser(req.user);
+   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+
+   (new (table.getModel()))(req.body).save().then( (data) => {
+      return res.status(200).json( data ); 
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   });
 });
 
 app.get('/renew', auth, (req,res,next) => {

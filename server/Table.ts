@@ -8,7 +8,7 @@ export interface Table {
 }
 
 var tableSchema = new mongoose.Schema( {
-    numero: {
+    number: {
         type: mongoose.SchemaTypes.Number,
         required: true,
 
@@ -23,13 +23,13 @@ var tableSchema = new mongoose.Schema( {
     }
 })
 
-export function getTableSchema() { return tableSchema; }
+export function getSchema() { return tableSchema; }
 
 // Mongoose Model
 var tableModel;  // This is not exposed outside the model
-export function getTableModel() : mongoose.Model< mongoose.Document > { // Return Model as singleton
+export function getModel() : mongoose.Model< mongoose.Document > { // Return Model as singleton
     if( !tableModel ) {
-        tableModel = mongoose.model('Table', getTableSchema() )
+        tableModel = mongoose.model('Table', getSchema() )
     }
     return tableModel;
 }
