@@ -18,7 +18,7 @@ import cors = require('cors');                  // Enable CORS middleware
 import io = require('socket.io');               // Socket.io websocket library
 import * as table from './Table';
 import * as user from './User';
-import * as order from './Order';
+import * as order from './Ticket';
 import * as menu from './Menu';
 
 var ios = undefined;
@@ -121,7 +121,8 @@ app.route("/tables/:id", auth).get((req, res, next) => {
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
-   (new (table.getModel()))(req.body).save().then( (data) => {
+   var Table = table.getModel();
+   (new Table(req.body)).save().then( (data) => {
       return res.status(200).json( data ); 
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
@@ -204,51 +205,74 @@ app.use((req, res, next) => {
 });
 
 mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnected() {
-    console.log("Connected to MongoDB");
-    var u = user.newUser({
-        username: "admin",
-    });
-    u.setDesk();
-    u.setPassword("admin");
-    u.save().then(() => {
-        console.log("Admin user created");
-        user.getModel().count({}).then((count) => {
-            console.log(count);
-            if (count != 0) {
-               console.log("Adding some test data into the database");
-               var user1 = user.newUser({
-                  username: "waiter1"
-               })
-               user1.setWaiter();
-               user1.setPassword("waiter1");
-               var pr1 = user1.save();
-               
-               var user2 = user.newUser({
-                  username: "cook1"
-               })
-               user2.setWaiter();
-               user2.setPassword("cook1");
-               var pr2 = user2.save();
+   console.log("Connected to MongoDB");
+   user.getModel().deleteMany({}).then(data => {
+      console.log("Database users pulito: " + data);
+   }).catch(err => {
+      console.log("Errore nella pulizia del dataset utenti: " + err);
+   });
+   var u = user.newUser({
+      username: "admin",
+   });
+   u.setDesk();
+   u.setPassword("admin");
+   u.save().then(() => {
+      console.log("Admin user created");
+      user.getModel().count({}).then((count) => {
+         console.log(count);
+         if (count != 0) {
+            console.log("Adding some test data into the database");
+            var user1 = user.newUser({
+               username: "waiter1"
+            })
+            user1.setWaiter();
+            user1.setPassword("waiter1");
+            var pr1 = user1.save();
+            
+            var user2 = user.newUser({
+               username: "cook1"
+            })
+            user2.setWaiter();
+            user2.setPassword("cook1");
+            var pr2 = user2.save();
 
-               var user3 = user.newUser({
-                  username: "bartender1"
-               })
-               user3.setWaiter();
-               user3.setPassword("bartender1");
-               var pr3 = user3.save();
+            var user3 = user.newUser({
+               username: "bartender1"
+            })
+            user3.setWaiter();
+            user3.setPassword("bartender1");
+            var pr3 = user3.save();
 
-               Promise.all([pr1, pr2, pr3])
-                  .then(function () {
-                  console.log("Users saved");
-               })
-                  .catch(function (reason) {
-                  console.log("Unable to save: " + reason);
-               });
-            }
-        });
-    }).catch((err) => {
-        console.log("Unable to create desk user: " + err);
-    });
+            Promise.all([pr1, pr2, pr3])
+               .then(function () {
+               console.log("Users saved");
+            })
+               .catch(function (reason) {
+               console.log("Unable to save: " + reason);
+            });
+         }
+      });
+   }).catch((err) => {
+      console.log("Unable to create desk user: " + err);
+   });
+
+   table.getModel().deleteMany({}).then(data => {
+      console.log("Database tables pulito: " + data);
+   }).catch(err => {
+      console.log("Errore nella pulizia del dataset tables: " + err);
+   });
+   var tableModel = table.getModel();
+   var t1 = (new tableModel({number : 1, max_people: 4})).save();
+   var t2 = (new tableModel({number : 2, max_people: 4})).save();
+   var t3 = (new tableModel({number : 3, max_people: 6})).save();
+   Promise.all([t1, t2, t3])
+               .then(function () {
+               console.log("Table saved");
+            })
+               .catch(function (reason) {
+               console.log("Unable to save tables: " + reason);
+            });
+
     // To start a standard HTTP server we directly invoke the "listen"
     // method of express application
     let server = http.createServer(app);
