@@ -5,7 +5,8 @@ import {UserService} from './user.service';
 import {Router} from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import {ErrorObservable} from 'rxjs-compat/observable/ErrorObservable';
-import {Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
+import {mockorders} from './mock-orders';
 
 @Injectable({
   providedIn: 'root'
@@ -15,16 +16,25 @@ export class OrderService {
   public orders: Order[] = [];
   private id = 2;
 
+  /*private messageSource = new BehaviorSubject(this.orders);
+  currentMessage = this.messageSource.asObservable();*/
+
   constructor(private us: UserService, private router: Router, private order: OrderService, private http: HttpClient  ) {
     this.orders.push({id: 1, nick : '--' , selTable : -1 , selMenuEntry : -1, in_progress: false, ready: false, timestamp: Date.now()});
     console.log('Message service instantiated');
     console.log('User service token: ' + us.get_token() );
   }
 
-  send(o: any) {
+  @Output() posted: EventEmitter<Order> = new EventEmitter();
+
+  /*changeMessage(o: Order[]) {
+    this.messageSource.next(o);
+  }*/
+
+  /*send(o: any) {
     this.orders.push(o);
     console.log('you have sent to server your order from ' + o.nick + ' by table ' + o.selTable + ' with ' + o.selMenuEntry);
-  }
+  }*/
 
 /*  private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
@@ -54,7 +64,9 @@ export class OrderService {
       tap( (data) => console.log(JSON.stringify(data))) ,
       catchError( this.handleError )
     );*/
-    return new Observable(m);
+    // return new Observable(m);
+    console.log(m);
+    return of(m);
   }
 
 /*  private create_options( params = {} ) {
@@ -118,5 +130,12 @@ export class OrderService {
   get_id() {
     this.id += 1;
     return (this.id - 1);
+  }
+
+  post_order(o: Order): Observable<Order>  {
+    this.orders.unshift(o);
+    this.posted.emit(o);
+    /*this.order.changeMessage(this.orders);*/
+    return of(o);
   }
 }

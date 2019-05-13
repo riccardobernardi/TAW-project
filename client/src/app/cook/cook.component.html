@@ -2,7 +2,7 @@
   cook view
 </p>
 
-<div *ngFor="let ord of orders" class="card" style="margin: 5px" >
+<div *ngFor="let ord of this.orders" class="card" style="margin: 5px" >
   <div class="card-body">
     <!--<h5 class="card-title"><i class="far fa-envelope"></i>&nbsp;{{ord.selMenuEntry}}</h5>-->
     <!--<h6 class="card-subtitle mb-2 text-muted">{{ord.timestamp | date}} / {{ord.timestamp | date:'shortTime'}}</h6>-->
@@ -12,4 +12,4 @@
   </div>
 </div>
 
-<button id = "ricarica" class="btn btn-lg btn-primary btn-block" (click)="get_orders()" >ricarica</button>
+<button id = "ricarica" class="btn btn-lg btn-primary btn-block" (click)="get_orders();print()" >ricarica</button>

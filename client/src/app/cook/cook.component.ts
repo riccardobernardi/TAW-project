@@ -23,9 +23,9 @@ export class CookComponent implements OnInit {
     }
     this.get_orders();
 
-    /*this.sio.connect().subscribe( (m) => {
+    this.sio.connect().subscribe( (m) => {
       this.get_orders();
-    });*/
+    });
 
     /*const socket = io('http://localhost:4200');
     socket.on('broadcast', this.order.get);*/
@@ -36,10 +36,10 @@ export class CookComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  public get_orders() {
+  get_orders() {
     console.log('received an emit');
     /*this.orders = this.order.get();*/
-    console.log(this.orders)
+    /*console.log(this.orders)*/
     console.log('event received');
 
     this.order.get().subscribe(
@@ -58,6 +58,10 @@ export class CookComponent implements OnInit {
         } );
       }
     );
+  }
+
+  print() {
+    console.log(this.orders);
   }
 
 }
