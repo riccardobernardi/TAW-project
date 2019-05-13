@@ -108,25 +108,6 @@ export class OrderService {
     return this.orders.length;
   }
 
-  arrayRemove(arr, value) {
-
-    return arr.filter((ele) => {
-      if (ele.id === 1) {
-        return true;
-      }
-      return ele.id !== value;
-    });
-
-  }
-
-  delete(value) {
-    /*this.orders.forEach( (item, index) => {
-      if (item.id == id) {this.orders.splice(index, 1 ); }
-    });*/
-    this.orders = this.arrayRemove(this.orders, value );
-    console.log('you have deleted to server your order num ' + value);
-  }
-
   get_id() {
     this.id += 1;
     return (this.id - 1);
@@ -135,7 +116,6 @@ export class OrderService {
   post_order(o: Order): Observable<Order>  {
     this.orders.unshift(o);
     this.posted.emit(o);
-    /*this.order.changeMessage(this.orders);*/
     return of(o);
   }
 }

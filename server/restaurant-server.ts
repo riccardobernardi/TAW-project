@@ -92,7 +92,7 @@ app.delete("/users/:username", auth, (req, res, next) => {
    })
 });
 
-app.get("/tables", auth, (req, res, next) => {
+/*app.get("/tables", auth, (req, res, next) => {
 
    var sender = user.newUser(req.user);
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
@@ -126,7 +126,7 @@ app.route("/tables/:id", auth).get((req, res, next) => {
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
    });
-});
+});*/
 
 app.get('/renew', auth, (req,res,next) => {
    var tokendata = req.user;

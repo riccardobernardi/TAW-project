@@ -20,7 +20,7 @@ export class UserLoginComponent implements OnInit {
       console.log('Renew succeded: ' + JSON.stringify(d) );
       // this.role = this.us.get_role();
       // console.log('going to: ' + '/' + this.role );
-      //this.router.navigate(['/' + this.role]);
+      // this.router.navigate(['/' + this.role]);
     }, (err) => {
       console.log('Renew error: ' + JSON.stringify(err.error.errormessage) );
     });
@@ -33,7 +33,7 @@ export class UserLoginComponent implements OnInit {
       this.role = this.us.get_role();
       this.errmessage = undefined;
       console.log('going to: ' + '/' + this.role );
-      this.router.navigate(['/' + this.role]);
+      this.router.navigate(['/' + this.role.toLowerCase()]);
     }, (err) => {
       console.log('Login error: ' + JSON.stringify(err.error.errormessage) );
       this.errmessage = err.error.errormessage;
