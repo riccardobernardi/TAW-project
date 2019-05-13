@@ -1,7 +1,7 @@
 import mongoose = require('mongoose');
 
 //Interface of table, we don't know how use it at the moment
-export interface Menu {
+export interface Menu extends mongoose.Document {
     name: string,
     type: string,
     price: number,
@@ -12,11 +12,17 @@ export interface Menu {
 
 var type = ["dish, beverage"]; 
 
+var countDecimals = function(value) {
+    if (Math.floor(value) !== value)
+        return value.toString().split(".")[1].length || 0;
+    return 0;
+}
+
 var menuSchema = new mongoose.Schema( {
     name: {
         type: mongoose.SchemaTypes.String,
         required: true,
-        enum: type
+        unique: true
     },
     type: {
         type: mongoose.SchemaTypes.String,
@@ -25,7 +31,13 @@ var menuSchema = new mongoose.Schema( {
     },
     price: {
         type: mongoose.SchemaTypes.Number,
-        required: true
+        required: true,
+        validate: {
+            validator: function(value){
+                return countDecimals(value) <= 2;
+            },
+            message: "Price must have a precision of maximum 2 digits."
+        }
     },
     ingredients:  {
         type: [mongoose.SchemaTypes.String],
@@ -33,7 +45,13 @@ var menuSchema = new mongoose.Schema( {
     },
     required_time: {
         type: mongoose.SchemaTypes.Number,
-        required: true
+        required: true,
+        validate: {
+            validator: function(value){
+                return countDecimals(value) == 0;
+            },
+            message: "Required time must be an integer number."
+        }
     },
     description: {
         type: mongoose.SchemaTypes.String,
@@ -41,13 +59,13 @@ var menuSchema = new mongoose.Schema( {
     }
 })
 
-export function getMenuSchema() { return menuSchema; }
+export function getSchema() { return menuSchema; }
 
 // Mongoose Model
 var menuModel;  // This is not exposed outside the model
-export function getUserModel() : mongoose.Model< mongoose.Document > { // Return Model as singleton
+export function getModel() : mongoose.Model< mongoose.Document > { // Return Model as singleton
     if( !menuModel ) {
-        menuModel = mongoose.model('Menu', getMenuSchema() )
+        menuModel = mongoose.model('Menu', getSchema() )
     }
     return menuModel;
 }

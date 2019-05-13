@@ -1,7 +1,9 @@
 import mongoose = require('mongoose');
 
 //Interface of table, we don't know how use it at the moment
-export interface order {
+//export interface order {
+export interface Ticket extends mongoose.Document {
+    _id: string,
     waiter: string,
     table: string,
     start: Date,
@@ -13,7 +15,7 @@ export interface order {
 
 var type = ["dish, beverage"]; 
 
-var orderSchema = new mongoose.Schema( {
+var ticketSchema = new mongoose.Schema( {
     waiter: {
         type: mongoose.SchemaTypes.ObjectId,
         required: true
@@ -28,9 +30,9 @@ var orderSchema = new mongoose.Schema( {
     },
     end: {
         type: mongoose.SchemaTypes.Date,
-        required: true
+        required: false
     },
-    command: {
+    orders: {
         type: [{
             id_command: String,
             id_menu: String,
@@ -51,13 +53,14 @@ var orderSchema = new mongoose.Schema( {
     }
 })
 
-export function getOrderSchema() { return orderSchema; }
-
+//export function getOrderSchema() { return orderSchema; }
+export function getSchema() { return ticketSchema; }
 // Mongoose Model
-var orderModel;  // This is not exposed outside the model
-export function getUserModel() : mongoose.Model< mongoose.Document > { // Return Model as singleton
-    if( !orderModel ) {
-        orderModel = mongoose.model('Order', getOrderSchema() )
+var ticketModel // This is not exposed outside the model
+
+export function getModel() : mongoose.Model< mongoose.Document > { // Return Model as singleton
+    if( !ticketModel ) {
+        ticketModel = mongoose.model('Ticket', getSchema() )
     }
-    return orderModel;
+    return ticketModel;
 }

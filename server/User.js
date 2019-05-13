@@ -2,13 +2,18 @@
 exports.__esModule = true;
 var mongoose = require("mongoose");
 var crypto = require("crypto");
+<<<<<<< HEAD
 var roles = ["WAITER, COOK, DESK, BARTENDER"];
+=======
+var roles = ["WAITER", "COOK", "DESK", "BARTENDER"];
+>>>>>>> 5ff4508ba0142111b514e5e9ac488600b5959cd7
 var userSchema = new mongoose.Schema({
     username: {
         type: mongoose.SchemaTypes.String,
         required: true,
         unique: true
     },
+<<<<<<< HEAD
     /*mail: {
         type: mongoose.SchemaTypes.String,
         required: true,
@@ -17,6 +22,17 @@ var userSchema = new mongoose.Schema({
     roles: {
         type: [mongoose.SchemaTypes.String],
         required: true
+=======
+    /*roles:  {
+        type: [mongoose.SchemaTypes.String],
+        required: true,
+        enum: roles
+    },*/
+    role: {
+        type: mongoose.SchemaTypes.String,
+        required: true,
+        "enum": roles
+>>>>>>> 5ff4508ba0142111b514e5e9ac488600b5959cd7
     },
     salt: {
         type: mongoose.SchemaTypes.String,
@@ -41,6 +57,7 @@ userSchema.methods.validatePassword = function (pwd) {
     return (this.digest === digest);
 };
 userSchema.methods.hasDeskRole = function () {
+<<<<<<< HEAD
     for (var roleidx in this.roles) {
         if (this.roles[roleidx] === 'DESK')
             return true;
@@ -79,6 +96,50 @@ userSchema.methods.hasBartenderRole = function () {
 };
 userSchema.methods.setBartender = function () {
     this.roles.push("BARTENDER");
+=======
+    /*for( var roleidx in this.roles ) {
+        if( this.roles[roleidx] === 'DESK' )
+            return true;
+    }
+    return false;*/
+    return this.role === 'DESK';
+};
+userSchema.methods.setDesk = function () {
+    this.role = "DESK";
+};
+userSchema.methods.hasWaiterRole = function () {
+    /*for( var roleidx in this.roles ) {
+        if( this.roles[roleidx] === 'WAITER' )
+            return true;
+    }
+    return false;*/
+    return this.role === 'WAITER';
+};
+userSchema.methods.setWaiter = function () {
+    this.role = "WAITER";
+};
+userSchema.methods.hasCookRole = function () {
+    /*for( var roleidx in this.roles ) {
+        if( this.roles[roleidx] === 'COOK' )
+            return true;
+    }
+    return false;*/
+    return this.role === 'COOK';
+};
+userSchema.methods.setCook = function () {
+    this.role = "COOK";
+};
+userSchema.methods.hasBartenderRole = function () {
+    /*for( var roleidx in this.roles ) {
+        if( this.roles[roleidx] === 'BARTENDER' )
+            return true;
+    }
+    return false;*/
+    return this.role === 'BARTENDER';
+};
+userSchema.methods.setBartender = function () {
+    this.role = "BARTENDER";
+>>>>>>> 5ff4508ba0142111b514e5e9ac488600b5959cd7
 };
 function getSchema() { return userSchema; }
 exports.getSchema = getSchema;

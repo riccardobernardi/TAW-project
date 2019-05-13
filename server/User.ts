@@ -1,13 +1,13 @@
 import mongoose = require('mongoose');
 import crypto = require('crypto');
 
-var roles = ["WAITER, COOK, DESK, BARTENDER"];
+var roles = ["WAITER", "COOK", "DESK", "BARTENDER"];
 
 export interface User extends mongoose.Document {
     //readonly _id: mongoose.Schema.Types.ObjectId,
     username: string,
-    //mail: string,
-    roles: string[],
+    //roles: string[],
+    role: string,
     salt: string,
     digest: string,
     setPassword: (pwd:string)=>void,
@@ -28,14 +28,15 @@ var userSchema = new mongoose.Schema( {
         required: true,
         unique: true
     },
-    /*mail: {
+    /*roles:  {
+        type: [mongoose.SchemaTypes.String],
+        required: true,
+        enum: roles
+    },*/
+    role:  {
         type: mongoose.SchemaTypes.String,
         required: true,
-        unique: true
-    },*/
-    roles:  {
-        type: [mongoose.SchemaTypes.String],
-        required: true 
+        enum: roles
     },
     salt:  {
         type: mongoose.SchemaTypes.String,
@@ -68,51 +69,58 @@ userSchema.methods.validatePassword = function( pwd:string ):boolean {
 }
 
 userSchema.methods.hasDeskRole = function(): boolean {
-    for( var roleidx in this.roles ) {
+    /*for( var roleidx in this.roles ) {
         if( this.roles[roleidx] === 'DESK' )
             return true;
     }
-    return false;
+    return false;*/
+    return this.role === 'DESK';
 }
 
 userSchema.methods.setDesk = function() {
-    this.roles.push( "DESK" );
+    this.role = "DESK";
 }
 
 userSchema.methods.hasWaiterRole = function(): boolean {
-    for( var roleidx in this.roles ) {
+    /*for( var roleidx in this.roles ) {
         if( this.roles[roleidx] === 'WAITER' )
             return true;
     }
-    return false;
+    return false;*/
+    return this.role === 'WAITER';
+
 }
 
 userSchema.methods.setWaiter = function() {
-    this.roles.push( "WAITER" );
+    this.role = "WAITER";
 }
 
 userSchema.methods.hasCookRole = function(): boolean {
-    for( var roleidx in this.roles ) {
+    /*for( var roleidx in this.roles ) {
         if( this.roles[roleidx] === 'COOK' )
             return true;
     }
-    return false;
+    return false;*/
+    return this.role === 'COOK';
+
 }
 
 userSchema.methods.setCook = function() {
-    this.roles.push( "COOK" );
+    this.role = "COOK";
 }
 
 userSchema.methods.hasBartenderRole = function(): boolean {
-    for( var roleidx in this.roles ) {
+    /*for( var roleidx in this.roles ) {
         if( this.roles[roleidx] === 'BARTENDER' )
             return true;
     }
-    return false;
+    return false;*/
+    return this.role === 'BARTENDER';
+
 }
 
 userSchema.methods.setBartender = function() {
-    this.roles.push( "BARTENDER" );
+    this.role = "BARTENDER";
 }
 
 export function getSchema() { return userSchema; }

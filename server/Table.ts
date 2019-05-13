@@ -1,25 +1,40 @@
 import mongoose = require('mongoose');
 
 //Interface of table, we don't know how use it at the moment
-export interface Table {
-    numero: number,
+export interface Table extends mongoose.Document {
+    number: number,
     max_people: number,
     state: string
+}
+
+//CODICE DOPPIO, VEDERE SE SI PUO' CENTRALIZZARE, c'è anche in menu.ts
+var countDecimals = function(value) {
+    if (Math.floor(value) !== value)
+        return value.toString().split(".")[1].length || 0;
+    return 0;
 }
 
 var tableSchema = new mongoose.Schema( {
     number: {
         type: mongoose.SchemaTypes.Number,
         required: true,
+        unique: true
 
     },
     max_people:  {
         type: mongoose.SchemaTypes.Number,
-        required: true 
+        required: true,
+        validate: {
+            validator: function(value){
+                return countDecimals(value) == 0;
+            },
+            message: "Max people must be an integer number."
+        }
     },
     state: {
         type: mongoose.SchemaTypes.ObjectId,
-        required: false
+        required: false,
+        enum: ["free", "occupied"]
     }
 })
 
