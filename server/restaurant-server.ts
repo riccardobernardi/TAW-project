@@ -132,6 +132,87 @@ app.get("/tables/:number", auth, (req, res, next) => {
    });
 })
 
+app.route("/items").get(auth, (req,res,next) => {
+   var sender = user.newUser(req.user);
+   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+
+   var filter = {}
+   if(req.query.type)
+      filter = {type: req.query.type}
+
+   item.getModel().find(filter).then( (itemslist) => {
+      return res.status(200).json( itemslist ); 
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   })
+}).post(auth, (req, res, next) => {
+   
+   if(!user.newUser(req.user).hasDeskRole())
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
+   
+   var i = new (item.getModel()) (req.body);
+   
+   if (!item.isItem(i)){
+      return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
+   }
+      
+   i.save().then( (data) => {
+      return res.status(200).json({ error: false, errormessage: "", id: data._id });
+   }).catch( (reason) => {
+   if( reason.code === 11000 )
+      return next({statusCode:404, error:true, errormessage: "Item already exists"} );
+   return next({ statusCode:404, error: true, errormessage: "DB error: "+reason.errmsg });
+   })
+   
+});
+
+
+app.route("/items/:id").get(auth, (req,res,next) => {
+   var sender = user.newUser(req.user);
+   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+
+  
+   item.getModel().findById(req.params.id).then( (item) => {
+      return res.status(200).json( item ); 
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   })
+}).put(auth, (req, res, next) => {
+   
+   if(!user.newUser(req.user).hasDeskRole())
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
+   
+   
+   var i = new (item.getModel()) (req.body);
+   
+   if (!item.isItem(i)){
+      return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
+   }
+
+   item.getModel().findById(req.params.id).then( (item) => {
+      return item.set(i);
+   }).then((item) => {
+      return res.status(200).json( item );
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   })
+}).delete(auth, (req, res, next) => {
+   
+   if(!user.newUser(req.user).hasDeskRole()){
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
+   }
+   
+   item.getModel().findOneAndDelete(req.params.username).then( ()=> {
+      return res.status(200).json( {error:false, errormessage:""} );
+   }).catch( (reason)=> {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+reason });
+   })
+});
+
+
+
 app.get('/renew', auth, (req,res,next) => {
    var tokendata = req.user;
    delete tokendata.iat;
@@ -569,3 +650,4 @@ console.log("Unable to connect to MongoDB");
 process.exit(-2);
 }
 )*/
+

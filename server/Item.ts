@@ -10,6 +10,11 @@ export interface Item extends mongoose.Document {
     description: string
 }
 
+
+export function isItem(arg: any): arg is Item {
+    return (arg._id && arg.name && arg.type && arg.price && arg.required_time && typeof(arg.name) == 'string' && type.includes(arg.type) && typeof(arg.price) == 'number' && typeof(arg.price) == 'number' && (!arg.description || typeof(arg.description) == 'string') );
+ };
+
 var type = ["dish, beverage"]; 
 
 var countDecimals = function(value) {
