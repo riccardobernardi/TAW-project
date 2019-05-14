@@ -1,4 +1,4 @@
-//const result = require('dotenv').config({path: __dirname + '/.env'})     // The dotenv module will load a file named ".env"
+const result = require('dotenv').config({path: __dirname + '/.env'})     // The dotenv module will load a file named ".env"
 import fs = require('fs');
 import http = require('http');                // HTTP module
 import https = require('https');              // HTTPS module
