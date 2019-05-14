@@ -3,7 +3,7 @@ export interface Order {
   id: number;
   nick: string;
   selTable: number;
-  selMenuEntry: number;
+  selMenuEntry: string;
   ready: boolean;
   in_progress: boolean;
 }

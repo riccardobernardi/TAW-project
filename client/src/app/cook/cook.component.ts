@@ -5,6 +5,7 @@ import {OrderService} from '../order.service';
 import * as io from 'socket.io-client';
 import {SocketioService} from '../socketio.service';
 import {Order} from '../Order';
+import {mockorders} from '../mock-orders';
 
 @Component({
   selector: 'app-cook',
@@ -12,7 +13,7 @@ import {Order} from '../Order';
   styleUrls: ['./cook.component.css']
 })
 export class CookComponent implements OnInit {
-  private orders: Order[] = [];
+  private orders: Order[] = mockorders;
   // private socket = io('http://localhost:4200');
 
   constructor(private sio: SocketioService, private us: UserService, private router: Router, private order: OrderService  ) { }
@@ -21,7 +22,7 @@ export class CookComponent implements OnInit {
     if (this.us.get_token() === undefined || this.us.get_token() === '') {
       this.logout();
     }
-    this.get_orders();
+    // this.get_orders();
 
     /*this.sio.connect().subscribe( (m) => {
       this.get_orders();

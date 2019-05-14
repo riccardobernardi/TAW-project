@@ -22,7 +22,7 @@
 
       <button id = "send" class="btn btn-lg btn-primary btn-block" (click)="this.send()" >Invia</button>
 
-      <label for="ordini">Ordini già evasi per questo tavolo</label>
+      <label for="menu">Ordini già evasi per questo tavolo</label>
       <select class="form-control" [(ngModel)]="deleteOrder" name="menu" id="menu">
         <option *ngFor="let ord of this.orders" value="{{ord.id}}">{{ord.id + " " + ord.selMenuEntry}}</option>
       </select>
@@ -34,8 +34,6 @@
       <p>orders_size = {{this.orders_size()}}</p>
 
       <button id = "logout" class="btn btn-lg btn-primary btn-block" (click)="this.logout()" >Logout</button>
-
-      <p>refresha</p>
 
     </div>
 

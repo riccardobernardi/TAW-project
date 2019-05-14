@@ -8,8 +8,16 @@
     <!--<h6 class="card-subtitle mb-2 text-muted">{{ord.timestamp | date}} / {{ord.timestamp | date:'shortTime'}}</h6>-->
     <p class="card-text">{{ ord.selTable }}</p>
     <p class="card-text">{{ ord.selMenuEntry }}</p>
+
+
+    <form class="form-inline">
+      <div class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2">In progress</button></div>
+      <div class="form-group mx-sm-3 mb-2"><button type="submit" class="btn btn-primary mb-2">Completed</button></div>
+    </form>
+
+
     <!--<span *ngFor="let tag of message.tags" class="badge badge-secondary tag">{{tag}}</span>-->
   </div>
 </div>
 
-<button id = "ricarica" class="btn btn-lg btn-primary btn-block" (click)="get_orders();print()" >ricarica</button>
+<button id = "logout" class="btn btn-lg btn-primary btn-block" (click)="this.logout()" >Logout</button>

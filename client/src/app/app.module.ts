@@ -25,6 +25,7 @@ import { BarmanComponent } from './barman/barman.component';
 import {SocketioService} from './socketio.service';
 import {OrderService} from './order.service';
 // import { SocketioService } from './socketio.service';
+import {MatButtonToggleModule, MatIconModule} from '@angular/material';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import {OrderService} from './order.service';
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MatButtonToggleModule, MatIconModule,
   ],
   providers: [
     {provide: UserService, useClass: UserHttpService },
