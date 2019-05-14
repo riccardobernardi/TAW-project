@@ -47,7 +47,7 @@ import {OrderService} from './order.service';
     AppRoutingModule
   ],
   providers: [
-    {provide: UserService, useClass: UserService },
+    {provide: UserService, useClass: UserHttpService },
     {provide: SocketioService, useClass: SocketioService },
     {provide: OrderService, useClass: OrderService },
     // {provide: MessageService, useClass: MessageHttpService /* Here we can select the specifc service instance */}

@@ -7,37 +7,36 @@
       <p for="button">Your role is {{this.us.get_role()}}</p>
 
       <label for="tables">Seleziona un tavolo</label>
-      <select class="form-control" [(ngModel)]="selTable" (click)="get_orders();" name="tables" id="tables">
+      <select class="form-control" [(ngModel)]="selTable" name="tables" id="tables">
         <option *ngFor="let table of tables" value="{{table}}">{{table}}</option>
       </select>
 
       <p [style.display]="selTable === undefined?'none':'inherit'">Hai selezionato il tavolo {{selTable}}</p>
 
       <label for="ordini">Seleziona un prodotto da aggiungere</label>
-      <select class="form-control" (click)="get_orders();" [(ngModel)]="selMenuEntry" name="ordini" id="ordini">
+      <select class="form-control" [(ngModel)]="selMenuEntry" name="ordini" id="ordini">
         <option *ngFor="let product of menu" value="{{product}}">{{product}}</option>
       </select>
 
       <p [style.display]="selMenuEntry === undefined?'none':'inherit'">Hai selezionato il prodotto {{selMenuEntry}}</p>
 
-      <button id = "send" class="btn btn-lg btn-primary btn-block" (click)="send()" >Invia</button>
+      <button id = "send" class="btn btn-lg btn-primary btn-block" (click)="this.send()" >Invia</button>
 
       <label for="ordini">Ordini già evasi per questo tavolo</label>
-      <select class="form-control" (click)="get_orders();" [(ngModel)]="deleteOrder" name="menu" id="menu">
+      <select class="form-control" [(ngModel)]="deleteOrder" name="menu" id="menu">
         <option *ngFor="let ord of this.orders" value="{{ord.id}}">{{ord.id + " " + ord.selMenuEntry}}</option>
       </select>
 
       <p [style.display]="deleteOrder === undefined?'none':'inherit'">Stai eliminando la comanda {{deleteOrder}}</p>
 
-      <button id = "delete" class="btn btn-lg btn-primary btn-block" (click)="delete();" >Delete</button>
+      <button id = "delete" class="btn btn-lg btn-primary btn-block" (click)="this.delete();" >Delete</button>
 
-      <p>orders_size = {{this.order.orders_size()}}</p>
+      <p>orders_size = {{this.orders_size()}}</p>
 
-      <button id = "logout" class="btn btn-lg btn-primary btn-block" (click)="logout()" >Logout</button>
+      <button id = "logout" class="btn btn-lg btn-primary btn-block" (click)="this.logout()" >Logout</button>
 
       <p>refresha</p>
 
-      <button id = "ricarica" class="btn btn-lg btn-primary btn-block" (click)="get_orders();print()" >ricarica</button>
     </div>
 
   </form>

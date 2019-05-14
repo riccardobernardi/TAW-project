@@ -5,7 +5,7 @@ import {OrderService} from '../order.service';
 import * as io from 'socket.io-client';
 import {Order} from '../Order';
 import {SocketioService} from '../socketio.service';
-import { BehaviorSubject } from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {mockorders} from '../mock-orders';
 
 @Component({
@@ -14,26 +14,19 @@ import {mockorders} from '../mock-orders';
   styleUrls: ['./waiter.component.css']
 })
 export class WaiterComponent implements OnInit {
-  constructor( private sio: SocketioService, private us: UserService, private router: Router  ) { }
+  constructor( private sio: SocketioService, private us: UserService, private router: Router) { }
   private tables = [1, 2];
   private menu = ['pasta', 'riso'];
   private selTable = undefined;
   private selMenuEntry = undefined;
   private deleteOrder = undefined;
+  private id = 1;
   private orders: Order[] = [];
-
-  @Output() posted = new EventEmitter<Order>();
 
   ngOnInit() {
     if (this.us.get_token() === undefined || this.us.get_token() === '') {
       this.logout();
     }
-    this.get_orders();
-
-    /*this.sio.connect().subscribe( (m) => {
-      this.get_orders();
-    });*/
-    // tslint:disable-next-line:forin
   }
 
   logout() {
@@ -41,45 +34,33 @@ export class WaiterComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+  orders_size() {
+    return this.orders.length;
+  }
+
+  get_id() {
+    this.id += 1;
+    return (this.id - 1);
+  }
+
   send() {
     const o = {nick: this.us.get_nick(), selTable: this.selTable, selMenuEntry: this.selMenuEntry,
-      ready: false, id: this.order.get_id(), in_progress: false, timestamp: Date.now()};
+      ready: false, id: this.get_id(), in_progress: false, timestamp: Date.now()};
+    this.orders.unshift(o);
+  }
 
-    this.order.post_order(o).subscribe( (m) => {
-      console.log('Message posted');
-      this.posted.emit( m );
-    }, (error) => {
-      console.log('Error occurred while posting: ' + error);
+  arrayRemove(arr, value) {
+    return arr.filter((ele) => {
+      if (ele.id === 1) {
+        return true;
+      }
+      return ele.id !== value;
     });
   }
 
-  public get_orders() {
-    this.orders = [];
-    console.log('received an emit');
-    /*this.orders = this.order.get();*/
-    console.log(this.orders);
-    console.log('event received');
-
-    this.order.get().subscribe(
-      ( messages ) => {
-        this.orders = messages;
-
-      } , (err) => {
-
-        // Try to renew the token
-        this.us.renew().subscribe( () => {
-          // Succeeded
-          this.get_orders();
-        }, (err2) => {
-          // Error again, we really need to logout
-          this.logout();
-        } );
-      }
-    );
-  }
-
   delete() {
-    this.order.delete(this.deleteOrder);
+    this.orders = this.arrayRemove(this.orders, this.deleteOrder );
+    console.log(this.orders);
   }
 
 }

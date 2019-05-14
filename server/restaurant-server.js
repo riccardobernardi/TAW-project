@@ -75,40 +75,6 @@ app["delete"]("/users/:username", auth, function (req, res, next) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
 });
-app.route("/tables").get(auth, function (req, res, next) {
-    var sender = user.newUser(req.user);
-    if (!sender.hasDeskRole() && !sender.hasWaiterRole())
-        return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
-    table.getModel().find({}, { number: 1, max_people: 1, _id: 0 }).then(function (tableslist) {
-        return res.status(200).json(tableslist);
-    })["catch"](function (reason) {
-        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
-    });
-}).post(auth, function (req, res, next) {
-    var sender = user.newUser(req.user);
-    if (!sender.hasDeskRole() && !sender.hasWaiterRole())
-        return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
-    var Table = table.getModel();
-    (new Table(req.body)).save().then(function (data) {
-        return res.status(200).json({
-            number: data.number,
-            max_people: data.number
-        });
-    })["catch"](function (reason) {
-        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
-    });
-});
-;
-app.get("/tables/:number", auth, function (req, res, next) {
-    var sender = user.newUser(req.user);
-    if (!sender.hasDeskRole() && !sender.hasWaiterRole())
-        return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
-    table.getModel().find({ number: req.params.number }, { number: 1, max_people: 1 }).then(function (table) {
-        return res.status(200).json(table);
-    })["catch"](function (reason) {
-        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
-    });
-});
 app.get('/renew', auth, function (req, res, next) {
     var tokendata = req.user;
     delete tokendata.iat;
