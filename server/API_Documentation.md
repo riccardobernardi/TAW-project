@@ -161,7 +161,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
 | Errore    | Altri errori                         |
 | Esempio   |    /tables/1 Body: {number:1, max_   |
-|           | people: 5 }                          |
+|             people: 5 }                          |
 | Note:     | Codice di esempio                    |
 
 ## Gestione del menu
@@ -281,9 +281,8 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Successo  |  Codice: 200 Contenuto:              |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
 | Errore    | Altri errori                         |
-| Esempio   |  /tickets/1 Body: {end: 
-							timestamp(now),  state: "complete"} 										
-																									 |
+| Esempio   |  /tickets/1 Body: {end:              | 
+|							timestamp(now),  state: "complete"}  |									
 | Note:     | Codice di esempio                    |
 
 ### Recupero comande relative ad un ordine

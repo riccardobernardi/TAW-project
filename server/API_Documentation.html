@@ -174,7 +174,7 @@ $(document).ready(function () {
 </tr>
 <tr class="odd">
 <td>Parametri</td>
-<td>Richiesti: Role=[ruolo]</td>
+<td>Richiesti: role=[ruolo]</td>
 </tr>
 <tr class="even">
 <td>Corpo</td>
@@ -194,7 +194,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/users?Role=“Cuoco”</td>
+<td>/users?role=“Cuoco”</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
@@ -205,11 +205,7 @@ $(document).ready(function () {
 </div>
 <div id="inserimento-utente" class="section level3">
 <h3>Inserimento utente</h3>
-<table style="width:100%;">
-<colgroup>
-<col width="11%"></col>
-<col width="88%"></col>
-</colgroup>
+<table>
 <thead>
 <tr class="header">
 <th>Titolo</th>
@@ -231,7 +227,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Corpo</td>
-<td>{ID, Username, Password, Ruolo}</td>
+<td>{username, password, role}</td>
 </tr>
 <tr class="odd">
 <td>Successo</td>
@@ -247,7 +243,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/users Body: { ID: “prova”, Nickname: “prova1”, Password: “a”, Ruolo: “Simpaticone” }</td>
+<td>/users Body: { username: “prova1”, password: “a”, role: “Simpaticone” }</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
@@ -276,7 +272,7 @@ $(document).ready(function () {
 </tr>
 <tr class="odd">
 <td>Parametri</td>
-<td>Nick=[username]</td>
+<td>username=[username]</td>
 </tr>
 <tr class="even">
 <td>Corpo</td>
@@ -296,7 +292,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/users?Nick=prova</td>
+<td>/users?username=prova</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
@@ -321,7 +317,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Metodo</td>
-<td>POST/GET(?)</td>
+<td>GET</td>
 </tr>
 <tr class="odd">
 <td>Parametri</td>
@@ -329,7 +325,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Corpo</td>
-<td>{ Username, Password }</td>
+<td>{ username, password }</td>
 </tr>
 <tr class="odd">
 <td>Successo</td>
@@ -345,9 +341,62 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/users? Body: { Username: “prova1”, Password: “a” }</td>
+<td>/users? Body: { username: “prova1”, password: “a” }</td>
 </tr>
 <tr class="odd">
+<td>Note:</td>
+<td>Codice di esempio</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="modifica-totale-dellutente" class="section level3">
+<h3>Modifica totale dell’utente</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Titolo</th>
+<th>Modifica totale utente</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>URL</td>
+<td>/users/:id</td>
+</tr>
+<tr class="even">
+<td>Metodo</td>
+<td>PUT</td>
+</tr>
+<tr class="odd">
+<td>Parametri</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Corpo</td>
+<td>{ username, password, role }</td>
+</tr>
+<tr class="odd">
+<td>Successo</td>
+<td>Codice: 200 Contenuto:</td>
+</tr>
+<tr class="even">
+<td>Errore</td>
+<td>Codice: 401 UNAUTHORIZED Contenuto:</td>
+</tr>
+<tr class="odd">
+<td>Errore</td>
+<td>Altri errori</td>
+</tr>
+<tr class="even">
+<td>Esempio</td>
+<td>/users/1 Body: { username: “ciao1”, password: “pwd”,</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>, role: “waiter” }</td>
+</tr>
+<tr class="even">
 <td>Note:</td>
 <td>Codice di esempio</td>
 </tr>
@@ -369,7 +418,7 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td>URL</td>
-<td>/tavoli</td>
+<td>/tables</td>
 </tr>
 <tr class="even">
 <td>Metodo</td>
@@ -397,7 +446,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/tavoli</td>
+<td>/tables</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
@@ -418,7 +467,7 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td>URL</td>
-<td>/tavoli/:n</td>
+<td>/tables/:number</td>
 </tr>
 <tr class="even">
 <td>Metodo</td>
@@ -446,7 +495,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/tavoli/1</td>
+<td>/tables/1</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
@@ -467,7 +516,7 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td>URL</td>
-<td>/tavoli/:n</td>
+<td>/tables/:number</td>
 </tr>
 <tr class="even">
 <td>Metodo</td>
@@ -495,9 +544,119 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/tavoli/1 Body: ?</td>
+<td>/tables/1 Body: {number: 1,</td>
 </tr>
 <tr class="odd">
+<td></td>
+<td>max_people:2 }</td>
+</tr>
+<tr class="even">
+<td>Note:</td>
+<td>Codice di esempio</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="inserimento-tavolo" class="section level3">
+<h3>Inserimento tavolo</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Titolo</th>
+<th>Fornire un tavolo specifico</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>URL</td>
+<td>/tables</td>
+</tr>
+<tr class="even">
+<td>Metodo</td>
+<td>POST</td>
+</tr>
+<tr class="odd">
+<td>Parametri</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Corpo</td>
+<td>{number, max_people}</td>
+</tr>
+<tr class="odd">
+<td>Successo</td>
+<td>Codice: 200 Contenuto:</td>
+</tr>
+<tr class="even">
+<td>Errore</td>
+<td>Codice: 401 UNAUTHORIZED Contenuto:</td>
+</tr>
+<tr class="odd">
+<td>Errore</td>
+<td>Altri errori</td>
+</tr>
+<tr class="even">
+<td>Esempio</td>
+<td>/tables/1 Body: {number:1, max_</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>people: 5 }</td>
+</tr>
+<tr class="even">
+<td>Note:</td>
+<td>Codice di esempio</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="modifica-di-un-attributo-di-un-tavolo" class="section level3">
+<h3>Modifica di un attributo di un tavolo</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Titolo</th>
+<th>Fornire un tavolo specifico</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>URL</td>
+<td>/tables/:number</td>
+</tr>
+<tr class="even">
+<td>Metodo</td>
+<td>PATCH</td>
+</tr>
+<tr class="odd">
+<td>Parametri</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Corpo</td>
+<td>{max_people?, status?}</td>
+</tr>
+<tr class="odd">
+<td>Successo</td>
+<td>Codice: 200 Contenuto:</td>
+</tr>
+<tr class="even">
+<td>Errore</td>
+<td>Codice: 401 UNAUTHORIZED Contenuto:</td>
+</tr>
+<tr class="odd">
+<td>Errore</td>
+<td>Altri errori</td>
+</tr>
+<tr class="even">
+<td>Esempio</td>
+<td>/tables/1 Body: {number:1, max_</td>
+</tr>
+<tr class="odd">
+<td>people: 5 }</td>
+<td></td>
+</tr>
+<tr class="even">
 <td>Note:</td>
 <td>Codice di esempio</td>
 </tr>
@@ -519,7 +678,7 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td>URL</td>
-<td>/menu</td>
+<td>/items</td>
 </tr>
 <tr class="even">
 <td>Metodo</td>
@@ -527,7 +686,7 @@ $(document).ready(function () {
 </tr>
 <tr class="odd">
 <td>Parametri</td>
-<td>Type=[tipo]</td>
+<td>type=[tipo]</td>
 </tr>
 <tr class="even">
 <td>Corpo</td>
@@ -547,7 +706,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/menu?Type=bibite</td>
+<td>/items?type=dish</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
@@ -568,7 +727,7 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td>URL</td>
-<td>/menu/:id</td>
+<td>/items/:id</td>
 </tr>
 <tr class="even">
 <td>Metodo</td>
@@ -596,7 +755,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/menu/1</td>
+<td>/items/1</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
@@ -621,7 +780,7 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td>URL</td>
-<td>/menu/:id</td>
+<td>/items</td>
 </tr>
 <tr class="even">
 <td>Metodo</td>
@@ -633,7 +792,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Corpo</td>
-<td>{Nome, Tipo, Ingr, Descr, Prezzo}</td>
+<td>{name, type, ingredients, description, price}</td>
 </tr>
 <tr class="odd">
 <td>Successo</td>
@@ -649,7 +808,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/menu/1 Body: { Nome: Spaghetti al pomodoro, Tipo: piatto, Ingredienti: [{Spaghetti}, {Pomodoro}], Descrizione: “Spaghetti al pomodoro, Prezzo: 6.00 }</td>
+<td>/items/1 Body: { name: Spaghetti al pomodoro, type: piatto, ingredients: [{Spaghetti}, {Pomodoro}], description: “Spaghetti al pomodoro, price: 6.00 }</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
@@ -660,7 +819,11 @@ $(document).ready(function () {
 </div>
 <div id="modificare-un-prodotto-specifico" class="section level3">
 <h3>Modificare un prodotto specifico</h3>
-<table>
+<table style="width:71%;">
+<colgroup>
+<col width="16%"></col>
+<col width="54%"></col>
+</colgroup>
 <thead>
 <tr class="header">
 <th>Titolo</th>
@@ -670,7 +833,7 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td>URL</td>
-<td>/menu/:id</td>
+<td>/items/:id</td>
 </tr>
 <tr class="even">
 <td>Metodo</td>
@@ -682,7 +845,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Corpo</td>
-<td>{parametri del piatto}</td>
+<td>{name, type, ingredients, description, price}</td>
 </tr>
 <tr class="odd">
 <td>Successo</td>
@@ -698,7 +861,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/menu/1 Body: { ? }</td>
+<td>/items/1 Body: {name: Spaghetti al pomodoro, type: piatto, ingredients: [{Spaghetti}, {Pomodoro}], description: “Spaghetti al pomodoro, price: 6.00 }</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
@@ -719,7 +882,7 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td>URL</td>
-<td>/menu/:id</td>
+<td>/items/:id</td>
 </tr>
 <tr class="even">
 <td>Metodo</td>
@@ -747,7 +910,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/menu/1</td>
+<td>/items/1</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
@@ -757,8 +920,8 @@ $(document).ready(function () {
 </table>
 </div>
 </div>
-<div id="gestione-degli-ordini" class="section level2">
-<h2>Gestione degli ordini</h2>
+<div id="gestione-dei-ticket-e-degli-ordini" class="section level2">
+<h2>Gestione dei ticket e degli ordini</h2>
 <div id="inserimento-di-un-ordine" class="section level3">
 <h3>Inserimento di un ordine</h3>
 <table style="width:100%;">
@@ -775,7 +938,7 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td>URL</td>
-<td>/ordini</td>
+<td>/tickets</td>
 </tr>
 <tr class="even">
 <td>Metodo</td>
@@ -787,7 +950,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Corpo</td>
-<td>{id_cam, id_tav, ora_inizio}</td>
+<td>{id_wait, id_tab, start_hour}</td>
 </tr>
 <tr class="odd">
 <td>Successo</td>
@@ -803,7 +966,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/ordini Body: { id_cam: 1, id_tav: 1, ora_inizio: timestamp(now) }</td>
+<td>/tickets Body: {id_wai: 1, tab_number: 1, start_hour: timestamp(now) }</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
@@ -824,7 +987,7 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td>URL</td>
-<td>/ordini</td>
+<td>/tickets</td>
 </tr>
 <tr class="even">
 <td>Metodo</td>
@@ -832,7 +995,7 @@ $(document).ready(function () {
 </tr>
 <tr class="odd">
 <td>Parametri</td>
-<td>Date=[data]&amp;Cam=[id_cam]&amp;Tav=[id_tavolo]&amp;Stato=[stato]</td>
+<td>date=[data]&amp;wait=[id_cam]&amp;tab=[id_tavolo]&amp;state=[stato]</td>
 </tr>
 <tr class="even">
 <td>Corpo</td>
@@ -852,7 +1015,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/ordini?Cam=1&amp;Tav=1</td>
+<td>/tickets?wai=1&amp;tab=1</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
@@ -873,7 +1036,7 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td>URL</td>
-<td>/ordini/:id</td>
+<td>/tickets/:id</td>
 </tr>
 <tr class="even">
 <td>Metodo</td>
@@ -901,7 +1064,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/ordini/1</td>
+<td>/tickets/1</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
@@ -909,6 +1072,54 @@ $(document).ready(function () {
 </tr>
 </tbody>
 </table>
+</div>
+<div id="recupero-info-di-un-ordine-specifico-1" class="section level3">
+<h3>Recupero info di un ordine specifico</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Titolo</th>
+<th>Recupero info di un ordine specifico</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>URL</td>
+<td>/tickets/:id</td>
+</tr>
+<tr class="even">
+<td>Metodo</td>
+<td>PATCH</td>
+</tr>
+<tr class="odd">
+<td>Parametri</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Corpo</td>
+<td>{end, state}</td>
+</tr>
+<tr class="odd">
+<td>Successo</td>
+<td>Codice: 200 Contenuto:</td>
+</tr>
+<tr class="even">
+<td>Errore</td>
+<td>Codice: 401 UNAUTHORIZED Contenuto:</td>
+</tr>
+<tr class="odd">
+<td>Errore</td>
+<td>Altri errori</td>
+</tr>
+<tr class="even">
+<td>Esempio</td>
+<td>/tickets/1 Body: {end:</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                        timestamp(now),  state: &quot;complete&quot;}                                         
+                                                                                                 |</code></pre>
+<div style="white-space: pre-line;">Note: | Codice di esempio |</div>
 </div>
 <div id="recupero-comande-relative-ad-un-ordine" class="section level3">
 <h3>Recupero comande relative ad un ordine</h3>
@@ -922,7 +1133,7 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td>URL</td>
-<td>/ordini/:id/comande</td>
+<td>/tickets/:id/orders</td>
 </tr>
 <tr class="even">
 <td>Metodo</td>
@@ -950,7 +1161,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/ordini/1/comande</td>
+<td>/tickets/1/orders</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
@@ -975,7 +1186,7 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td>URL</td>
-<td>/ordini/:id/comande</td>
+<td>/tickets/:id/orders</td>
 </tr>
 <tr class="even">
 <td>Metodo</td>
@@ -987,7 +1198,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Corpo</td>
-<td>{id_piatto, prezzo, aggiunte, stato}</td>
+<td>{dish_name, price, added, state}</td>
 </tr>
 <tr class="odd">
 <td>Successo</td>
@@ -1003,7 +1214,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/ordini/1/comande Body: { id_piatto: 1, prezzo: 7.00, aggiunte: {doppio pomodoro}, stato: “da completare” }</td>
+<td>/tickets/1/orders Body: { dish_name: “Spaghetti”, price: 7.00, added: {doppio pomodoro}, state: “da completare” }</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
@@ -1024,11 +1235,11 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td>URL</td>
-<td>/ordini/:id/comande/:id</td>
+<td>/tickets/:id/orders/:id</td>
 </tr>
 <tr class="even">
 <td>Metodo</td>
-<td>PUT</td>
+<td>PATCH</td>
 </tr>
 <tr class="odd">
 <td>Parametri</td>
@@ -1036,7 +1247,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Corpo</td>
-<td>{Campi da decidere}</td>
+<td>{stato }</td>
 </tr>
 <tr class="odd">
 <td>Successo</td>
@@ -1052,7 +1263,7 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/ordini/1/comande Body: { ? }</td>
+<td>/tickets/1/orders Body: { state: “pronto” }</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
@@ -1073,7 +1284,7 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td>URL</td>
-<td>/ordini/:id/comande/:id</td>
+<td>/tickets/:id/orders/:id</td>
 </tr>
 <tr class="even">
 <td>Metodo</td>
@@ -1101,11 +1312,56 @@ $(document).ready(function () {
 </tr>
 <tr class="even">
 <td>Esempio</td>
-<td>/ordini/1/comande</td>
+<td>/tickets/1/orders</td>
 </tr>
 <tr class="odd">
 <td>Note:</td>
 <td>Codice di esempio</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="dare-tutte-gli-ordini-pendenti" class="section level3">
+<h3>Dare tutte gli ordini pendenti</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Titolo</th>
+<th>Lista totale ordini</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>URL</td>
+<td>/tickets/orders</td>
+</tr>
+<tr class="even">
+<td>Metodo</td>
+<td>GET</td>
+</tr>
+<tr class="odd">
+<td>Parametri</td>
+<td>state=[stato]</td>
+</tr>
+<tr class="even">
+<td>Corpo</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Successo</td>
+<td>Codice: 200 Contenuto:</td>
+</tr>
+<tr class="even">
+<td>Errore</td>
+<td>Codice: 401 UNAUTHORIZED Contenuto:</td>
+</tr>
+<tr class="odd">
+<td>Errore</td>
+<td>Altri errori</td>
+</tr>
+<tr class="even">
+<td>Esempio</td>
+<td>/tickets/orders?state=“open”</td>
 </tr>
 </tbody>
 </table>
