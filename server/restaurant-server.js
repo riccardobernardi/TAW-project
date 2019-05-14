@@ -15,6 +15,7 @@ var jwt = require("express-jwt"); // JWT parsing middleware for express
 var cors = require("cors"); // Enable CORS middleware
 var table = require("./Table");
 var user = require("./User");
+var item = require("./Item");
 var ios = undefined;
 var app = express();
 // We create the JWT authentication middleware
@@ -74,50 +75,102 @@ app["delete"]("/users/:username", auth, function (req, res, next) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
 });
-/*app.get("/tables", auth, (req, res, next) => {
-=======
-app.route("/tables").get(auth, (req, res, next) => {
->>>>>>> 5ff4508ba0142111b514e5e9ac488600b5959cd7
+app.route("/tables").get(auth, function (req, res, next) {
+    var sender = user.newUser(req.user);
+    if (!sender.hasDeskRole() && !sender.hasWaiterRole())
+        return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
+    table.getModel().find({}, { number: 1, max_people: 1, _id: 0 }).then(function (tableslist) {
+        return res.status(200).json(tableslist);
+    })["catch"](function (reason) {
+        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+    });
+}).post(auth, function (req, res, next) {
+    var sender = user.newUser(req.user);
+    if (!sender.hasDeskRole() && !sender.hasWaiterRole())
+        return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
+    var Table = table.getModel();
+    (new Table(req.body)).save().then(function (data) {
+        return res.status(200).json({
+            number: data.number,
+            max_people: data.number
+        });
+    })["catch"](function (reason) {
+        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+    });
+});
+;
+app.get("/tables/:number", auth, function (req, res, next) {
+    var sender = user.newUser(req.user);
+    if (!sender.hasDeskRole() && !sender.hasWaiterRole())
+        return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
+    table.getModel().find({ number: req.params.number }, { number: 1, max_people: 1 }).then(function (table) {
+        return res.status(200).json(table);
+    })["catch"](function (reason) {
+        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+    });
+});
+app.route("/items").get(auth, function (req, res, next) {
+    var sender = user.newUser(req.user);
+    if (!sender.hasDeskRole() && !sender.hasWaiterRole())
+        return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
+    var filter = {};
+    if (req.query.type)
+        filter = { type: req.query.type };
+    item.getModel().find(filter).then(function (itemslist) {
+        return res.status(200).json(itemslist);
+    })["catch"](function (reason) {
+        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+    });
+}).post(auth, function (req, res, next) {
+    if (!user.newUser(req.user).hasDeskRole())
+        return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk" });
+    var i = new (item.getModel())(req.body);
+    if (!item.isItem(i)) {
+        return next({ statusCode: 404, error: true, errormessage: "Wrong format" });
+    }
+    i.save().then(function (data) {
+        return res.status(200).json({ error: false, errormessage: "", id: data._id });
+    })["catch"](function (reason) {
+        if (reason.code === 11000)
+            return next({ statusCode: 404, error: true, errormessage: "Item already exists" });
+        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason.errmsg });
+    });
+});
+app.route("/items/:id").get(auth, function (req, res, next) {
+    var sender = user.newUser(req.user);
+    if (!sender.hasDeskRole() && !sender.hasWaiterRole())
+        return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
+    item.getModel().findById(req.params.id).then(function (item) {
+        return res.status(200).json(item);
+    })["catch"](function (reason) {
+        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+    });
+}).put(auth, function (req, res, next) {
+    if (!user.newUser(req.user).hasDeskRole())
+        return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk" });
+    var i = new (item.getModel())(req.body);
+    if (!item.isItem(i)) {
+        return next({ statusCode: 404, error: true, errormessage: "Wrong format" });
+    }
+    item.getModel().findById(req.params.id).then(function (item) {
+        return item.set(i);
+    }).then(function (item) {
+        return res.status(200).json(item);
+    })["catch"](function (reason) {
+        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+    });
+})["delete"](auth, function (req, res, next) {
+    if (!user.newUser(req.user).hasDeskRole()) {
+        return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk" });
+    }
+    item.getModel().findOneAndDelete(req.params.username).then(function () {
+        return res.status(200).json({ error: false, errormessage: "" });
+    })["catch"](function (reason) {
+        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+    });
+});
 
-   var sender = user.newUser(req.user);
-   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
-   table.getModel().find({}, {number:1, max_people:1, _id: 0}).then( (tableslist) => {
-      return res.status(200).json( tableslist );
-   }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
-   });
-}).post(auth, (req, res, next) => {
-   var sender = user.newUser(req.user);
-   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
-
-   var Table = table.getModel();
-   (new Table(req.body)).save().then( (data : table.Table) => {
-      return res.status(200).json( {
-         number: data.number,
-         max_people: data.number
-      });
-   }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
-   });
-});;
-
-app.get("/tables/:number", auth, (req, res, next) => {
-
-   var sender = user.newUser(req.user);
-   
-   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
-
-   table.getModel().find({number: req.params.number}, {number: 1, max_people: 1}).then( (table) => {
-      return res.status(200).json( table );
-   }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
-   });
-<<<<<<< HEAD
-});*/
 app.get('/renew', auth, function (req, res, next) {
     var tokendata = req.user;
     delete tokendata.iat;

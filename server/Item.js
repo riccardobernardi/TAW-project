@@ -1,6 +1,11 @@
 "use strict";
 exports.__esModule = true;
 var mongoose = require("mongoose");
+function isItem(arg) {
+    return (arg._id && arg.name && arg.type && arg.price && arg.required_time && typeof (arg.name) == 'string' && type.includes(arg.type) && typeof (arg.price) == 'number' && typeof (arg.price) == 'number' && (!arg.description || typeof (arg.description) == 'string'));
+}
+exports.isItem = isItem;
+;
 var type = ["dish, beverage"];
 var countDecimals = function (value) {
     if (Math.floor(value) !== value)
