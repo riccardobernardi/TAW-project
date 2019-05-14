@@ -28,6 +28,7 @@ export class PaydeskComponent implements OnInit {
   }
 
   signup() {
+    console.log(this.user);
     this.us.register( this.user ).subscribe( (d) => {
       console.log('Registration ok: ' + JSON.stringify(d) );
       this.errmessage = undefined;

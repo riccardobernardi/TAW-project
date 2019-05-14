@@ -20,7 +20,7 @@
 
     <label for="roles">Role</label>
     <select class="form-control" [(ngModel)]="newRoleSelected" name="menu" id="roles">
-      <option *ngFor="let ord of this.roles" value="">{{ord}}</option>
+      <option *ngFor="let ord of this.roles" value="{{ord}}">{{ord}}</option>
     </select>
     <br>
     <button type="submit" class="btn btn-primary" (click)="send(newusername.value, newuserpassword.value)">Submit</button>
