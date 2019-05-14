@@ -1,5 +1,4 @@
-"use strict"
-const result = require('dotenv').config({path: __dirname + '/.env'})     // The dotenv module will load a file named ".env"
+//const result = require('dotenv').config({path: __dirname + '/.env'})     // The dotenv module will load a file named ".env"
 import fs = require('fs');
 import http = require('http');                // HTTP module
 import https = require('https');              // HTTPS module
@@ -19,7 +18,7 @@ import io = require('socket.io');               // Socket.io websocket library
 import * as table from './Table';
 import * as user from './User';
 import * as order from './Ticket';
-import * as menu from './Menu';
+import * as item from './Item';
 
 var ios = undefined;
 
@@ -45,7 +44,7 @@ app.get("/", (req,res) => {
 
 res.status(200).json( { 
    api_version: "0.1.0", 
-   endpoints: [ "/login", "/users", "/tables", "/menu", "/orders", "/orders/:id/command", "/report" ] } ); // json method sends a JSON response (setting the correct Content-Type) to the client
+   endpoints: [ "/login", "/users", "/tables", "/item", "/orders", "/orders/:id/command", "/report" ] } ); // json method sends a JSON response (setting the correct Content-Type) to the client
 });
 
 app.route("/users").get(auth, (req,res,next) => {
