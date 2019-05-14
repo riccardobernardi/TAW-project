@@ -1,4 +1,4 @@
-
+"use strict"
 const result = require('dotenv').config({path: __dirname + '/.env'})     // The dotenv module will load a file named ".env"
 import fs = require('fs');
 import http = require('http');                // HTTP module
