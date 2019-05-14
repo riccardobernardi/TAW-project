@@ -33,12 +33,12 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 |-----------|--------------------------------------|
 | URL       | /users                               |
 | Metodo    | GET                                  |
-| Parametri | Richiesti: Role=[ruolo]              |
+| Parametri | Richiesti: role=[ruolo]              |
 | Corpo     |                                      |
 | Successo  |  Codice: 200 Contenuto:              |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
 | Errore    | Altri errori                         |
-| Esempio   | /users?Role="Cuoco"                  |
+| Esempio   | /users?role="Cuoco"                  |
 | Note:     | Codice di esempio                    |
 
 ### Inserimento utente
@@ -47,11 +47,11 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | URL       | /users                                                                                      |
 | Metodo    | POST                                                                                        |
 | Parametri |                                                                                             |
-| Corpo     | {ID, Username, Password, Ruolo}                                                             |
+| Corpo     | {username, password, role}                                                             |
 | Successo  |  Codice: 200 Contenuto:                                                                     |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                                                        |
 | Errore    | Altri errori                                                                                |
-| Esempio   |  /users Body: {   ID: "prova",  Nickname: "prova1",  Password: "a",  Ruolo: "Simpaticone" } |
+| Esempio   |  /users Body: { username: "prova1",  password: "a",  role: "Simpaticone" } |
 | Note:     | Codice di esempio                                                                           |                     |
 
 ### Rimozione utente
@@ -59,25 +59,39 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 |-----------|--------------------------------------|
 | URL       | /users                               |
 | Metodo    | DELETE                               |
-| Parametri | Nick=[username]                      |
+| Parametri | username=[username]                  |
 | Corpo     |                                      |
 | Successo  |  Codice: 200 Contenuto:              |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
 | Errore    | Altri errori                         |
-| Esempio   |  /users?Nick=prova                   |
+| Esempio   |  /users?username=prova               |
 | Note:     | Codice di esempio                    |
 
 ### Login personale
 | Titolo    | Login                                                    |
 |-----------|----------------------------------------------------------|
 | URL       | /login                                                   |
-| Metodo    | POST/GET(?)                                              |
+| Metodo    | GET                                                      |
 | Parametri |                                                          |
-| Corpo     |  { Username, Password }                                  |
+| Corpo     |  { username, password }                                  |
 | Successo  |  Codice: 200 Contenuto:                                  |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                     |
 | Errore    | Altri errori                                             |
-| Esempio   |   /users?  Body: {  Username: "prova1",  Password: "a" } |
+| Esempio   |   /users?  Body: {  username: "prova1",  password: "a" } |
+| Note:     | Codice di esempio                                        |
+
+### Modifica totale dell'utente
+| Titolo    | Modifica totale utente                                                   |
+|-----------|----------------------------------------------------------|
+| URL       | /users/:id                                                   |
+| Metodo    | PUT                                                      |
+| Parametri |                                                          |
+| Corpo     |  { username, password, role }                            |
+| Successo  |  Codice: 200 Contenuto:                                  |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                     |
+| Errore    | Altri errori                                             |
+| Esempio   |   /users/1  Body: {  username: "ciao1",  password: "pwd",|
+|           |  , role: "waiter" }                                      |
 | Note:     | Codice di esempio                                        |
 
 ## Gestione tavoli
@@ -85,200 +99,256 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 ### Lista tavoli
 | Titolo    | Fornire lista tavoli                 |
 |-----------|--------------------------------------|
-| URL       | /tavoli                              |
+| URL       | /tables                              |
 | Metodo    | GET                                  |
 | Parametri |                                      |
 | Corpo     |                                      |
 | Successo  |  Codice: 200 Contenuto:              |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
 | Errore    | Altri errori                         |
-| Esempio   |   /tavoli                            |
+| Esempio   |   /tables                            |
 | Note:     | Codice di esempio                    |
 
 ### Tavolo al dettaglio
 | Titolo    | Fornire un tavolo specifico          |
 |-----------|--------------------------------------|
-| URL       | /tavoli/:n                           |
+| URL       | /tables/:number                      |
 | Metodo    | GET                                  |
 | Parametri |                                      |
 | Corpo     |                                      |
 | Successo  |  Codice: 200 Contenuto:              |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
 | Errore    | Altri errori                         |
-| Esempio   |   /tavoli/1                          |
+| Esempio   |   /tables/1                          |
 | Note:     | Codice di esempio                    |
 
 ### Modifica agli attributi di un tavolo
 | Titolo    | Fornire un tavolo specifico          |
 |-----------|--------------------------------------|
-| URL       | /tavoli/:n                           |
+| URL       | /tables/:number                           |
 | Metodo    | PUT                                  |
 | Parametri |                                      |
 | Corpo     | {parametri da cambiare}              |
 | Successo  |  Codice: 200 Contenuto:              |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
 | Errore    | Altri errori                         |
-| Esempio   |    /tavoli/1 Body: ?                 |
+| Esempio   |    /tables/1 Body: {number: 1,       |
+|           |  max_people:2 }                      |  
+| Note:     | Codice di esempio                    |
+
+### Inserimento tavolo
+| Titolo    | Fornire un tavolo specifico          |
+|-----------|--------------------------------------|
+| URL       | /tables                              |
+| Metodo    | POST                                 |
+| Parametri |                                      |
+| Corpo     |{number, max_people}                  |
+| Successo  |  Codice: 200 Contenuto:              |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
+| Errore    | Altri errori                         |
+| Esempio   |    /tables/1 Body: {number:1, max_   |
+|           | people: 5 }                          |
+| Note:     | Codice di esempio                    |
+
+### Modifica di un attributo di un tavolo
+| Titolo    | Fornire un tavolo specifico          |
+|-----------|--------------------------------------|
+| URL       | /tables/:number                      |
+| Metodo    | PATCH                                |
+| Parametri |                                      |
+| Corpo     |{max_people?, status?}                |
+| Successo  |  Codice: 200 Contenuto:              |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
+| Errore    | Altri errori                         |
+| Esempio   |    /tables/1 Body: {number:1, max_   |
+|             people: 5 }                          |
 | Note:     | Codice di esempio                    |
 
 ## Gestione del menu
 ### Fornire la lista dei prodotti servibili
 | Titolo    | Fornire la lista dei prodotti        |
 |-----------|--------------------------------------|
-| URL       | /menu                                |
+| URL       | /items                               |
 | Metodo    | GET                                  |
-| Parametri | Type=[tipo]                          |
+| Parametri | type=[tipo]                          |
 | Corpo     |                                      |
 | Successo  |  Codice: 200 Contenuto:              |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
 | Errore    | Altri errori                         |
-| Esempio   | /menu?Type=bibite                    |
+| Esempio   | /items?type=dish                     |
 | Note:     | Codice di esempio                    |
 
 ### Fornire un prodotto specifico
 | Titolo    | Fornire un prodotto specifico        |
 |-----------|--------------------------------------|
-| URL       | /menu/:id                            |
+| URL       | /items/:id                           |
 | Metodo    | GET                                  |
 | Parametri |                                      |
 | Corpo     |                                      |
 | Successo  |  Codice: 200 Contenuto:              |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
 | Errore    | Altri errori                         |
-| Esempio   | /menu/1                              |
+| Esempio   | /items/1                             |
 | Note:     | Codice di esempio                    |
 
 ### Inserire un prodotto
 | Titolo    | Inserire un prodotto specifico                                                                                                                                    |
 |-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| URL       | /menu/:id                                                                                                                                                         |
+| URL       | /items                                                                                                                                                            |
 | Metodo    | POST                                                                                                                                                              |
 | Parametri |                                                                                                                                                                   |
-| Corpo     | {Nome, Tipo, Ingr, Descr, Prezzo}                                                                                                                                 |
+| Corpo     | {name, type, ingredients, description, price}                                                                                                                     |
 | Successo  |  Codice: 200 Contenuto:                                                                                                                                           |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                                                                                                                              |
 | Errore    | Altri errori                                                                                                                                                      |
-| Esempio   |  /menu/1  Body: {   Nome: Spaghetti al pomodoro,   Tipo: piatto,  Ingredienti: [{Spaghetti}, {Pomodoro}],   Descrizione: "Spaghetti al pomodoro,  Prezzo: 6.00  } |
+| Esempio   |  /items/1  Body: { name: Spaghetti al pomodoro,   type: piatto,  ingredients: [{Spaghetti}, {Pomodoro}],   description: "Spaghetti al pomodoro,  price: 6.00  }     |
 | Note:     | Codice di esempio                                                                                                                                                 |
 
 ### Modificare un prodotto specifico
 | Titolo    | Modificare un prodotto specifico     |
 |-----------|--------------------------------------|
-| URL       | /menu/:id                            |
+| URL       | /items/:id                           |
 | Metodo    | PUT                                  |
 | Parametri |                                      |
-| Corpo     | {parametri del piatto}               |
+| Corpo     | {name, type, ingredients, description, price}               |
 | Successo  |  Codice: 200 Contenuto:              |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
 | Errore    | Altri errori                         |
-| Esempio   |  /menu/1 Body: { ? }                 |
+| Esempio   |  /items/1 Body: {name: Spaghetti al pomodoro,   type: piatto,  ingredients: [{Spaghetti}, {Pomodoro}],   description: "Spaghetti al pomodoro,  price: 6.00   }                                                  |
 | Note:     | Codice di esempio                    |
 
 ### Eliminare un prodotto
 | Titolo    | Eliminare un prodotto specifico      |
 |-----------|--------------------------------------|
-| URL       | /menu/:id                            |
+| URL       | /items/:id                           |
 | Metodo    | DELETE                               |
 | Parametri |                                      |
 | Corpo     |                                      |
 | Successo  |  Codice: 200 Contenuto:              |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
 | Errore    | Altri errori                         |
-| Esempio   | /menu/1                              |
+| Esempio   | /items/1                             |
 | Note:     | Codice di esempio                    |
 
-## Gestione degli ordini
+## Gestione dei ticket e degli ordini
 
 ### Inserimento di un ordine 
 | Titolo    | Inserimento di un ordine                                                 |
 |-----------|--------------------------------------------------------------------------|
-| URL       | /ordini                                                                  |
+| URL       | /tickets                                                                 |
 | Metodo    | POST                                                                     |
 | Parametri |                                                                          |
-| Corpo     | {id_cam, id_tav, ora_inizio}                                             |
+| Corpo     | {id_wait, id_tab, start_hour}                                            |
 | Successo  |  Codice: 200 Contenuto:                                                  |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                                     |
 | Errore    | Altri errori                                                             |
-| Esempio   |  /ordini  Body: {  id_cam: 1,  id_tav: 1,  ora_inizio: timestamp(now) }  |
+| Esempio   |  /tickets  Body: {id_wai: 1, tab_number: 1, start_hour: timestamp(now) } |
 | Note:     | Codice di esempio                                                        |
 
 ### Recupero info di un ordine	
 | Titolo    | Recupero info di un ordine                             |
 |-----------|--------------------------------------------------------|
-| URL       | /ordini                                                |
+| URL       | /tickets                                               |
 | Metodo    | GET                                                    |
-| Parametri | Date=[data]&Cam=[id_cam]&Tav=[id_tavolo]&Stato=[stato] |
+| Parametri | date=[data]&wait=[id_cam]&tab=[id_tavolo]&state=[stato]|
 | Corpo     |                                                        |
 | Successo  |  Codice: 200 Contenuto:                                |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                   |
 | Errore    | Altri errori                                           |
-| Esempio   |  /ordini?Cam=1&Tav=1                                   |
+| Esempio   |  /tickets?wai=1&tab=1                                  |
 | Note:     | Codice di esempio                                      |
 
 ### Recupero info di un ordine specifico
 | Titolo    | Recupero info di un ordine specifico |
 |-----------|--------------------------------------|
-| URL       | /ordini/:id                          |
+| URL       | /tickets/:id                         |
 | Metodo    | GET                                  |
 | Parametri |                                      |
 | Corpo     |                                      |
 | Successo  |  Codice: 200 Contenuto:              |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
 | Errore    | Altri errori                         |
-| Esempio   |  /ordini/1                           |
+| Esempio   |  /tickets/1                          |
+| Note:     | Codice di esempio                    |
+
+### Recupero info di un ordine specifico
+| Titolo    | Recupero info di un ordine specifico |
+|-----------|--------------------------------------|
+| URL       | /tickets/:id                         |
+| Metodo    | PATCH                                |
+| Parametri |                                      |
+| Corpo     |  {end, state}                        |
+| Successo  |  Codice: 200 Contenuto:              |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
+| Errore    | Altri errori                         |
+| Esempio   |  /tickets/1 Body: {end:              | 
+|							timestamp(now),  state: "complete"}  |									
 | Note:     | Codice di esempio                    |
 
 ### Recupero comande relative ad un ordine
 | Titolo    | Recupero comande di un ordine specifico |
 |-----------|-----------------------------------------|
-| URL       | /ordini/:id/comande                     |
+| URL       | /tickets/:id/orders                     |
 | Metodo    | GET                                     |
 | Parametri |                                         |
 | Corpo     |                                         |
 | Successo  |  Codice: 200 Contenuto:                 |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto:    |
 | Errore    | Altri errori                            |
-| Esempio   |  /ordini/1/comande                      |
+| Esempio   | /tickets/1/orders                       |
 | Note:     | Codice di esempio                       |
 
 ### Inserimento di una comanda per un ordine
 | Titolo    | Inserimento comanda/e relative ad un ordine specifico                                                               |
 |-----------|---------------------------------------------------------------------------------------------------------------------|
-| URL       | /ordini/:id/comande                                                                                                 |
+| URL       | /tickets/:id/orders                                                                                                 |
 | Metodo    | POST                                                                                                                |
 | Parametri |                                                                                                                     |
-| Corpo     | {id_piatto, prezzo, aggiunte, stato}                                                                                |
+| Corpo     | {dish_name, price, added, state}                                                                                |
 | Successo  |  Codice: 200 Contenuto:                                                                                             |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                                                                                |
 | Errore    | Altri errori                                                                                                        |
-| Esempio   |  /ordini/1/comande   Body: {  id_piatto: 1,   prezzo: 7.00,  aggiunte: {doppio pomodoro},  stato: "da completare" } |
+| Esempio   |  /tickets/1/orders   Body: {  dish_name: "Spaghetti",   price: 7.00,  added: {doppio pomodoro},  state: "da completare" } |
 | Note:     | Codice di esempio                                                                                                   |
 
 ### Modifica di una comanda
 | Titolo    | Modifica comanda                                      |
 |-----------|-------------------------------------------------------|
-| URL       | /ordini/:id/comande/:id                               |
-| Metodo    | PUT                                                   |
+| URL       | /tickets/:id/orders/:id                               |
+| Metodo    | PATCH                                                 |
 | Parametri |                                                       |
-| Corpo     | {Campi da decidere}                                   |
+| Corpo     | {stato }                                              |
 | Successo  |  Codice: 200 Contenuto:                               |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                  |
 | Errore    | Altri errori                                          |
-| Esempio   |  /ordini/1/comande   Body: {  ? }                     |
+| Esempio   |  /tickets/1/orders   Body: {  state: "pronto" }       |
 | Note:     | Codice di esempio                                     |
 
 ### Cancellazione di una comanda
 | Titolo    | Cancellazione comanda                |
 |-----------|--------------------------------------|
-| URL       | /ordini/:id/comande/:id              |
+| URL       | /tickets/:id/orders/:id              |
 | Metodo    | DELETE                               |
 | Parametri |                                      |
 | Corpo     |                                      |
 | Successo  |  Codice: 200 Contenuto:              |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
 | Errore    | Altri errori                         |
-| Esempio   |  /ordini/1/comande                   |
+| Esempio   |  /tickets/1/orders                   |
 | Note:     | Codice di esempio                    |
+
+### Dare tutte gli ordini pendenti
+| Titolo    | Lista totale ordini                 |
+|-----------|-------------------------------------|
+| URL       | /tickets/orders                     |
+| Metodo    | GET                                 |
+| Parametri | state=[stato]                       |
+| Corpo     |                                     |
+| Successo  | Codice: 200 Contenuto:              |
+| Errore    | Codice: 401 UNAUTHORIZED Contenuto: |
+| Errore    | Altri errori                        |
+| Esempio   | /tickets/orders?state="open"        |
+
 
 ## Report
 ### Fornire un Report
