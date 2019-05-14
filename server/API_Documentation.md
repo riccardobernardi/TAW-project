@@ -150,7 +150,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 |           | people: 5 }                          |
 | Note:     | Codice di esempio                    |
 
-###Modifica di un attributo di un tavolo
+### Modifica di un attributo di un tavolo
 | Titolo    | Fornire un tavolo specifico          |
 |-----------|--------------------------------------|
 | URL       | /tables/:number                      |
