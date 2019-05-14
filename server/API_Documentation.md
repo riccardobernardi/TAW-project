@@ -80,6 +80,20 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |   /users?  Body: {  Username: "prova1",  Password: "a" } |
 | Note:     | Codice di esempio                                        |
 
+### Modifica totale dell'utente
+| Titolo    | Modifica totale utente                                                   |
+|-----------|----------------------------------------------------------|
+| URL       | /users/:id                                                   |
+| Metodo    | PUT                                                      |
+| Parametri |                                                          |
+| Corpo     |  { Username, Password, Role }                            |
+| Successo  |  Codice: 200 Contenuto:                                  |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                     |
+| Errore    | Altri errori                                             |
+| Esempio   |   /users/1  Body: {  username: "ciao1",  password: "pwd",|
+|           |  , role: "waiter" }                                      |
+| Note:     | Codice di esempio                                        |
+
 ## Gestione tavoli
 
 ### Lista tavoli
@@ -119,6 +133,34 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
 | Errore    | Altri errori                         |
 | Esempio   |    /tavoli/1 Body: ?                 |
+| Note:     | Codice di esempio                    |
+
+### Inserimento tavolo
+| Titolo    | Fornire un tavolo specifico          |
+|-----------|--------------------------------------|
+| URL       | /tables                              |
+| Metodo    | POST                                 |
+| Parametri |                                      |
+| Corpo     |{number, max_people}                  |
+| Successo  |  Codice: 200 Contenuto:              |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
+| Errore    | Altri errori                         |
+| Esempio   |    /tavoli/1 Body: {number:1, max_   |
+|           | people: 5 }                          |
+| Note:     | Codice di esempio                    |
+
+###Modifica di un attributo di un tavolo
+| Titolo    | Fornire un tavolo specifico          |
+|-----------|--------------------------------------|
+| URL       | /tables/:number                      |
+| Metodo    | PATCH                                |
+| Parametri |                                      |
+| Corpo     |{max_people?, status?}               |
+| Successo  |  Codice: 200 Contenuto:              |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
+| Errore    | Altri errori                         |
+| Esempio   |    /tavoli/1 Body: {number:1, max_   |
+|           | people: 5 }                          |
 | Note:     | Codice di esempio                    |
 
 ## Gestione del menu
@@ -228,6 +270,19 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Esempio   |  /ordini/1                           |
 | Note:     | Codice di esempio                    |
 
+### Recupero info di un ordine specifico
+| Titolo    | Recupero info di un ordine specifico |
+|-----------|--------------------------------------|
+| URL       | /ordini/:id                          |
+| Metodo    | PATCH                                |
+| Parametri |                                      |
+| Corpo     |  {fine, stato}                      |
+| Successo  |  Codice: 200 Contenuto:              |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
+| Errore    | Altri errori                         |
+| Esempio   |  /ordini/1                           |
+| Note:     | Codice di esempio                    |
+
 ### Recupero comande relative ad un ordine
 | Titolo    | Recupero comande di un ordine specifico |
 |-----------|-----------------------------------------|
@@ -258,13 +313,13 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Titolo    | Modifica comanda                                      |
 |-----------|-------------------------------------------------------|
 | URL       | /ordini/:id/comande/:id                               |
-| Metodo    | PUT                                                   |
+| Metodo    | PATCH                                                 |
 | Parametri |                                                       |
-| Corpo     | {Campi da decidere}                                   |
+| Corpo     | {stato }                                              |
 | Successo  |  Codice: 200 Contenuto:                               |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                  |
 | Errore    | Altri errori                                          |
-| Esempio   |  /ordini/1/comande   Body: {  ? }                     |
+| Esempio   |  /ordini/1/comande   Body: {  stato: "pronto" }       |
 | Note:     | Codice di esempio                                     |
 
 ### Cancellazione di una comanda
