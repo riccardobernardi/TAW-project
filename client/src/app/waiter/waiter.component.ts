@@ -24,6 +24,9 @@ export class WaiterComponent implements OnInit {
   private orders: Order[] = [];
 
   ngOnInit() {
+    const o = {nick: '--', selTable: -1, selMenuEntry: '--',
+      ready: false, id: this.get_id(), in_progress: false, timestamp: Date.now()};
+    this.orders.unshift(o);
     if (this.us.get_token() === undefined || this.us.get_token() === '') {
       this.logout();
     }
@@ -51,10 +54,10 @@ export class WaiterComponent implements OnInit {
 
   arrayRemove(arr, value) {
     return arr.filter((ele) => {
-      if (ele.id === 1) {
+      if (ele.id == 1) {
         return true;
       }
-      return ele.id !== value;
+      return ele.id != value;
     });
   }
 

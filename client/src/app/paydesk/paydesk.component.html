@@ -1,3 +1,30 @@
+
 <p>
-  paydesk works!
+  paydesk view
+  you name is : {{ null || "Admin"}}
 </p>
+
+<div class="card" style="margin: 5px" >
+
+<p class="btn btn-lg btn-primary btn-block" #addUser (click)="formAddUser.hidden = !formAddUser.hidden" >press here to add a User</p>
+
+  <form #formAddUser hidden="true" >
+    <div class="form-group">
+      <label for="newuserpassword">Name of new operator</label>
+      <input type="email" class="form-control" id="newusername" #newusername aria-describedby="emailHelp" placeholder="Enter name">
+    </div>
+    <div class="form-group">
+      <label for="newuserpassword">Password</label>
+      <input type="password" class="form-control" id="newuserpassword" #newuserpassword placeholder="Password">
+    </div>
+
+    <label for="roles">Role</label>
+    <select class="form-control" [(ngModel)]="newRoleSelected" name="menu" id="roles">
+      <option *ngFor="let ord of this.roles" value="">{{ord}}</option>
+    </select>
+    <br>
+    <button type="submit" class="btn btn-primary" (click)="send(newusername.value, newuserpassword.value)">Submit</button>
+  </form>
+
+</div>
+
