@@ -11,13 +11,10 @@ import { AppComponent } from './app.component';
 // Services
 // import { MessageService } from './message.service';
 // import { MessageHttpService } from './message-http.service';
-import { UserService } from './user.service';
 // import { UserHttpService } from './user-http.service';
 import { UserLoginComponent } from './user-login/user-login.component';
 import { AppRoutingModule } from './app-routing.module';
-import { UserSignupComponent } from './user-signup/user-signup.component';
 import { UserHttpService } from './user-http.service';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { WaiterComponent } from './waiter/waiter.component';
 import { PaydeskComponent } from './paydesk/paydesk.component';
 import { CookComponent } from './cook/cook.component';
@@ -25,7 +22,6 @@ import { BarmanComponent } from './barman/barman.component';
 import {SocketioService} from './socketio.service';
 import {OrderService} from './order.service';
 // import { SocketioService } from './socketio.service';
-import {MatButtonToggleModule, MatIconModule} from '@angular/material';
 
 
 @NgModule({
@@ -34,8 +30,6 @@ import {MatButtonToggleModule, MatIconModule} from '@angular/material';
     // MessageEditorComponent,
     // MessageListComponent,
     UserLoginComponent,
-    UserSignupComponent,
-    DashboardComponent,
     WaiterComponent,
     PaydeskComponent,
     CookComponent,
@@ -46,10 +40,9 @@ import {MatButtonToggleModule, MatIconModule} from '@angular/material';
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
-    MatButtonToggleModule, MatIconModule,
   ],
   providers: [
-    {provide: UserService, useClass: UserHttpService },
+    {provide: UserHttpService, useClass: UserHttpService },
     {provide: SocketioService, useClass: SocketioService },
     {provide: OrderService, useClass: OrderService },
     // {provide: MessageService, useClass: MessageHttpService /* Here we can select the specifc service instance */}

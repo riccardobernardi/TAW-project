@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { UserService } from './user.service';
+import {UserHttpService} from './user-http.service';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +8,7 @@ import { UserService } from './user.service';
 })
 export class AppComponent {
   title = 'client';
-  constructor( private us: UserService ) {
+  constructor( private us: UserHttpService ) {
 
   }
 

@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { UserService } from './user.service';
 
 /*import * as ns from "mod"
 import io = require('socket.io-client');*/
 import * as io from 'socket.io-client';
+import {UserHttpService} from './user-http.service';
 
 @Injectable()
 export class SocketioService {
 
   private socket;
-  constructor( private us: UserService ) { }
+  constructor( private us: UserHttpService ) { }
 
   connect(): Observable< any > {
 

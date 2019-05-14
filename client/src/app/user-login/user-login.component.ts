@@ -1,8 +1,8 @@
 
 
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../user.service';
 import { Router } from '@angular/router';
+import {UserHttpService} from '../user-http.service';
 
 @Component({
   selector: 'app-user-login',
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class UserLoginComponent implements OnInit {
 
   private errmessage = undefined;
-  constructor( private us: UserService, private router: Router  ) { }
+  constructor(private us: UserHttpService, private router: Router  ) { }
   private role = undefined
 
   ngOnInit() {

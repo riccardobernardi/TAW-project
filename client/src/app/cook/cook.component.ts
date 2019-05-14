@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {UserService} from '../user.service';
 import {Router} from '@angular/router';
 import {OrderService} from '../order.service';
 import * as io from 'socket.io-client';
 import {SocketioService} from '../socketio.service';
 import {Order} from '../Order';
 import {mockorders} from '../mock-orders';
+import {UserHttpService} from '../user-http.service';
 
 @Component({
   selector: 'app-cook',
@@ -13,14 +13,14 @@ import {mockorders} from '../mock-orders';
   styleUrls: ['./cook.component.css']
 })
 export class CookComponent implements OnInit {
-  private orders: Order[] = mockorders;
+  private orders: Order[] = mockorders.filter((data) => (data.type === 'food'));
   // private socket = io('http://localhost:4200');
 
-  constructor(private sio: SocketioService, private us: UserService, private router: Router, private order: OrderService  ) { }
+  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private order: OrderService  ) { }
 
   ngOnInit() {
     if (this.us.get_token() === undefined || this.us.get_token() === '') {
-      this.logout();
+      this.us.logout();
     }
     // this.get_orders();
 
@@ -56,10 +56,6 @@ export class CookComponent implements OnInit {
         } );
       }
     );
-  }
-
-  print() {
-    console.log(this.orders);
   }
 
 }

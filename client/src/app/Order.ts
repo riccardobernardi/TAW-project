@@ -6,6 +6,7 @@ export interface Order {
   selMenuEntry: string;
   ready: boolean;
   in_progress: boolean;
+  type: string;
 }
 
 // User defined type guard

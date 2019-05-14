@@ -6,7 +6,7 @@
 
 <div class="card" style="margin: 5px" >
 
-<p class="btn btn-lg btn-primary btn-block" #addUser (click)="formAddUser.hidden = !formAddUser.hidden" >press here to add a User</p>
+<div class="btn btn-lg btn-primary btn-block" #addUser (click)="formAddUser.hidden = !formAddUser.hidden" >press here to add a User</div>
 
   <form #formAddUser hidden="true" >
     <div class="form-group">
@@ -27,4 +27,18 @@
   </form>
 
 </div>
+
+<div class="card" style="margin: 5px" >
+
+  <div class="btn btn-lg btn-primary btn-block">Lorem Ipsum</div>
+
+</div>
+
+<div class="card" style="margin: 5px" >
+
+  <div class="btn btn-lg btn-primary btn-block">Dolor Sic Amet</div>
+
+</div>
+
+<button id = "logout" class="btn btn-lg btn-primary btn-block" (click)="this.logout()" >Logout</button>
 

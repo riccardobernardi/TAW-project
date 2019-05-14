@@ -1,12 +1,12 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {Order} from './Order';
 import {catchError, tap} from 'rxjs/operators';
-import {UserService} from './user.service';
 import {Router} from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import {ErrorObservable} from 'rxjs-compat/observable/ErrorObservable';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {mockorders} from './mock-orders';
+import {UserHttpService} from './user-http.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +19,8 @@ export class OrderService {
   /*private messageSource = new BehaviorSubject(this.orders);
   currentMessage = this.messageSource.asObservable();*/
 
-  constructor(private us: UserService, private router: Router, private http: HttpClient  ) {
-    this.orders.push({id: 1, nick : '--' , selTable : -1 , selMenuEntry : '--', in_progress: false, ready: false, timestamp: Date.now()});
+  constructor(private us: UserHttpService, private router: Router, private http: HttpClient  ) {
+    this.orders.push({id: 1, nick : '--' , selTable : -1 , selMenuEntry : '--', in_progress: false, ready: false, timestamp: Date.now(), type: ''});
     console.log('Message service instantiated');
     console.log('User service token: ' + us.get_token() );
   }

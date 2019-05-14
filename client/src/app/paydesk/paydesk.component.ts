@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {UserService} from '../user.service';
 import {Router} from '@angular/router';
+import {UserHttpService} from '../user-http.service';
 
 @Component({
   selector: 'app-paydesk',
@@ -9,22 +9,32 @@ import {Router} from '@angular/router';
 })
 export class PaydeskComponent implements OnInit {
 
-  constructor(private us: UserService, private router: Router  ) { }
+  constructor(private us: UserHttpService, private router: Router  ) { }
 
   private roles: string[] = ['waiter', 'cook', 'barman', 'admin'];
   private newRoleSelected: string = undefined;
 
   private errmessage = undefined;
-  private user = { ID: '00', Nickname: '', Password: '', Ruolo: '' };
+  private user = { username: '', password: '', role: '' };
 
   ngOnInit() {
+    if (this.us.get_token() == undefined || this.us.get_token() == '') {
+      this.us.logout();
+    } else {
+      console.log('your token is: [' + this.us.get_token() + ']');
+    }
   }
 
   send(name, password) {
-    this.user.Nickname = name;
-    this.user.Password = password;
-    this.user.Ruolo = this.newRoleSelected;
+    this.user.username = name;
+    this.user.password = password;
+    this.user.role = this.newRoleSelected.toUpperCase();
     this.signup();
+  }
+
+  logout() {
+    this.us.logout();
+    this.router.navigate(['/']);
   }
 
   signup() {

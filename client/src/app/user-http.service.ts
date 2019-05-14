@@ -15,11 +15,12 @@ import * as jwt_decode from 'jwt-decode';
 
 import 'rxjs/observable/';
 import {Observable} from 'rxjs';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class UserHttpService {
 
-  constructor( private http: HttpClient ) {
+  constructor( private http: HttpClient, private router: Router ) {
     console.log('User service instantiated');
 
   }
@@ -74,6 +75,7 @@ export class UserHttpService {
     console.log('Logging out');
     this.token = '';
     localStorage.setItem('postmessages_token', this.token);
+    this.router.navigate(['/']);
   }
 
   register( user ): Observable<any> {
@@ -81,11 +83,14 @@ export class UserHttpService {
       headers: new HttpHeaders({
         'cache-control': 'no-cache',
         'Content-Type':  'application/json',
-      })
+      }).append('Authorization', 'Bearer ' + this.get_token())
     };
+
+    console.log(options);
 
     return this.http.post( this.url + '/users', user, options ).pipe(
       tap( (data) => {
+        console.log(options);
         console.log(JSON.stringify(data) );
       })
     );
