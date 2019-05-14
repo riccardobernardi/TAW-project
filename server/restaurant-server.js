@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+var result = require('dotenv').config({ path: __dirname + '/.env' }); // The dotenv module will load a file named ".env"
 var http = require("http"); // HTTP module
 /*import colors = require('colors');
 colors.enabled = true;*/
@@ -25,7 +26,7 @@ var app = express();
 // If the token is valid, req.user will be set with the JSON object 
 // decoded to be used by later middleware for authorization and access control.
 //
-var auth = jwt({ secret: /*process.env.JWT_SECRET*/ "AAAAAAAAA" });
+var auth = jwt({ secret: process.env.JWT_SECRET });
 app.use(cors());
 // Install the top-level middleware "bodyparser"
 app.use(bodyparser.json());
@@ -169,14 +170,12 @@ app.route("/items/:id").get(auth, function (req, res, next) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
 });
-
-
 app.get('/renew', auth, function (req, res, next) {
     var tokendata = req.user;
     delete tokendata.iat;
     delete tokendata.exp;
     console.log("Renewing token for user " + JSON.stringify(tokendata));
-    var token_signed = jsonwebtoken.sign(tokendata, /*process.env.JWT_SECRET*/ "AAAAAAAAA", { expiresIn: '30s' });
+    var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '30s' });
     return res.status(200).json({ error: false, errormessage: "", token: token_signed });
 });
 // Configure HTTP basic authentication strategy 
@@ -213,7 +212,7 @@ app.get("/login", passport.authenticate('basic', { session: false }), function (
         role: req.user.role
     };
     console.log("Login granted. Generating token");
-    var token_signed = jsonwebtoken.sign(tokendata, /*process.env.JWT_SECRET*/ "AAAAAAAAA", { expiresIn: '1h' });
+    var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '1h' });
     // Note: You can manually check the JWT content at https://jwt.io
     return res.status(200).json({ error: false, errormessage: "", token: token_signed });
 });

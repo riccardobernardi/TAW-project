@@ -31,7 +31,7 @@ var app = express();
 // If the token is valid, req.user will be set with the JSON object 
 // decoded to be used by later middleware for authorization and access control.
 //
-var auth = jwt( {secret: /*process.env.JWT_SECRET*/ "AAAAAAAAA"} );
+var auth = jwt( {secret: process.env.JWT_SECRET} );
 
 app.use( cors() );
 
@@ -218,7 +218,7 @@ app.get('/renew', auth, (req,res,next) => {
    delete tokendata.iat;
    delete tokendata.exp;
    console.log("Renewing token for user " + JSON.stringify( tokendata ));
-   var token_signed = jsonwebtoken.sign(tokendata, /*process.env.JWT_SECRET*/"AAAAAAAAA", { expiresIn: '30s' } );
+   var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '1h' } );
    return res.status(200).json({ error: false, errormessage: "", token: token_signed });
 });
 
@@ -268,7 +268,7 @@ app.get("/login", passport.authenticate('basic', { session: false }), (req,res,n
    };
 
    console.log("Login granted. Generating token" );
-   var token_signed = jsonwebtoken.sign(tokendata, /*process.env.JWT_SECRET*/"AAAAAAAAA", { expiresIn: '1h' } );
+   var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '1h' } );
 
    // Note: You can manually check the JWT content at https://jwt.io
 
