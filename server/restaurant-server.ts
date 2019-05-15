@@ -17,7 +17,7 @@ import cors = require('cors');                  // Enable CORS middleware
 import io = require('socket.io');               // Socket.io websocket library
 import * as table from './Table';
 import * as user from './User';
-import * as order from './Ticket';
+import * as ticket from './Ticket';
 import * as item from './Item';
 
 var ios = undefined;
@@ -44,7 +44,7 @@ app.get("/", (req,res) => {
 
 res.status(200).json( { 
    api_version: "0.1.0", 
-   endpoints: [ "/login", "/users", "/tables", "/item", "/orders", "/orders/:id/command", "/report" ] } ); // json method sends a JSON response (setting the correct Content-Type) to the client
+   endpoints: [ "/login", "/users", "/tables", "/items", "/tickets", "/tickets/:id/command", "/reports" ] } ); // json method sends a JSON response (setting the correct Content-Type) to the client
 });
 
 app.route("/users").get(auth, (req,res,next) => {
@@ -52,9 +52,9 @@ app.route("/users").get(auth, (req,res,next) => {
    if(!user.newUser(req.user).hasDeskRole())
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
    //aggiungere filtri skip e limit come nell'esempio per supportare la paginazione?
-   var filter = {}
+   var filter: any = {}
    if(req.query.role)
-      filter = {role: req.query.role}
+      filter.role = req.query.role;
 
    user.getModel().find(filter, "username roles").then( (userslist) => {
       return res.status(200).json( userslist ); 
@@ -66,6 +66,8 @@ app.route("/users").get(auth, (req,res,next) => {
    if(!user.newUser(req.user).hasDeskRole())
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
    var u = user.newUser( req.body );
+
+   //TODO controlli isUser
    if( !req.body.password ) {
    return next({ statusCode:404, error: true, errormessage: "Password field missing"} );
    }
@@ -81,14 +83,30 @@ app.route("/users").get(auth, (req,res,next) => {
 });
 
 //cambiare username con id restituito da mongo e maagari aggiungere filtri su username in get users?
-app.delete("/users/:username", auth, (req, res, next) => {
+app.ruote("/users/:username").delete(auth, (req, res, next) => {
    if(!user.newUser(req.user).hasDeskRole())
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
    user.getModel().deleteOne( {username: req.params.username } ).then( ()=> {
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason)=> {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+reason });
-   })
+   });
+}).put(auth, (req, res, next) => {
+   if(!user.newUser(req.user).hasDeskRole()){
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
+   }
+
+   var u = user.newUser( req.body );
+   
+   //TODO controlli isUser
+   
+   //errore strano con findOneAndReplace, poi vedere, altrimenti tenere findOneAndUpdate
+   user.getModel().findOneAndUpdate({username: req.params.username}, u).then( (data)=> {
+      return res.status(200).json( data );
+   }).catch( (reason)=> {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+reason });
+   });
+
 });
 
 app.route("/tables").get(auth, (req, res, next) => {
@@ -118,7 +136,7 @@ app.route("/tables").get(auth, (req, res, next) => {
    });
 });;
 
-app.get("/tables/:number", auth, (req, res, next) => {
+app.route("/tables/:number").get(auth, (req, res, next) => {
 
    var sender = user.newUser(req.user);
    
@@ -130,16 +148,55 @@ app.get("/tables/:number", auth, (req, res, next) => {
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
    });
-})
+}).patch(auth, (req, res, next) => {
+   var sender = user.newUser(req.user);
+   
+   if(!sender.hasDeskRole() && !sender.hasWaiterRole()){
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+   }
+
+
+
+   if ( !req.body || (req.body.number && typeof(req.body.number) != 'number') || (req.body.max_people && typeof(req.body.max_people) != 'number') || (req.body.state && typeof(req.body.state) != 'string')){
+      return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
+   }
+
+   var update: any = {};
+   
+   if (req.body.number){
+      update.number = req.body.number;
+   }
+
+   if (req.body.max_people){
+      update.max_people = req.body.max_people;
+   }
+
+   if (req.body.state){
+      update.state = req.body.state;
+   }
+
+
+
+   table.getModel().findOneAndUpdate( {number: req.params.number}, { $set: update}, ).then( (data : table.Table) => {
+      return res.status(200).json( {
+         number: data.number,
+         max_people: data.number,
+         state: data.state
+      });
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   });
+   
+});
 
 app.route("/items").get(auth, (req,res,next) => {
    var sender = user.newUser(req.user);
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
-   var filter = {}
+   var filter: any = {}
    if(req.query.type)
-      filter = {type: req.query.type}
+      filter.type = req.query.type;
 
    item.getModel().find(filter).then( (itemslist) => {
       return res.status(200).json( itemslist ); 
@@ -211,6 +268,38 @@ app.route("/items/:id").get(auth, (req,res,next) => {
    })
 });
 
+
+app.route("/tickets").get(auth, (req, res, next) => {
+   var sender = user.newUser(req.user);
+   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+
+
+   var filter: any = {}
+   if(req.query.start)
+      filter.start = req.query.start;
+
+   if(req.query.state){
+      filter.state = req.query.state;
+   }
+   if(req.query.waiter){
+      filter.waiter = req.query.waiter;
+   }     
+   
+   if(req.query.table){
+      filter.table = req.query.table;
+   }
+
+   ticket.getModel().find(filter).then( (ticketslist) => {
+      return res.status(200).json( ticketslist ); 
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   });
+   
+
+}).post(auth, (req, res, next) => {
+
+});
 
 
 app.get('/renew', auth, (req,res,next) => {
@@ -380,9 +469,9 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
 
 /*app.route("/messages").get( auth, (req,res,next) => {
 
-var filter = {};
+var filter: any = {};
 if( req.query.tags ) {
-filter = { tags: {$all: req.query.tags } };
+filter.tags = {$all: req.query.tags };
 }
 console.log("Using filter: " + JSON.stringify(filter) );
 console.log(" Using query: " + JSON.stringify(req.query) );
