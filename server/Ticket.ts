@@ -5,13 +5,15 @@ import mongoose = require('mongoose');
 export interface Ticket extends mongoose.Document {
     _id: string,
     waiter: string,
-    table: string,
+    table: number,
     start: Date,
     end: Date,
-    command: string,
+    orders: string,
     state: string,
     total: number
 }
+
+export var orderState = ["ordered", "preparation", "ready", "delivered"];
 
 var type = ["dish, beverage"]; 
 
@@ -34,9 +36,9 @@ var ticketSchema = new mongoose.Schema( {
     },
     orders: {
         type: [{
-            id_command: String,
-            id_menu: String,
-            id_waiter: String,
+            id_order: String,
+            name_item: String,
+            username_waiter: String,
             state: String,
             price: Number, 
             added: [String],

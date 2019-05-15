@@ -1,4 +1,5 @@
 const result = require('dotenv').config({path: __dirname + '/.env'})     // The dotenv module will load a file named ".env"
+var ObjectID = require('mongodb').ObjectID;
 import fs = require('fs');
 import http = require('http');                // HTTP module
 import https = require('https');              // HTTPS module
@@ -48,7 +49,7 @@ res.status(200).json( {
 });
 
 app.route("/users").get(auth, (req,res,next) => {
-
+   console.log(typeof(req.body.date));
    if(!user.newUser(req.user).hasDeskRole())
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
    //aggiungere filtri skip e limit come nell'esempio per supportare la paginazione?
@@ -83,7 +84,7 @@ app.route("/users").get(auth, (req,res,next) => {
 });
 
 //cambiare username con id restituito da mongo e maagari aggiungere filtri su username in get users?
-app.ruote("/users/:username").delete(auth, (req, res, next) => {
+app.route("/users/:username").delete(auth, (req, res, next) => {
    if(!user.newUser(req.user).hasDeskRole())
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
    user.getModel().deleteOne( {username: req.params.username } ).then( ()=> {
@@ -298,8 +299,113 @@ app.route("/tickets").get(auth, (req, res, next) => {
    
 
 }).post(auth, (req, res, next) => {
+   var sender = user.newUser(req.user);
+   if(!sender.hasDeskRole() && !sender.hasWaiterRole()){
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+   }
    
+
+   var startdate: Date = new Date(req.body.start); 
+
+   if (!req.body || !req.body.waiter || !req.body.table || !req.body.start || typeof(req.body.waiter) == 'string' || typeof(req.body.table) == 'number' || startdate.toString() == 'Invalid Date' ){
+      return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
+   }
+
+   var newer: any = {};
+   newer.waiter = req.body.waiter;
+   newer.table = req.body.table;
+   newer.start = startdate;
+
+
+
+   var t = new (ticket.getModel()) (newer);
+   
+   
+      
+   t.save().then( (data) => {
+      return res.status(200).json({ error: false, errormessage: "", id: data._id });
+   }).catch( (reason) => {
+   if( reason.code === 11000 )
+      return next({statusCode:404, error:true, errormessage: "Ticket already exists"} );
+   return next({ statusCode:404, error: true, errormessage: "DB error: "+reason.errmsg });
+   })
 });
+
+app.route('/tickets/:id').get(auth, (req, res, next) => {
+   var sender = user.newUser(req.user);
+   
+   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+
+   
+
+   ticket.getModel().findById(req.params.id).then( (data) => {
+      return res.status(200).json( data ); 
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   });
+}).patch(auth, (req, res, next) => {
+   var sender = user.newUser(req.user);
+   
+   if(!sender.hasDeskRole()){
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+   }
+
+   var enddate: Date = new Date(req.body.end); 
+
+
+   if ( !req.body || (req.body.end && enddate.toString() != 'Invalid Date') || (req.body.state && typeof(req.body.state) != 'string')){
+      return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
+   }
+
+   var update: any = {};
+   
+   if (req.body.end){
+      update.end = req.body.end;
+   }
+
+   if (req.body.state){
+      update.state = req.body.state;
+   }
+
+   ticket.getModel().findOneAndUpdate( {_id: req.params.id}, { $set: update}, ).then( (data : ticket.Ticket) => {
+      return res.status(200).json( {error:false, errormessage:""} );
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   });
+});
+
+app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
+   ticket.getModel().findById(req.params.id).then( (data : ticket.Ticket) => {
+      return res.status(200).json( data.orders ); 
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   });
+}).post(auth, (req, res, next) => {
+   var sender = user.newUser(req.user);
+   
+   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+
+   if (!req.body || !req.body.name_item || !req.body.price || !req.body.added || typeof(req.body.name_item) == 'string' || typeof(req.body.price) == 'number' || Array.isArray(req.body.added)){
+      return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
+   }
+
+   var newer: any = {};
+   newer.id_order = new ObjectID();
+   newer.name_item = req.body.name_item;
+   newer.price = req.body.price;
+   newer.added = req.body.added;
+   newer.state = ticket.orderState[0];
+   newer.username_waiter = req.user.username;
+
+   ticket.getModel().update( { _id: req.params.id}, { $push: { orders: newer } }).then( () => {
+      return res.status(200).json( {error:false, errormessage:""} ); 
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   });
+});
+
 
 
 app.get('/renew', auth, (req,res,next) => {
