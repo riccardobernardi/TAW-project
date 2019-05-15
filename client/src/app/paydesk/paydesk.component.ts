@@ -11,7 +11,7 @@ export class PaydeskComponent implements OnInit {
 
   constructor(private us: UserHttpService, private router: Router  ) { }
 
-  private roles: string[] = ['waiter', 'cook', 'barman', 'admin'];
+  private roles: string[] = ['waiter', 'cook', 'bartender', 'admin'];
   private newRoleSelected: string = undefined;
 
   private errmessage = undefined;
