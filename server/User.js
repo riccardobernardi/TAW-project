@@ -1,7 +1,7 @@
 "use strict";
-exports.__esModule = true;
-var mongoose = require("mongoose");
-var crypto = require("crypto");
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose = require("mongoose");
+const crypto = require("crypto");
 var roles = ["WAITER", "COOK", "DESK", "BARTENDER"];
 var userSchema = new mongoose.Schema({
     username: {
@@ -17,7 +17,7 @@ var userSchema = new mongoose.Schema({
     role: {
         type: mongoose.SchemaTypes.String,
         required: true,
-        "enum": roles
+        enum: roles
     },
     salt: {
         type: mongoose.SchemaTypes.String,
@@ -102,3 +102,4 @@ function newUser(data) {
     return user;
 }
 exports.newUser = newUser;
+//# sourceMappingURL=User.js.map

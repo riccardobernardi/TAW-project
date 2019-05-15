@@ -1,6 +1,6 @@
 "use strict";
-exports.__esModule = true;
-var mongoose = require("mongoose");
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose = require("mongoose");
 function isItem(arg) {
     return (arg._id && arg.name && arg.type && arg.price && arg.required_time && typeof (arg.name) == 'string' && type.includes(arg.type) && typeof (arg.price) == 'number' && typeof (arg.price) == 'number' && (!arg.description || typeof (arg.description) == 'string'));
 }
@@ -21,7 +21,7 @@ var itemSchema = new mongoose.Schema({
     type: {
         type: mongoose.SchemaTypes.String,
         required: true,
-        "enum": type
+        enum: type,
     },
     price: {
         type: mongoose.SchemaTypes.Number,
@@ -63,3 +63,4 @@ function getModel() {
     return itemModel;
 }
 exports.getModel = getModel;
+//# sourceMappingURL=Item.js.map

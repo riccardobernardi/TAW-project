@@ -1,6 +1,6 @@
 "use strict";
-exports.__esModule = true;
-var mongoose = require("mongoose");
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose = require("mongoose");
 var type = ["dish, beverage"];
 var ticketSchema = new mongoose.Schema({
     waiter: {
@@ -26,7 +26,7 @@ var ticketSchema = new mongoose.Schema({
                 id_waiter: String,
                 state: String,
                 price: Number,
-                added: [String]
+                added: [String],
             }],
         required: true
     },
@@ -51,3 +51,4 @@ function getModel() {
     return ticketModel;
 }
 exports.getModel = getModel;
+//# sourceMappingURL=Ticket.js.map
