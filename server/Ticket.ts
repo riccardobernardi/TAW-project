@@ -5,19 +5,34 @@ import mongoose = require('mongoose');
 export interface Ticket extends mongoose.Document {
     _id: string,
     waiter: string,
-    table: string,
+    table: number,
     start: Date,
     end: Date,
-    command: string,
+    orders: Array<Order>,
     state: string,
     total: number
 }
+
+
+//TODO controllare sta interfaccia
+export interface Order {
+    id_order: string,
+    name_item: String,
+    username_waiter: String,
+    state: String,
+    price: Number, 
+    added: [String],
+}
+
+export const orderState = ["ordered", "preparation", "ready", "delivered"];
+
+export const ticketState = ["open", "closed"]
 
 var type = ["dish, beverage"]; 
 
 var ticketSchema = new mongoose.Schema( {
     waiter: {
-        type: mongoose.SchemaTypes.ObjectId,
+        type: mongoose.SchemaTypes.String,
         required: true
     },
     table: {
@@ -34,9 +49,9 @@ var ticketSchema = new mongoose.Schema( {
     },
     orders: {
         type: [{
-            id_command: String,
-            id_menu: String,
-            id_waiter: String,
+            id_order: String,
+            name_item: String,
+            username_waiter: String,
             state: String,
             price: Number, 
             added: [String],
@@ -44,8 +59,8 @@ var ticketSchema = new mongoose.Schema( {
         required: true
     },
     state: {
-        type: mongoose.SchemaTypes.ObjectId,
-        required: true
+        type: mongoose.SchemaTypes.String,
+        required: false
     },
     total: {
         type: mongoose.SchemaTypes.Number,
