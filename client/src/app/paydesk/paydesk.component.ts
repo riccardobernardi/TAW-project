@@ -16,6 +16,8 @@ export class PaydeskComponent implements OnInit {
 
   private errmessage = undefined;
   private user = { username: '', password: '', role: '' };
+  selDelUser: any;
+  selTable: any;
 
   ngOnInit() {
     if (this.us.get_token() == undefined || this.us.get_token() == '') {

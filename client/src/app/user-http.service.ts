@@ -114,4 +114,24 @@ export class UserHttpService {
   get_id() {
     return jwt_decode(this.token).id;
   }
+
+  get_users() {
+    return ['paolo', 'gianni'];
+  }
+
+  deleteUser(selDelUser) {
+    console.log('deleted:' + selDelUser);
+  }
+
+  changePasswordUser(selUser, newPwd) {
+    console.log('new pwd is : ' + newPwd + 'for user : ' + selUser);
+  }
+
+  get_tables() {
+    return [1, 2, 3, 4];
+  }
+
+  emitReceipt() {
+    return 'price is 100$';
+  }
 }
