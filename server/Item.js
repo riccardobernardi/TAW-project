@@ -1,8 +1,9 @@
 "use strict";
 exports.__esModule = true;
 var mongoose = require("mongoose");
+/*ARGID non c'è tra i campi nella post!*/
 function isItem(arg) {
-    return (arg._id && arg.name && arg.type && arg.price && arg.required_time && typeof (arg.name) == 'string' && exports.type.includes(arg.type) && typeof (arg.price) == 'number' && typeof (arg.price) == 'number' && (!arg.description || typeof (arg.description) == 'string'));
+    return (arg._id && arg.name && arg.type && arg.price && arg.required_time && typeof (arg.name) == 'string' && exports.type.includes(arg.type) && !isNaN(parseInt(arg.price)) && (!arg.description || typeof (arg.description) == 'string') && !isNaN(parseInt(arg.required_time)));
 }
 exports.isItem = isItem;
 ;

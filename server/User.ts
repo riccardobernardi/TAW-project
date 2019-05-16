@@ -1,7 +1,7 @@
 import mongoose = require('mongoose');
 import crypto = require('crypto');
 
-var roles = ["WAITER", "COOK", "DESK", "BARTENDER"];
+export const roles = ["waiter", "cook", "desk", "bartender"];
 
 export interface User extends mongoose.Document {
     //readonly _id: mongoose.Schema.Types.ObjectId,
@@ -74,11 +74,11 @@ userSchema.methods.hasDeskRole = function(): boolean {
             return true;
     }
     return false;*/
-    return this.role === 'DESK';
+    return this.role === "desk";
 }
 
 userSchema.methods.setDesk = function() {
-    this.role = "DESK";
+    this.role = "desk";
 }
 
 userSchema.methods.hasWaiterRole = function(): boolean {
@@ -87,12 +87,12 @@ userSchema.methods.hasWaiterRole = function(): boolean {
             return true;
     }
     return false;*/
-    return this.role === 'WAITER';
+    return this.role === 'waiter';
 
 }
 
 userSchema.methods.setWaiter = function() {
-    this.role = "WAITER";
+    this.role = "waiter";
 }
 
 userSchema.methods.hasCookRole = function(): boolean {
@@ -101,12 +101,12 @@ userSchema.methods.hasCookRole = function(): boolean {
             return true;
     }
     return false;*/
-    return this.role === 'COOK';
+    return this.role === 'cook';
 
 }
 
 userSchema.methods.setCook = function() {
-    this.role = "COOK";
+    this.role = "cook";
 }
 
 userSchema.methods.hasBartenderRole = function(): boolean {
@@ -115,12 +115,12 @@ userSchema.methods.hasBartenderRole = function(): boolean {
             return true;
     }
     return false;*/
-    return this.role === 'BARTENDER';
+    return this.role === 'bartender';
 
 }
 
 userSchema.methods.setBartender = function() {
-    this.role = "BARTENDER";
+    this.role = "bartender";
 }
 
 export function getSchema() { return userSchema; }
