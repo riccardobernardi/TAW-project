@@ -2,11 +2,11 @@
 exports.__esModule = true;
 var mongoose = require("mongoose");
 function isItem(arg) {
-    return (arg._id && arg.name && arg.type && arg.price && arg.required_time && typeof (arg.name) == 'string' && type.includes(arg.type) && typeof (arg.price) == 'number' && typeof (arg.price) == 'number' && (!arg.description || typeof (arg.description) == 'string'));
+    return (arg._id && arg.name && arg.type && arg.price && arg.required_time && typeof (arg.name) == 'string' && exports.type.includes(arg.type) && typeof (arg.price) == 'number' && typeof (arg.price) == 'number' && (!arg.description || typeof (arg.description) == 'string'));
 }
 exports.isItem = isItem;
 ;
-var type = ["dish, beverage"];
+exports.type = ["dish", "beverage"];
 var countDecimals = function (value) {
     if (Math.floor(value) !== value)
         return value.toString().split(".")[1].length || 0;
@@ -21,7 +21,7 @@ var itemSchema = new mongoose.Schema({
     type: {
         type: mongoose.SchemaTypes.String,
         required: true,
-        "enum": type
+        "enum": exports.type
     },
     price: {
         type: mongoose.SchemaTypes.Number,

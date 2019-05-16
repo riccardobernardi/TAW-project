@@ -539,91 +539,198 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
    console.log("Connected to MongoDB");
    user.getModel().deleteMany({}).then(data => {
       console.log("Database users pulito: " + data);
-   }).catch(err => {
-      console.log("Errore nella pulizia del dataset utenti: " + err);
-   });
-   var u = user.newUser({
-      username: "admin",
-   });
-   u.setDesk();
-   u.setPassword("admin");
-   u.save().then(() => {
-      console.log("Admin user created");
-      user.getModel().count({}).then((count) => {
-         console.log(count);
-         if (count != 0) {
-            console.log("Adding some test data into the database");
-            var user1 = user.newUser({
-               username: "waiter1"
-            })
-            user1.setWaiter();
-            user1.setPassword("waiter1");
-            var pr1 = user1.save();
-            
-            var user2 = user.newUser({
-               username: "cook1"
-            })
-            user2.setCook();
-            user2.setPassword("cook1");
-            var pr2 = user2.save();
-
-            var user3 = user.newUser({
-               username: "bartender1"
-            })
-            user3.setBartender();
-            user3.setPassword("bartender1");
-            var pr3 = user3.save();
-
-            Promise.all([pr1, pr2, pr3])
-               .then(function () {
-               console.log("Users saved");
-            })
-               .catch(function (reason) {
-               console.log("Unable to save: " + reason);
-            });
-         }
+      var u = user.newUser({
+         username: "admin",
       });
-   }).catch((err) => {
-      console.log("Unable to create desk user: " + err);
+      u.setDesk();
+      u.setPassword("admin");
+      return u.save();
+   }).then(() => {
+      console.log("Admin user created");
+      return user.getModel().count({});
+   }).then((count) => {
+      console.log(count);
+      if (count != 0) {
+         console.log("Adding some test data into the database");
+         var user1 = user.newUser({
+            username: "waiter1"
+         })
+         user1.setWaiter();
+         user1.setPassword("waiter1");
+         var pr1 = user1.save();
+         
+         var user2 = user.newUser({
+            username: "cook1"
+         })
+         user2.setCook();
+         user2.setPassword("cook1");
+         var pr2 = user2.save();
+
+         var user3 = user.newUser({
+            username: "bartender1"
+         })
+         user3.setBartender();
+         user3.setPassword("bartender1");
+         var pr3 = user3.save();
+
+         var user4 = user.newUser({
+            username: "waiter2"
+         })
+         user4.setWaiter();
+         user4.setPassword("waiter2");
+         var pr4 = user4.save();
+
+         Promise.all([pr1, pr2, pr3, pr4])
+            .then(function () {
+            console.log("Users saved");
+         })
+            .catch(function (reason) {
+            console.log("Unable to save: " + reason);
+         });
+      }
+   }).catch(err => {
+      console.log("Errore " + err);
    });
 
    table.getModel().deleteMany({}).then(data => {
       console.log("Database tables pulito: " + data);
+
+      var tableModel = table.getModel();
+      var t1 = (new tableModel({number : 1, max_people: 4})).save();
+      var t2 = (new tableModel({number : 2, max_people: 4})).save();
+      var t3 = (new tableModel({number : 3, max_people: 6})).save();
+      Promise.all([t1, t2, t3]).then(function () {
+         console.log("Table saved");
+      }).catch(function (reason) {
+         console.log("Unable to save tables: " + reason);
+      });
    }).catch(err => {
       console.log("Errore nella pulizia del dataset tables: " + err);
    });
-   var tableModel = table.getModel();
-   var t1 = (new tableModel({number : 1, max_people: 4})).save();
-   var t2 = (new tableModel({number : 2, max_people: 4})).save();
-   var t3 = (new tableModel({number : 3, max_people: 6})).save();
-   Promise.all([t1, t2, t3]).then(function () {
-      console.log("Table saved");
-   }).catch(function (reason) {
-      console.log("Unable to save tables: " + reason);
+   
+
+   item.getModel().deleteMany({}).then(data => {
+      console.log("Dataset items pulito: " + data);
+      
+      var itemModel = item.getModel();
+      var i1 = (new itemModel({
+         name: "Spaghetti al pomodoro.",
+         type: item.type[0],
+         price: 5,
+         ingredients: ["spaghetti", "sugo di pomodoro"],
+         required_time: 12,
+         description: "Semplici spaghetti al pomodoro che Cecchini non può però mangiare a pranzo, perchè porta sempre il riso per cani."
+      })).save();
+
+      var i2 = (new itemModel({
+         name: "Spaghetti al ragu",
+         type: item.type[0],
+         price: 6,
+         ingredients: ["spaghetti", "sugo di pomodoro", "carne macinata"],
+         required_time: 12,
+         description: "Semplici spaghetti al ragù."
+      })).save();
+
+      var i3 = (new itemModel({
+         name: "Bistecca alla griglia",
+         type: item.type[0],
+         price: 8,
+         ingredients: ["bistecca"],
+         required_time: 10, 
+         description: "Forse è una bistecca?"
+      })).save();
+
+      var i4 = (new itemModel({
+         name: "Coca cola",
+         type: item.type[1],
+         price: 2.5,
+         ingredients: ["coca cola"],
+         required_time: 1, 
+         description: "Coca cola alla spina da 333ml"
+      })).save();
+
+      var i5 = (new itemModel({
+         name: "Chinotto",
+         type: item.type[1],
+         price: 2,
+         ingredients: ["coca cola"],
+         required_time: 1, 
+         description: "Chinotto in lattina da 333ml"
+      })).save();
+
+      Promise.all([i1, i2, i3, i4, i5]).then(function () {
+         console.log("Items saved");
+      }).catch(function (reason) {
+         console.log("Unable to save items: " + reason);
+      });
    });
 
-   // To start a standard HTTP server we directly invoke the "listen"
-   // method of express application
-   let server = http.createServer(app);
-   /*ios = io(server);
-   ios.on('connection', function (client) {
-      console.log("Socket.io client connected".green);
-   });*/
-   server.listen(8080, () => console.log("HTTP Server started on port 8080"));
-   // To start an HTTPS server we create an https.Server instance 
-   // passing the express application middleware. Then, we start listening
-   // on port 8443
-   //
-   /*
-   https.createServer({
-   key: fs.readFileSync('keys/key.pem'),
-   cert: fs.readFileSync('keys/cert.pem')
-   }, app).listen(8443);
-   */
-}, function onrejected() {
-    console.log("Unable to connect to MongoDB");
-    process.exit(-2);
+
+   ticket.getModel().deleteMany({}).then(data => {
+      var ticketModel = ticket.getModel();
+
+      var ti1 = new ticketModel({
+         waiter: "waiter1",
+         table: 1,
+         start: new Date("05/05/2019, 11:49:36 AM"),
+         orders: [{
+            id_order: new ObjectID(),
+            name_item: "Bistecca alla griglia",
+            username_waiter: "waiter1",
+            state: ticket.orderState[0],
+            price: 9
+         }],
+         state: ticket.ticketState[0],
+         total: 0
+      }).save();
+
+      var ti2 = new ticketModel({
+         waiter: "waiter2",
+         table: 1,
+         start: new Date("05/05/2019, 08:49:36 PM"),
+         orders: [{
+            id_order: new ObjectID(),
+            name_item: "Spaghetti al pomodoro",
+            username_waiter: "waiter2",
+            state: ticket.orderState[0],
+            price: 6,
+            added: ["Mozzarella"]
+         }],
+         state: ticket.ticketState[0],
+         total: 0
+      }).save();
+
+      Promise.all([ti1, ti2]).then(function () {
+         console.log("Tickets saved");
+      }).catch(function (reason) {
+         console.log("Unable to save tickets: " + reason);
+      });
+   });
 });
+
+let server = http.createServer(app);
+//ios = io(server);
+//ios.on('connection', function(client) {
+console.log( "Socket.io client connected" );
+server.listen( 8080, () => console.log("HTTP Server started on port 8080") );
+
+// To start an HTTPS server we create an https.Server instance 
+// passing the express application middleware. Then, we start listening
+// on port 8443
+//
+/*
+https.createServer({
+key: fs.readFileSync('keys/key.pem'),
+cert: fs.readFileSync('keys/cert.pem')
+}, app).listen(8443);
+*/
+
+/*},
+function onrejected() {
+console.log("Unable to connect to MongoDB");
+process.exit(-2);
+}
+)
 
 /*app.route("/messages").get( auth, (req,res,next) => {
 
