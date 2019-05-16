@@ -131,7 +131,7 @@ export class UserHttpService {
     return [1, 2, 3, 4];
   }
 
-  emitReceipt() {
-    return 'price is 100$';
+  emitReceipt(seltable) {
+    return 'price is ' + seltable * 20 + '$';
   }
 }

@@ -13,7 +13,7 @@ import {UserHttpService} from './user-http.service';
 })
 export class OrderService {
 
-  public orders: Order[] = [];
+  public orders: Order[] = mockorders;
   private id = 2;
 
   /*private messageSource = new BehaviorSubject(this.orders);
@@ -57,7 +57,7 @@ export class OrderService {
     if (val === undefined) {
       m = this.orders;
     } else {
-      m = this.orders.filter(obj => (obj.selTable === val || obj.selTable === -1));
+      m = this.orders.filter(obj => (obj.selTable == val || obj.selTable == -1));
     }
 
     /*return this.http.get<Order[]>( this.us.url + '/messages', this.create_options( {limit: '10', skip: '0'} ) ).pipe(
@@ -66,7 +66,7 @@ export class OrderService {
     );*/
     // return new Observable(m);
     console.log(m);
-    return of(m);
+    return m;
   }
 
 /*  private create_options( params = {} ) {

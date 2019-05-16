@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import {UserHttpService} from '../user-http.service';
+import {OrderService} from '../order.service';
+import {Order} from '../Order';
+import {mockorders} from '../mock-orders';
 
 @Component({
   selector: 'app-paydesk',
@@ -9,7 +12,7 @@ import {UserHttpService} from '../user-http.service';
 })
 export class PaydeskComponent implements OnInit {
 
-  constructor(private us: UserHttpService, private router: Router  ) { }
+  constructor(private us: UserHttpService, private router: Router, private order: OrderService  ) { }
 
   private roles: string[] = ['waiter', 'cook', 'bartender', 'admin'];
   private newRoleSelected: string = undefined;
