@@ -34,6 +34,8 @@ var app = express();
 //
 var auth = jwt( {secret: process.env.JWT_SECRET} );
 
+var ios = undefined;
+
 app.use( cors() );
 
 // Install the top-level middleware "bodyparser"
@@ -705,6 +707,12 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
       }).catch(function (reason) {
          console.log("Unable to save tickets: " + reason);
       });
+   });
+
+   let server = http.createServer(app);
+   ios = io(server);
+   ios.on('connection', function(client) {
+      console.log( "Socket.io client connected");
    });
 });
 
