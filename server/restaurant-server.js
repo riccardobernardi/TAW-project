@@ -15,10 +15,12 @@ var passportHTTP = require("passport-http"); // implements Basic and Digest auth
 var jsonwebtoken = require("jsonwebtoken"); // JWT generation
 var jwt = require("express-jwt"); // JWT parsing middleware for express
 var cors = require("cors"); // Enable CORS middleware
+var io = require("socket.io"); // Socket.io websocket library
 var table = require("./Table");
 var user = require("./User");
 var ticket = require("./Ticket");
 var item = require("./Item");
+var rooms = ["waiters", "cookers", "desks", "bartenders"];
 var ios = undefined;
 var app = express();
 // We create the JWT authentication middleware
@@ -29,6 +31,7 @@ var app = express();
 // decoded to be used by later middleware for authorization and access control.
 //
 var auth = jwt({ secret: process.env.JWT_SECRET });
+var ios = undefined;
 app.use(cors());
 // Install the top-level middleware "bodyparser"
 app.use(bodyparser.json());
@@ -49,7 +52,7 @@ app.route("/users").get(auth, function (req, res, next) {
     var filter = {};
     if (req.query.role)
         filter.role = req.query.role;
-    user.getModel().find(filter, "username roles").then(function (userslist) {
+    user.getModel().find(filter, "username role").then(function (userslist) {
         return res.status(200).json(userslist);
     })["catch"](function (reason) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
@@ -87,7 +90,8 @@ app.route("/users/:username")["delete"](auth, function (req, res, next) {
     var u = user.newUser(req.body);
     //TODO controlli isUser
     //errore strano con findOneAndReplace, poi vedere, altrimenti tenere findOneAndUpdate
-    user.getModel().findOneAndUpdate({ username: req.params.username }, u).then(function (data) {
+    //occhio al setting dei campi, si può fare diversamente?
+    user.getModel().findOneAndUpdate({ username: req.params.username }, { $set: { username: req.body.username, password: req.body.password, role: req.body.role } }).then(function (data) {
         return res.status(200).json(data);
     })["catch"](function (reason) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
@@ -131,7 +135,10 @@ app.route("/tables/:number").get(auth, function (req, res, next) {
     if (!sender.hasDeskRole() && !sender.hasWaiterRole()) {
         return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
     }
-    if (!req.body || (req.body.number && typeof (req.body.number) != 'number') || (req.body.max_people && typeof (req.body.max_people) != 'number') || (req.body.state && typeof (req.body.state) != 'string')) {
+    /*if ( !req.body || (req.body.number && typeof(req.body.number) != 'number') || (req.body.max_people && typeof(req.body.max_people) != 'number') || (req.body.state && typeof(req.body.state) != 'string')){
+       return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
+    }*/
+    if (!req.body || (req.body.number && isNaN(parseInt(req.body.number))) || (req.body.max_people && isNaN(parseInt(req.body.max_people))) || (req.body.state && typeof (req.body.state) != 'string')) {
         return next({ statusCode: 404, error: true, errormessage: "Wrong format" });
     }
     var update = {};
@@ -144,6 +151,7 @@ app.route("/tables/:number").get(auth, function (req, res, next) {
     if (req.body.state) {
         update.state = req.body.state;
     }
+    //perchè la patch con findOneAndUpdate ritora sempre un valore vecchio?
     table.getModel().findOneAndUpdate({ number: req.params.number }, { $set: update }).then(function (data) {
         return res.status(200).json({
             number: data.number,
@@ -161,7 +169,7 @@ app.route("/items").get(auth, function (req, res, next) {
     var filter = {};
     if (req.query.type)
         filter.type = req.query.type;
-    item.getModel().find(filter).then(function (itemslist) {
+    item.getModel().find(filter, "name type price required_time ingredients").then(function (itemslist) {
         return res.status(200).json(itemslist);
     })["catch"](function (reason) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
@@ -170,6 +178,7 @@ app.route("/items").get(auth, function (req, res, next) {
     if (!user.newUser(req.user).hasDeskRole())
         return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk" });
     var i = new (item.getModel())(req.body);
+    console.log(i);
     if (!item.isItem(i)) {
         return next({ statusCode: 404, error: true, errormessage: "Wrong format" });
     }
@@ -181,6 +190,7 @@ app.route("/items").get(auth, function (req, res, next) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason.errmsg });
     });
 });
+/*DECIDERE SE UTILIZZARE ALTRI CAMPI o SEMPRE ID*/
 app.route("/items/:id").get(auth, function (req, res, next) {
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
@@ -198,7 +208,7 @@ app.route("/items/:id").get(auth, function (req, res, next) {
         return next({ statusCode: 404, error: true, errormessage: "Wrong format" });
     }
     item.getModel().findById(req.params.id).then(function (item) {
-        return item.set(i);
+        return item.set(i).save();
     }).then(function (item) {
         return res.status(200).json(item);
     })["catch"](function (reason) {
@@ -208,7 +218,7 @@ app.route("/items/:id").get(auth, function (req, res, next) {
     if (!user.newUser(req.user).hasDeskRole()) {
         return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk" });
     }
-    item.getModel().findOneAndDelete(req.params.username).then(function () {
+    item.getModel().findOneAndDelete({ _id: req.params.id }).then(function () {
         return res.status(200).json({ error: false, errormessage: "" });
     })["catch"](function (reason) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
@@ -241,14 +251,18 @@ app.route("/tickets").get(auth, function (req, res, next) {
         return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
     }
     var startdate = new Date(req.body.start);
-    if (!req.body || !req.body.waiter || !req.body.table || !req.body.start || typeof (req.body.waiter) == 'string' || typeof (req.body.table) == 'number' || startdate.toString() == 'Invalid Date') {
+    console.log(req.body);
+    console.log(startdate.toString());
+    console.log(typeof (req.body.table));
+    if (!req.body || !req.body.waiter || !req.body.table || !req.body.start || typeof (req.body.waiter) != 'string' || typeof (req.body.table) != 'number' || startdate.toString() == 'Invalid Date') {
         return next({ statusCode: 404, error: true, errormessage: "Wrong format" });
     }
     var newer = {};
     newer.waiter = req.body.waiter;
     newer.table = req.body.table;
-    newer.start = startdate;
+    newer.start = startdate.toString();
     var t = new (ticket.getModel())(newer);
+    console.log(t);
     t.save().then(function (data) {
         return res.status(200).json({ error: false, errormessage: "", id: data._id });
     })["catch"](function (reason) {
@@ -272,7 +286,8 @@ app.route('/tickets/:id').get(auth, function (req, res, next) {
         return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
     }
     var enddate = new Date(req.body.end);
-    if (!req.body || (req.body.end && enddate.toString() != 'Invalid Date') || (req.body.state && typeof (req.body.state) != 'string')) {
+    console.log(enddate);
+    if (!req.body || (req.body.end && enddate.toString() == 'Invalid Date') || (req.body.state && typeof (req.body.state) != 'string')) {
         return next({ statusCode: 404, error: true, errormessage: "Wrong format" });
     }
     var update = {};
@@ -298,7 +313,8 @@ app.route('/tickets/:id/orders').get(auth, function (req, res, next) {
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
         return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
-    if (!req.body || !req.body.name_item || !req.body.price || !req.body.added || typeof (req.body.name_item) == 'string' || typeof (req.body.price) == 'number' || Array.isArray(req.body.added)) {
+    console.log(req.body);
+    if (!req.body || !req.body.name_item || !req.body.price || /*req.body.added ||*/ typeof (req.body.name_item) != 'string' || typeof (req.body.price) != 'number' /*|| Array.isArray(req.body.added)*/) {
         return next({ statusCode: 404, error: true, errormessage: "Wrong format" });
     }
     var newer = {};
@@ -321,11 +337,11 @@ app.get('/tickets/orders', auth, function (req, res, next) {
     if (req.query.state) {
         filter.state = req.query.state;
     }
-    ticket.getModel().find().then(function (ticketslist) {
+    ticket.getModel().find({}).then(function (ticketslist) {
         var orderslist = [];
-        ticketslist.forEach(function (element) {
-            orderslist.push(element);
-        });
+        /*ticketslist.forEach(function(element/*: ticket.Ticket){
+           orderslist.push(element);
+        });*/
         return res.status(200).json(orderslist);
         //return res.status(200).json( ticketslist ); 
     })["catch"](function (reason) {
@@ -340,7 +356,7 @@ app.route('/ticket/:idTicket/orders/:idOrder').patch(auth, function (req, res, n
         if (!data) {
             return next({ statusCode: 404, error: true, errormessage: "Ticket id not found" });
         }
-        var toChange = data.orders.filter(function (ord) { return ord.id_order == req.params.idOrder; });
+        var toChange = data.orders.filter(function (ord) { return ord._id == req.params.idOrder; });
         if (toChange.length < 1) {
             return next({ statusCode: 404, error: true, errormessage: "Order id not found" });
         }
@@ -527,7 +543,7 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
             table: 1,
             start: new Date("05/05/2019, 11:49:36 AM"),
             orders: [{
-                    id_order: new ObjectID(),
+                    //id_order: new ObjectID(),
                     name_item: "Bistecca alla griglia",
                     username_waiter: "waiter1",
                     state: ticket.orderState[0],
@@ -541,7 +557,7 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
             table: 1,
             start: new Date("05/05/2019, 08:49:36 PM"),
             orders: [{
-                    id_order: new ObjectID(),
+                    //id_order: new ObjectID(),
                     name_item: "Spaghetti al pomodoro",
                     username_waiter: "waiter2",
                     state: ticket.orderState[0],
@@ -557,12 +573,68 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
             console.log("Unable to save tickets: " + reason);
         });
     });
+    var server = http.createServer(app);
+    ios = io(server);
+    ios.on('connection', function (client) {
+        console.log("Socket.io client connected");
+        var _loop_1 = function (event_1) {
+            client.on(event_1, function (body, callback) {
+                forwardSocketMessage(event_1, socketEvents[event_1].senderRole, body.token, socketEvents[event_1].destRooms, body.data);
+            });
+        };
+        for (var event_1 in socketEvents) {
+            _loop_1(event_1);
+        }
+    });
+    server.listen(8080, function () { return console.log("HTTP Server started on port 8080"); });
+}, function onrejected() {
+    console.log("Unable to connect to MongoDB");
+    process.exit(-2);
 });
-var server = http.createServer(app);
+var socketEvents = {
+    "occupied table": {
+        destRooms: [rooms[0], rooms[2]],
+        senderRole: user.roles[0]
+    },
+    "ordered dish": {
+        destRooms: [rooms[1]],
+        senderRole: user.roles[0]
+    },
+    "ordered drink": {
+        destRooms: [rooms[3]],
+        senderRole: user.roles[0]
+    },
+    "dish in preparation": {
+        destRooms: [rooms[1]],
+        senderRole: user.roles[1]
+    },
+    "ready dish": {
+        destRooms: [rooms[0]],
+        senderRole: user.roles[1]
+    },
+    "ready drink": {
+        destRooms: [rooms[0]],
+        senderRole: user.roles[3]
+    },
+    "table free": {
+        destRooms: [rooms[0], rooms[2]],
+        senderRole: user.roles[2]
+    }
+};
+//TODO mettere dei filtri per i dati da forwardare
+function forwardSocketMessage(event, senderRole, senderToken, roomsDestination, data) {
+    if (jsonwebtoken.verify(senderToken, process.env.JWT_SECRET) && jsonwebtoken.decode(senderToken).payload.role === senderRole) {
+        roomsDestination.forEach(function (room) {
+            ios.to(room).emit(event, data);
+        });
+    }
+}
+;
+//let server = http.createServer(app);
 //ios = io(server);
 //ios.on('connection', function(client) {
-console.log("Socket.io client connected");
-server.listen(8080, function () { return console.log("HTTP Server started on port 8080"); });
+//console.log( "Socket.io client connected" );
+//server.listen( 8080, () => console.log("HTTP Server started on port 8080") );
 // To start an HTTPS server we create an https.Server instance 
 // passing the express application middleware. Then, we start listening
 // on port 8443

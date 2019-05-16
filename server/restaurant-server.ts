@@ -23,8 +23,6 @@ import * as item from './Item';
 import { verify } from 'crypto';
 
 
-
-
 var rooms = ["waiters", "cookers", "desks", "bartenders"];
 
 var ios = undefined;
@@ -67,7 +65,7 @@ app.route("/users").get(auth, (req,res,next) => {
    if(req.query.role)
       filter.role = req.query.role;
 
-   user.getModel().find(filter, "username roles").then( (userslist) => {
+   user.getModel().find(filter, "username role").then( (userslist) => {
       return res.status(200).json( userslist ); 
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
@@ -112,7 +110,8 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
    //TODO controlli isUser
    
    //errore strano con findOneAndReplace, poi vedere, altrimenti tenere findOneAndUpdate
-   user.getModel().findOneAndUpdate({username: req.params.username}, u).then( (data)=> {
+   //occhio al setting dei campi, si può fare diversamente?
+   user.getModel().findOneAndUpdate({username: req.params.username}, {$set : {username : req.body.username, password:req.body.password, role: req.body.role}}).then( (data : user.User)=> {
       return res.status(200).json( data );
    }).catch( (reason)=> {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+reason });
@@ -166,9 +165,11 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
    }
 
+   /*if ( !req.body || (req.body.number && typeof(req.body.number) != 'number') || (req.body.max_people && typeof(req.body.max_people) != 'number') || (req.body.state && typeof(req.body.state) != 'string')){
+      return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
+   }*/
 
-
-   if ( !req.body || (req.body.number && typeof(req.body.number) != 'number') || (req.body.max_people && typeof(req.body.max_people) != 'number') || (req.body.state && typeof(req.body.state) != 'string')){
+   if ( !req.body || (req.body.number && isNaN(parseInt(req.body.number))) || (req.body.max_people && isNaN(parseInt(req.body.max_people))) || (req.body.state && typeof(req.body.state) != 'string')){
       return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
    }
 
@@ -187,7 +188,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
    }
 
 
-
+   //perchè la patch con findOneAndUpdate ritora sempre un valore vecchio?
    table.getModel().findOneAndUpdate( {number: req.params.number}, { $set: update}, ).then( (data : table.Table) => {
       return res.status(200).json( {
          number: data.number,
@@ -209,7 +210,7 @@ app.route("/items").get(auth, (req,res,next) => {
    if(req.query.type)
       filter.type = req.query.type;
 
-   item.getModel().find(filter).then( (itemslist) => {
+   item.getModel().find(filter, "name type price required_time ingredients").then( (itemslist) => {
       return res.status(200).json( itemslist ); 
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
@@ -221,6 +222,7 @@ app.route("/items").get(auth, (req,res,next) => {
    
    var i = new (item.getModel()) (req.body);
    
+   console.log(i)
    if (!item.isItem(i)){
       return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
    }
@@ -235,7 +237,7 @@ app.route("/items").get(auth, (req,res,next) => {
    
 });
 
-
+/*DECIDERE SE UTILIZZARE ALTRI CAMPI o SEMPRE ID*/
 app.route("/items/:id").get(auth, (req,res,next) => {
    var sender = user.newUser(req.user);
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
@@ -260,7 +262,7 @@ app.route("/items/:id").get(auth, (req,res,next) => {
    }
 
    item.getModel().findById(req.params.id).then( (item) => {
-      return item.set(i);
+      return item.set(i).save();
    }).then((item) => {
       return res.status(200).json( item );
    }).catch( (reason) => {
@@ -272,7 +274,7 @@ app.route("/items/:id").get(auth, (req,res,next) => {
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
    }
    
-   item.getModel().findOneAndDelete(req.params.username).then( ()=> {
+   item.getModel().findOneAndDelete({_id:req.params.id}).then( ()=> {
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason)=> {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+reason });
@@ -315,21 +317,24 @@ app.route("/tickets").get(auth, (req, res, next) => {
    }
    
 
-   var startdate: Date = new Date(req.body.start); 
+   var startdate: Date = new Date(req.body.start);
+   console.log(req.body) ;
+   console.log(startdate.toString());
+   console.log(typeof(req.body.table));
 
-   if (!req.body || !req.body.waiter || !req.body.table || !req.body.start || typeof(req.body.waiter) == 'string' || typeof(req.body.table) == 'number' || startdate.toString() == 'Invalid Date' ){
+   if (!req.body || !req.body.waiter || !req.body.table || !req.body.start || typeof(req.body.waiter) != 'string' || typeof(req.body.table) != 'number' || startdate.toString() == 'Invalid Date' ){
       return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
    }
 
    var newer: any = {};
    newer.waiter = req.body.waiter;
    newer.table = req.body.table;
-   newer.start = startdate;
+   newer.start = startdate.toString();
 
 
 
    var t = new (ticket.getModel()) (newer);
-   
+   console.log(t);
    
       
    t.save().then( (data) => {
@@ -362,9 +367,9 @@ app.route('/tickets/:id').get(auth, (req, res, next) => {
    }
 
    var enddate: Date = new Date(req.body.end); 
+   console.log(enddate);
 
-
-   if ( !req.body || (req.body.end && enddate.toString() != 'Invalid Date') || (req.body.state && typeof(req.body.state) != 'string')){
+   if ( !req.body || (req.body.end && enddate.toString() == 'Invalid Date') || (req.body.state && typeof(req.body.state) != 'string')){
       return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
    }
 
@@ -397,7 +402,9 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
-   if (!req.body || !req.body.name_item || !req.body.price || !req.body.added || typeof(req.body.name_item) == 'string' || typeof(req.body.price) == 'number' || Array.isArray(req.body.added)){
+      console.log(req.body);
+
+   if (!req.body || !req.body.name_item || !req.body.price || /*req.body.added ||*/ typeof(req.body.name_item) != 'string' || typeof(req.body.price) != 'number' /*|| Array.isArray(req.body.added)*/){
       return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
    }
 
@@ -416,6 +423,7 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    });
 });
 
+//NON RIESCO A FARLA FUNZIONARE
 app.get('/tickets/orders', auth, (req,res,next) => {
    var filter: any = {}
    if(req.query.start)
@@ -426,11 +434,11 @@ app.get('/tickets/orders', auth, (req,res,next) => {
    }
 
 
-   ticket.getModel().find().then( (ticketslist) => {
+   ticket.getModel().find({}).then( (ticketslist) => {
       var orderslist = [];
-      ticketslist.forEach(function(element: ticket.Ticket){
+      /*ticketslist.forEach(function(element/*: ticket.Ticket){
          orderslist.push(element);
-      });
+      });*/
       return res.status(200).json(orderslist);
       //return res.status(200).json( ticketslist ); 
    }).catch( (reason) => {
@@ -438,7 +446,7 @@ app.get('/tickets/orders', auth, (req,res,next) => {
    });
 });
 
-app.route('/ticket/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
+app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
    
    
    if ( !req.body || (req.body.state && typeof(req.body.state) != 'string')){
@@ -446,12 +454,11 @@ app.route('/ticket/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
    }
 
    
-
    ticket.getModel().findById( req.params.idTicket).then( (data : ticket.Ticket) => {
       if (!data){
          return next({ statusCode:404, error: true, errormessage: "Ticket id not found" });
       }
-      var toChange: Array<ticket.Order> = data.orders.filter(function(ord){return ord.id_order == req.params.idOrder});
+      var toChange: Array<ticket.Order> = data.orders.filter(function(ord){return ord.id == req.params.idOrder});
 
       if (toChange.length < 1){
          return next({ statusCode:404, error: true, errormessage: "Order id not found" });
@@ -465,8 +472,6 @@ app.route('/ticket/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
    });
 });
-
-
 
 app.get('/renew', auth, (req,res,next) => {
    var tokendata = req.user;
@@ -502,8 +507,7 @@ passport.use( new passportHTTP.BasicStrategy(
       })
    }
 ));
- 
- 
+  
 // Login endpoint uses passport middleware to check
 // user credentials before generating a new JWT
 app.get("/login", passport.authenticate('basic', { session: false }), (req,res,next) => {
@@ -682,7 +686,7 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
          table: 1,
          start: new Date("05/05/2019, 11:49:36 AM"),
          orders: [{
-            id_order: new ObjectID(),
+            //id_order: new ObjectID(),
             name_item: "Bistecca alla griglia",
             username_waiter: "waiter1",
             state: ticket.orderState[0],
@@ -697,7 +701,7 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
          table: 1,
          start: new Date("05/05/2019, 08:49:36 PM"),
          orders: [{
-            id_order: new ObjectID(),
+            //id_order: new ObjectID(),
             name_item: "Spaghetti al pomodoro",
             username_waiter: "waiter2",
             state: ticket.orderState[0],

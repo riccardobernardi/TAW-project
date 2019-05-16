@@ -10,9 +10,9 @@ export interface Item extends mongoose.Document {
     description: string
 }
 
-
+/*ARGID non c'è tra i campi nella post!*/
 export function isItem(arg: any): arg is Item {
-    return (arg._id && arg.name && arg.type && arg.price && arg.required_time && typeof(arg.name) == 'string' && type.includes(arg.type) && typeof(arg.price) == 'number' && typeof(arg.price) == 'number' && (!arg.description || typeof(arg.description) == 'string') );
+    return (arg._id && arg.name && arg.type && arg.price && arg.required_time && typeof(arg.name) == 'string' && type.includes(arg.type) && !isNaN(parseInt(arg.price)) && (!arg.description || typeof(arg.description) == 'string') && !isNaN(parseInt(arg.required_time)) );
  };
 
 export const type = ["dish", "beverage"]; 

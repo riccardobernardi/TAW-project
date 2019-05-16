@@ -30,7 +30,7 @@ var ticketSchema = new mongoose.Schema({
                 price: Number,
                 added: [String]
             }],
-        required: true
+        required: false
     },
     state: {
         type: mongoose.SchemaTypes.String,
@@ -38,7 +38,7 @@ var ticketSchema = new mongoose.Schema({
     },
     total: {
         type: mongoose.SchemaTypes.Number,
-        required: true
+        required: false
     }
 });
 //export function getOrderSchema() { return orderSchema; }

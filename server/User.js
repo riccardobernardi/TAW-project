@@ -2,7 +2,7 @@
 exports.__esModule = true;
 var mongoose = require("mongoose");
 var crypto = require("crypto");
-var roles = ["WAITER", "COOK", "DESK", "BARTENDER"];
+exports.roles = ["waiter", "cook", "desk", "bartender"];
 var userSchema = new mongoose.Schema({
     username: {
         type: mongoose.SchemaTypes.String,
@@ -17,7 +17,7 @@ var userSchema = new mongoose.Schema({
     role: {
         type: mongoose.SchemaTypes.String,
         required: true,
-        "enum": roles
+        "enum": exports.roles
     },
     salt: {
         type: mongoose.SchemaTypes.String,
@@ -47,10 +47,10 @@ userSchema.methods.hasDeskRole = function () {
             return true;
     }
     return false;*/
-    return this.role === 'DESK';
+    return this.role === "desk";
 };
 userSchema.methods.setDesk = function () {
-    this.role = "DESK";
+    this.role = "desk";
 };
 userSchema.methods.hasWaiterRole = function () {
     /*for( var roleidx in this.roles ) {
@@ -58,10 +58,10 @@ userSchema.methods.hasWaiterRole = function () {
             return true;
     }
     return false;*/
-    return this.role === 'WAITER';
+    return this.role === 'waiter';
 };
 userSchema.methods.setWaiter = function () {
-    this.role = "WAITER";
+    this.role = "waiter";
 };
 userSchema.methods.hasCookRole = function () {
     /*for( var roleidx in this.roles ) {
@@ -69,10 +69,10 @@ userSchema.methods.hasCookRole = function () {
             return true;
     }
     return false;*/
-    return this.role === 'COOK';
+    return this.role === 'cook';
 };
 userSchema.methods.setCook = function () {
-    this.role = "COOK";
+    this.role = "cook";
 };
 userSchema.methods.hasBartenderRole = function () {
     /*for( var roleidx in this.roles ) {
@@ -80,10 +80,10 @@ userSchema.methods.hasBartenderRole = function () {
             return true;
     }
     return false;*/
-    return this.role === 'BARTENDER';
+    return this.role === 'bartender';
 };
 userSchema.methods.setBartender = function () {
-    this.role = "BARTENDER";
+    this.role = "bartender";
 };
 function getSchema() { return userSchema; }
 exports.getSchema = getSchema;

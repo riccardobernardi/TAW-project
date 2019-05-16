@@ -16,7 +16,7 @@ export interface Ticket extends mongoose.Document {
 
 //TODO controllare sta interfaccia
 export interface Order {
-    id_order: string,
+    id: string,
     name_item: String,
     username_waiter: String,
     state: String,
@@ -56,7 +56,7 @@ var ticketSchema = new mongoose.Schema( {
             price: Number, 
             added: [String],
         }],
-        required: true
+        required: false
     },
     state: {
         type: mongoose.SchemaTypes.String,
@@ -64,7 +64,7 @@ var ticketSchema = new mongoose.Schema( {
     },
     total: {
         type: mongoose.SchemaTypes.Number,
-        required: true
+        required: false
     }
 })
 
