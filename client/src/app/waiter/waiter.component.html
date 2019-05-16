@@ -15,7 +15,7 @@
 
       <label for="ordini">Seleziona un prodotto da aggiungere</label>
       <select class="form-control" [(ngModel)]="selMenuEntry" name="ordini" id="ordini">
-        <option *ngFor="let product of menu" value="{{product}}">{{product}}</option>
+        <option *ngFor="let product of menu" value="{{product.name}}">{{product.name}}</option>
       </select>
 
       <p [style.display]="selMenuEntry === undefined?'none':'inherit'">Hai selezionato il prodotto {{selMenuEntry}}</p>

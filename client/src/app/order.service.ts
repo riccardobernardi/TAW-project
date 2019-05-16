@@ -20,7 +20,8 @@ export class OrderService {
   currentMessage = this.messageSource.asObservable();*/
 
   constructor(private us: UserHttpService, private router: Router, private http: HttpClient  ) {
-    this.orders.push({id: 1, nick : '--' , selTable : -1 , selMenuEntry : '--', in_progress: false, ready: false, timestamp: Date.now(), type: ''});
+    this.orders.push({id: 1, nick : '--' , selTable : -1 , selMenuEntry : '--',
+      in_progress: false, ready: false, timestamp: Date.now(), type: ''});
     console.log('Message service instantiated');
     console.log('User service token: ' + us.get_token() );
   }

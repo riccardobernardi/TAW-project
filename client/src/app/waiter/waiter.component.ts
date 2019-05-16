@@ -7,6 +7,7 @@ import {SocketioService} from '../socketio.service';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {mockorders} from '../mock-orders';
 import {UserHttpService} from '../user-http.service';
+import {OrderHttpService} from '../order-http.service';
 
 @Component({
   selector: 'app-waiter',
@@ -14,9 +15,10 @@ import {UserHttpService} from '../user-http.service';
   styleUrls: ['./waiter.component.css']
 })
 export class WaiterComponent implements OnInit {
-  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router) { }
+  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private order: OrderHttpService) { }
   private tables = [1, 2];
-  private menu = ['pasta', 'riso'];
+  /*private menu = ['pasta', 'riso'];*/
+  private menu = this.order.items;
   private selTable = undefined;
   private selMenuEntry = undefined;
   private deleteOrder = undefined;
@@ -29,7 +31,7 @@ export class WaiterComponent implements OnInit {
     }
     const o = {nick: '--', selTable: -1, selMenuEntry: '--',
       ready: false, id: this.get_id(), in_progress: false, timestamp: Date.now(), type: ''};
-    this.orders.unshift(o);
+    this.orders.unshift(o)
   }
 
   logout() {

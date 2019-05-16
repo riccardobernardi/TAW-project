@@ -145,7 +145,7 @@ export class UserHttpService {
   changePasswordUser(selUser, newPwd) {
     console.log('new pwd is : ' + newPwd + 'for user : ' + selUser);
 
-    let user = { username: selUser, password: newPwd, role: '' };
+    const user = { username: selUser, password: newPwd, role: '' };
     user.role = this.users.filter((u) => u.username == selUser)[0].role.toUpperCase();
 
     const options = {

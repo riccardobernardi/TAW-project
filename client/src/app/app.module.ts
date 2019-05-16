@@ -21,6 +21,7 @@ import { CookComponent } from './cook/cook.component';
 import { BarmanComponent } from './barman/barman.component';
 import {SocketioService} from './socketio.service';
 import {OrderService} from './order.service';
+import {OrderHttpService} from './order-http.service';
 // import { SocketioService } from './socketio.service';
 
 
@@ -44,7 +45,7 @@ import {OrderService} from './order.service';
   providers: [
     {provide: UserHttpService, useClass: UserHttpService },
     {provide: SocketioService, useClass: SocketioService },
-    {provide: OrderService, useClass: OrderService },
+    {provide: OrderService, useClass: OrderHttpService },
     // {provide: MessageService, useClass: MessageHttpService /* Here we can select the specifc service instance */}
   ],
   bootstrap: [AppComponent]
