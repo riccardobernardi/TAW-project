@@ -36,7 +36,7 @@
 
     <label for="tables">Seleziona un Utente</label>
     <select class="form-control" [(ngModel)]="selDelUser" name="tables" id="tables">
-      <option *ngFor="let table of this.us.get_users()" value="{{table}}">{{table}}</option>
+      <option *ngFor="let table of this.us.users" value="{{table}}">{{table}}</option>
     </select>
 
     <br>
@@ -53,7 +53,7 @@
 
     <label for="tables">Seleziona un Utente</label>
     <select class="form-control" [(ngModel)]="selDelUser" name="tables">
-      <option *ngFor="let table of this.us.get_users()" value="{{table}}">{{table}}</option>
+      <option *ngFor="let table of this.us.users" value="{{table}}">{{table}}</option>
     </select>
 
     <br>

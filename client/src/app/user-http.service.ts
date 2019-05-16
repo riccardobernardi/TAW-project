@@ -22,11 +22,12 @@ export class UserHttpService {
 
   constructor( private http: HttpClient, private router: Router ) {
     console.log('User service instantiated');
-
+    this.get_users();
   }
 
   public token = '';
   public url = 'http://localhost:8080';
+  public users = []
 
   login( nick: string, password: string ): Observable<any> {
 
@@ -116,7 +117,25 @@ export class UserHttpService {
   }
 
   get_users() {
-    return ['paolo', 'gianni'];
+    // return [{username : 'paolo', role: 'WAITER'}, {username : 'gianni', role: 'WAITER'}];
+
+    const options = {
+      headers: new HttpHeaders({
+        'cache-control': 'no-cache',
+        'Content-Type':  'application/json',
+      }).append('Authorization', 'Bearer ' + this.get_token())
+    };
+
+    console.log(options);
+
+    return this.http.get( this.url + '/users', options ).pipe(
+      tap( (data) => {
+        console.log(options);
+        console.log(JSON.stringify(data) );
+        this.users.push(data);
+        console.log(data);
+      })
+    );
   }
 
   deleteUser(selDelUser) {
@@ -125,6 +144,25 @@ export class UserHttpService {
 
   changePasswordUser(selUser, newPwd) {
     console.log('new pwd is : ' + newPwd + 'for user : ' + selUser);
+
+    let user = { username: selUser, password: newPwd, role: '' };
+    user.role = this.users.filter((u) => u.username == selUser)[0].role.toUpperCase();
+
+    const options = {
+      headers: new HttpHeaders({
+        'cache-control': 'no-cache',
+        'Content-Type':  'application/json',
+      }).append('Authorization', 'Bearer ' + this.get_token())
+    };
+
+    console.log(options);
+
+    return this.http.put( this.url + '/users/selUser', user, options ).pipe(
+      tap( (data) => {
+        console.log(options);
+        console.log(JSON.stringify(data) );
+      })
+    );
   }
 
   get_tables() {
