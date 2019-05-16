@@ -48,6 +48,8 @@ res.status(200).json( {
    endpoints: [ "/login", "/users", "/tables", "/items", "/tickets", "/tickets/:id/command", "/reports" ] } ); // json method sends a JSON response (setting the correct Content-Type) to the client
 });
 
+//TODO controlli sui tutti i campi d'ingresso(es query)
+
 app.route("/users").get(auth, (req,res,next) => {
    console.log(typeof(req.body.date));
    if(!user.newUser(req.user).hasDeskRole())
@@ -401,6 +403,56 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
 
    ticket.getModel().update( { _id: req.params.id}, { $push: { orders: newer } }).then( () => {
       return res.status(200).json( {error:false, errormessage:""} ); 
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   });
+});
+
+app.get('/tickets/orders', auth, (req,res,next) => {
+   var filter: any = {}
+   if(req.query.start)
+     filter.start = req.query.start;
+
+   if(req.query.state){
+      filter.state = req.query.state;
+   }
+
+
+   ticket.getModel().find().then( (ticketslist) => {
+      var orderslist = [];
+      ticketslist.forEach(function(element: ticket.Ticket){
+         orderslist.push(element);
+      });
+      return res.status(200).json(orderslist);
+      //return res.status(200).json( ticketslist ); 
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   });
+});
+
+app.route('/ticket/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
+   
+   
+   if ( !req.body || (req.body.state && typeof(req.body.state) != 'string')){
+      return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
+   }
+
+   
+
+   ticket.getModel().findById( req.params.idTicket).then( (data : ticket.Ticket) => {
+      if (!data){
+         return next({ statusCode:404, error: true, errormessage: "Ticket id not found" });
+      }
+      var toChange: Array<ticket.Order> = data.orders.filter(function(ord){return ord.id_order == req.params.idOrder});
+
+      if (toChange.length < 1){
+         return next({ statusCode:404, error: true, errormessage: "Order id not found" });
+      }
+
+      toChange[0].state = req.body.state;
+      data.save();
+      
+      return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
    });

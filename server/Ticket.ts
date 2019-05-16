@@ -8,9 +8,20 @@ export interface Ticket extends mongoose.Document {
     table: number,
     start: Date,
     end: Date,
-    orders: string,
+    orders: Array<Order>,
     state: string,
     total: number
+}
+
+
+//TODO controllare sta interfaccia
+export interface Order {
+    id_order: string,
+    name_item: String,
+    username_waiter: String,
+    state: String,
+    price: Number, 
+    added: [String],
 }
 
 export var orderState = ["ordered", "preparation", "ready", "delivered"];
