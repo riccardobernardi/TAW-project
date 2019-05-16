@@ -20,6 +20,12 @@ import * as table from './Table';
 import * as user from './User';
 import * as ticket from './Ticket';
 import * as item from './Item';
+import { verify } from 'crypto';
+
+
+
+
+var rooms = ["waiters", "cookers", "desks", "bartenders"];
 
 var ios = undefined;
 
@@ -713,14 +719,68 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
    ios = io(server);
    ios.on('connection', function(client) {
       console.log( "Socket.io client connected");
-   });
+
+      for (let event in socketEvents){
+         client.on(event, (body, callback) => {
+            forwardSocketMessage(event, socketEvents[event].senderRole, body.token,socketEvents[event].destRooms, body.data);
+         });
+      }
+      
+      } );
+   server.listen( 8080, () => console.log("HTTP Server started on port 8080") );
+
+}, function onrejected() {
+    console.log("Unable to connect to MongoDB");
+    process.exit(-2);
 });
 
-let server = http.createServer(app);
+var socketEvents = {
+   "occupied table": {
+      destRooms: [rooms[0], rooms[2]],
+      senderRole: user.roles[0]
+   },
+   
+   "ordered dish": {
+      destRooms: [rooms[1]],
+      senderRole: user.roles[0]
+   },
+   "ordered drink":{
+      destRooms: [rooms[3]],
+      senderRole: user.roles[0]
+   },
+   "dish in preparation": {
+      destRooms: [rooms[1]],
+      senderRole: user.roles[1]
+   },
+   "ready dish": {
+      destRooms: [rooms[0]],
+      senderRole: user.roles[1]
+   },
+   "ready drink": {
+      destRooms: [rooms[0]],
+      senderRole: user.roles[3]
+   },
+   "table free": {
+      destRooms: [rooms[0], rooms[2]],
+      senderRole: user.roles[2]
+   }
+   
+};
+
+//TODO mettere dei filtri per i dati da forwardare
+function forwardSocketMessage(event: string, senderRole: string, senderToken: string,roomsDestination: Array<string>, data){
+   if ( jsonwebtoken.verify(senderToken, process.env.JWT_SECRET) && jsonwebtoken.decode(senderToken).payload.role === senderRole){
+      roomsDestination.forEach(function(room){
+         ios.to(room).emit(event, data);
+      });
+   }
+};
+
+//let server = http.createServer(app);
 //ios = io(server);
 //ios.on('connection', function(client) {
-console.log( "Socket.io client connected" );
-server.listen( 8080, () => console.log("HTTP Server started on port 8080") );
+//console.log( "Socket.io client connected" );
+//server.listen( 8080, () => console.log("HTTP Server started on port 8080") );
 
 // To start an HTTPS server we create an https.Server instance 
 // passing the express application middleware. Then, we start listening

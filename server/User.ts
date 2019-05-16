@@ -1,7 +1,7 @@
 import mongoose = require('mongoose');
 import crypto = require('crypto');
 
-var roles = ["WAITER", "COOK", "DESK", "BARTENDER"];
+export const roles = ["WAITER", "COOK", "DESK", "BARTENDER"];
 
 export interface User extends mongoose.Document {
     //readonly _id: mongoose.Schema.Types.ObjectId,
