@@ -1,6 +1,6 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose = require("mongoose");
+exports.__esModule = true;
+var mongoose = require("mongoose");
 //CODICE DOPPIO, VEDERE SE SI PUO' CENTRALIZZARE, c'è anche in menu.ts
 var countDecimals = function (value) {
     if (Math.floor(value) !== value)
@@ -26,7 +26,7 @@ var tableSchema = new mongoose.Schema({
     state: {
         type: mongoose.SchemaTypes.ObjectId,
         required: false,
-        enum: ["free", "occupied"]
+        "enum": ["free", "occupied"]
     }
 });
 function getSchema() { return tableSchema; }
@@ -40,4 +40,3 @@ function getModel() {
     return tableModel;
 }
 exports.getModel = getModel;
-//# sourceMappingURL=Table.js.map
