@@ -54,6 +54,14 @@ res.status(200).json( {
    endpoints: [ "/login", "/users", "/tables", "/items", "/tickets", "/tickets/:id/command", "/reports" ] } ); // json method sends a JSON response (setting the correct Content-Type) to the client
 });
 
+/*
+- si può supporre che gli utenti abbiano un solo ruolo, semmai si possono fare più account per lo stesso utente
+
+- per l'approccio che utilizziamo, websocket del server invia solo (alle chiamate alle API) e websocket del client ascolta gli eventi e poi reinterroga il server (quindi non serve l'autenticazione, perchè se non è autenticato non può interrogare l'api)
+
+- endpoint /tickets?filter=orders per inviare gli ordini relativi ai tickets (magari con un ulteriore parametro filterOrders)
+*/
+
 //TODO controlli sui tutti i campi d'ingresso(es query)
 
 app.route("/users").get(auth, (req,res,next) => {
