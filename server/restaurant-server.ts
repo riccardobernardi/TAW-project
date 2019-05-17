@@ -55,8 +55,6 @@ res.status(200).json( {
 });
 
 /*
-- si può supporre che gli utenti abbiano un solo ruolo, semmai si possono fare più account per lo stesso utente
-
 - per l'approccio che utilizziamo, websocket del server invia solo (alle chiamate alle API) e websocket del client ascolta gli eventi e poi reinterroga il server (quindi non serve l'autenticazione, perchè se non è autenticato non può interrogare l'api)
 
 - endpoint /tickets?filter=orders per inviare gli ordini relativi ai tickets (magari con un ulteriore parametro filterOrders)
@@ -196,9 +194,9 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
       update.state = req.body.state;
    }
 
-
    //perchè la patch con findOneAndUpdate ritora sempre un valore vecchio?
    table.getModel().findOneAndUpdate( {number: req.params.number}, { $set: update}, ).then( (data : table.Table) => {
+      
       return res.status(200).json( {
          number: data.number,
          max_people: data.number,
@@ -207,7 +205,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
    });
-   
+
 });
 
 app.route("/items").get(auth, (req,res,next) => {
@@ -290,6 +288,8 @@ app.route("/items/:id").get(auth, (req,res,next) => {
    })
 });
 
+var queryOrderStates;
+(queryOrderStates = Array.from(ticket.orderState)).push("all");
 
 app.route("/tickets").get(auth, (req, res, next) => {
    var sender = user.newUser(req.user);
@@ -312,19 +312,32 @@ app.route("/tickets").get(auth, (req, res, next) => {
       filter.table = req.query.table;
    }
 
-   ticket.getModel().find(filter).then( (ticketslist) => {
-      return res.status(200).json( ticketslist ); 
+   if(req.query.orders && !queryOrderStates.filter((val) => val === req.query.orders))
+      return next({ statusCode:404, error: true, errormessage: "The state of orders accepted are ordered, preparation, ready, delivered and all"})
+
+   ticket.getModel().find(filter).then( (ticketslist : ticket.Ticket[]) => {
+      if(req.query.orders && (req.query.orders != queryOrderStates[4])){
+         var orders = []
+         ticketslist.forEach((ticket : ticket.Ticket) => {
+            var ticket_orders = ticket.orders.filter((order => order.state == req.query.orders));
+            if(ticket_orders.length != 0) {
+               orders.push({
+                  ticket_id: ticket.id,
+                  orders: ticket_orders
+               });
+            }
+         });
+         return res.status(200).json(orders);
+      } else return res.status(200).json( ticketslist ); 
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
    });
    
-
 }).post(auth, (req, res, next) => {
    var sender = user.newUser(req.user);
    if(!sender.hasDeskRole() && !sender.hasWaiterRole()){
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
    }
-   
 
    var startdate: Date = new Date(req.body.start);
    console.log(req.body) ;
@@ -750,37 +763,36 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
 var socketEvents = {
    "occupied table": {
       destRooms: [rooms[0], rooms[2]],
-      senderRole: user.roles[0]
+      //senderRole: user.roles[0]
    },
    
    "ordered dish": {
       destRooms: [rooms[1]],
-      senderRole: user.roles[0]
+      //senderRole: user.roles[0]
    },
    "ordered drink":{
       destRooms: [rooms[3]],
-      senderRole: user.roles[0]
+      //senderRole: user.roles[0]
    },
    "dish in preparation": {
       destRooms: [rooms[1]],
-      senderRole: user.roles[1]
+      //senderRole: user.roles[1]
    },
    "ready dish": {
       destRooms: [rooms[0]],
-      senderRole: user.roles[1]
+      //senderRole: user.roles[1]
    },
    "ready drink": {
       destRooms: [rooms[0]],
-      senderRole: user.roles[3]
+      //senderRole: user.roles[3]
    },
    "table free": {
       destRooms: [rooms[0], rooms[2]],
-      senderRole: user.roles[2]
+      //senderRole: user.roles[2]
    }
    
 };
 
-//TODO mettere dei filtri per i dati da forwardare
 function forwardSocketMessage(event: string, senderRole: string, senderToken: string,roomsDestination: Array<string>, data){
    if ( jsonwebtoken.verify(senderToken, process.env.JWT_SECRET) && jsonwebtoken.decode(senderToken).payload.role === senderRole){
       roomsDestination.forEach(function(room){
@@ -788,6 +800,15 @@ function forwardSocketMessage(event: string, senderRole: string, senderToken: st
       });
    }
 };
+
+//TODO mettere dei filtri per i dati da forwardare
+/*function forwardSocketMessage(event: string, senderRole: string, senderToken: string,roomsDestination: Array<string>, data){
+   if ( jsonwebtoken.verify(senderToken, process.env.JWT_SECRET) && jsonwebtoken.decode(senderToken).payload.role === senderRole){
+      roomsDestination.forEach(function(room){
+         ios.to(room).emit(event, data);
+      });
+   }
+};*/
 
 //let server = http.createServer(app);
 //ios = io(server);

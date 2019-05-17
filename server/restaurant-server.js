@@ -43,6 +43,11 @@ app.get("/", function (req, res) {
         endpoints: ["/login", "/users", "/tables", "/items", "/tickets", "/tickets/:id/command", "/reports"]
     }); // json method sends a JSON response (setting the correct Content-Type) to the client
 });
+/*
+- per l'approccio che utilizziamo, websocket del server invia solo (alle chiamate alle API) e websocket del client ascolta gli eventi e poi reinterroga il server (quindi non serve l'autenticazione, perchè se non è autenticato non può interrogare l'api)
+
+- endpoint /tickets?filter=orders per inviare gli ordini relativi ai tickets (magari con un ulteriore parametro filterOrders)
+*/
 //TODO controlli sui tutti i campi d'ingresso(es query)
 app.route("/users").get(auth, function (req, res, next) {
     console.log(JSON.stringify(req.headers));
@@ -225,6 +230,8 @@ app.route("/items/:id").get(auth, function (req, res, next) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
 });
+var queryOrderStates;
+(queryOrderStates = Array.from(ticket.orderState)).push("all");
 app.route("/tickets").get(auth, function (req, res, next) {
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
@@ -241,8 +248,24 @@ app.route("/tickets").get(auth, function (req, res, next) {
     if (req.query.table) {
         filter.table = req.query.table;
     }
+    if (req.query.orders && !queryOrderStates.filter(function (val) { return val === req.query.orders; }))
+        return next({ statusCode: 404, error: true, errormessage: "The state of orders accepted are ordered, preparation, ready, delivered and all" });
     ticket.getModel().find(filter).then(function (ticketslist) {
-        return res.status(200).json(ticketslist);
+        if (req.query.orders && (req.query.orders != queryOrderStates[4])) {
+            var orders = [];
+            ticketslist.forEach(function (ticket) {
+                var ticket_orders = ticket.orders.filter((function (order) { return order.state == req.query.orders; }));
+                if (ticket_orders.length != 0) {
+                    orders.push({
+                        ticket_id: ticket.id,
+                        orders: ticket_orders
+                    });
+                }
+            });
+            return res.status(200).json(orders);
+        }
+        else
+            return res.status(200).json(ticketslist);
     })["catch"](function (reason) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
@@ -595,35 +618,27 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
 });
 var socketEvents = {
     "occupied table": {
-        destRooms: [rooms[0], rooms[2]],
-        senderRole: user.roles[0]
+        destRooms: [rooms[0], rooms[2]]
     },
     "ordered dish": {
-        destRooms: [rooms[1]],
-        senderRole: user.roles[0]
+        destRooms: [rooms[1]]
     },
     "ordered drink": {
-        destRooms: [rooms[3]],
-        senderRole: user.roles[0]
+        destRooms: [rooms[3]]
     },
     "dish in preparation": {
-        destRooms: [rooms[1]],
-        senderRole: user.roles[1]
+        destRooms: [rooms[1]]
     },
     "ready dish": {
-        destRooms: [rooms[0]],
-        senderRole: user.roles[1]
+        destRooms: [rooms[0]]
     },
     "ready drink": {
-        destRooms: [rooms[0]],
-        senderRole: user.roles[3]
+        destRooms: [rooms[0]]
     },
     "table free": {
-        destRooms: [rooms[0], rooms[2]],
-        senderRole: user.roles[2]
+        destRooms: [rooms[0], rooms[2]]
     }
 };
-//TODO mettere dei filtri per i dati da forwardare
 function forwardSocketMessage(event, senderRole, senderToken, roomsDestination, data) {
     if (jsonwebtoken.verify(senderToken, process.env.JWT_SECRET) && jsonwebtoken.decode(senderToken).payload.role === senderRole) {
         roomsDestination.forEach(function (room) {
@@ -632,6 +647,14 @@ function forwardSocketMessage(event, senderRole, senderToken, roomsDestination, 
     }
 }
 ;
+//TODO mettere dei filtri per i dati da forwardare
+/*function forwardSocketMessage(event: string, senderRole: string, senderToken: string,roomsDestination: Array<string>, data){
+   if ( jsonwebtoken.verify(senderToken, process.env.JWT_SECRET) && jsonwebtoken.decode(senderToken).payload.role === senderRole){
+      roomsDestination.forEach(function(room){
+         ios.to(room).emit(event, data);
+      });
+   }
+};*/
 //let server = http.createServer(app);
 //ios = io(server);
 //ios.on('connection', function(client) {
