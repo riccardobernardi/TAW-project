@@ -45,6 +45,7 @@ app.get("/", function (req, res) {
 });
 //TODO controlli sui tutti i campi d'ingresso(es query)
 app.route("/users").get(auth, function (req, res, next) {
+    console.log(JSON.stringify(req.headers));
     console.log(typeof (req.body.date));
     if (!user.newUser(req.user).hasDeskRole())
         return next({ statusCode: 404, error: true, errormessage: "Unauthorized: user is not a desk" });
@@ -330,6 +331,7 @@ app.route('/tickets/:id/orders').get(auth, function (req, res, next) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
 });
+//NON RIESCO A FARLA FUNZIONARE
 app.get('/tickets/orders', auth, function (req, res, next) {
     var filter = {};
     if (req.query.start)
@@ -348,7 +350,7 @@ app.get('/tickets/orders', auth, function (req, res, next) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
 });
-app.route('/ticket/:idTicket/orders/:idOrder').patch(auth, function (req, res, next) {
+app.route('/tickets/:idTicket/orders/:idOrder').patch(auth, function (req, res, next) {
     if (!req.body || (req.body.state && typeof (req.body.state) != 'string')) {
         return next({ statusCode: 404, error: true, errormessage: "Wrong format" });
     }
@@ -356,7 +358,7 @@ app.route('/ticket/:idTicket/orders/:idOrder').patch(auth, function (req, res, n
         if (!data) {
             return next({ statusCode: 404, error: true, errormessage: "Ticket id not found" });
         }
-        var toChange = data.orders.filter(function (ord) { return ord._id == req.params.idOrder; });
+        var toChange = data.orders.filter(function (ord) { return ord.id == req.params.idOrder; });
         if (toChange.length < 1) {
             return next({ statusCode: 404, error: true, errormessage: "Order id not found" });
         }

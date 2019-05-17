@@ -36,7 +36,7 @@
 
     <label for="tables">Seleziona un Utente</label>
     <select class="form-control" [(ngModel)]="selDelUser" name="tables" id="tables">
-      <option *ngFor="let table of this.us.users" value="{{table}}">{{table}}</option>
+      <option *ngFor="let table of this.users" value="{{table.username}}">{{table.username}}</option>
     </select>
 
     <br>
@@ -47,13 +47,13 @@
 
 <div class="card" style="margin: 5px" >
 
-  <div class="btn btn-lg btn-primary btn-block" (click)="formDelUser.hidden = !formDelUser.hidden" >Change password to a User</div>
+  <div class="btn btn-lg btn-primary btn-block" (click)="formChangePwdUser.hidden = !formChangePwdUser.hidden" >Change password to a User</div>
 
-  <form #formDelUser hidden="true" >
+  <form #formChangePwdUser hidden="true" >
 
     <label for="tables">Seleziona un Utente</label>
-    <select class="form-control" [(ngModel)]="selDelUser" name="tables">
-      <option *ngFor="let table of this.us.users" value="{{table}}">{{table}}</option>
+    <select class="form-control" [(ngModel)]="selChangePwdUser" name="tables">
+      <option *ngFor="let table of this.users" value="{{table.username}}">{{table.username}}</option>
     </select>
 
     <br>
@@ -62,7 +62,7 @@
     <input type="password" #newPwd id="newPwd" class="form-control" placeholder="Password" required>
 
     <br>
-    <button type="submit" class="btn btn-primary" (click)="this.us.changePasswordUser(selDelUser,newPwd)">Submit</button>
+    <button type="submit" class="btn btn-primary" (click)="this.us.changePasswordUser(selChangePwdUser,newPwd)">Submit</button>
   </form>
 
 </div>

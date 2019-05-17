@@ -20,14 +20,13 @@ import {Router} from '@angular/router';
 @Injectable()
 export class UserHttpService {
 
-  constructor( private http: HttpClient, private router: Router ) {
-    console.log('User service instantiated');
-    this.get_users();
-  }
-
   public token = '';
   public url = 'http://localhost:8080';
   public users = []
+
+  constructor( private http: HttpClient, private router: Router ) {
+    console.log('User service instantiated');
+  }
 
   login( nick: string, password: string ): Observable<any> {
 
@@ -42,7 +41,7 @@ export class UserHttpService {
 
     return this.http.get( this.url + '/login',  options, ).pipe(
       tap( (data) => {
-        console.log(JSON.stringify(data));
+        // console.log(JSON.stringify(data));
         this.token = data.token;
         localStorage.setItem('postmessages_token', this.token );
       }));
@@ -126,16 +125,9 @@ export class UserHttpService {
       }).append('Authorization', 'Bearer ' + this.get_token())
     };
 
-    console.log(options);
+  //
 
-    return this.http.get( this.url + '/users', options ).pipe(
-      tap( (data) => {
-        console.log(options);
-        console.log(JSON.stringify(data) );
-        this.users.push(data);
-        console.log(data);
-      })
-    );
+    return this.http.get( this.url + '/users', options );
   }
 
   deleteUser(selDelUser) {

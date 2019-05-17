@@ -57,6 +57,7 @@ res.status(200).json( {
 //TODO controlli sui tutti i campi d'ingresso(es query)
 
 app.route("/users").get(auth, (req,res,next) => {
+   console.log(JSON.stringify(req.headers));
    console.log(typeof(req.body.date));
    if(!user.newUser(req.user).hasDeskRole())
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );

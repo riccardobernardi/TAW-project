@@ -17,9 +17,9 @@ export class OrderHttpService {
     this.orders.push({id: 1, nick : '--' , selTable : -1 , selMenuEntry : '--',
       in_progress: false, ready: false, timestamp: Date.now(), type: ''});
     console.log('Message service instantiated');
-    console.log('User service token: ' + us.get_token() );
-    this.get_items();
-    console.log(JSON.stringify(this.items));
+    // console.log('User service token: ' + us.get_token() );
+    // this.get_items();
+    // console.log(JSON.stringify(this.items));
   }
 
   public orders: Order[] = mockorders;
@@ -37,12 +37,12 @@ export class OrderHttpService {
       }).append('Authorization', 'Bearer ' + this.us.get_token())
     };
 
-    console.log('qui gli items');
+    // console.log('qui gli items');
 
     return this.http.get( this.url + '/items', options ).pipe(
       tap( (data) => {
         this.items.push(data);
-        console.log(data);
+        // console.log(data);
       })
     );
   }
@@ -90,7 +90,7 @@ export class OrderHttpService {
       catchError( this.handleError )
     );*/
     // return new Observable(m);
-    console.log(m);
+    // console.log(m);
     return m;
   }
 

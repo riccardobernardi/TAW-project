@@ -4,6 +4,7 @@ import {UserHttpService} from '../user-http.service';
 import {OrderService} from '../order.service';
 import {Order} from '../Order';
 import {mockorders} from '../mock-orders';
+import {OrderHttpService} from '../order-http.service';
 
 @Component({
   selector: 'app-paydesk',
@@ -12,7 +13,7 @@ import {mockorders} from '../mock-orders';
 })
 export class PaydeskComponent implements OnInit {
 
-  constructor(private us: UserHttpService, private router: Router, private order: OrderService  ) { }
+  constructor(private us: UserHttpService, private router: Router, private order: OrderHttpService  ) { }
 
   private roles: string[] = ['waiter', 'cook', 'bartender', 'admin'];
   private newRoleSelected: string = undefined;
@@ -21,6 +22,8 @@ export class PaydeskComponent implements OnInit {
   private user = { username: '', password: '', role: '' };
   selDelUser: any;
   selTable: any;
+  users = [];
+  selChangePwdUser: any;
 
   ngOnInit() {
     if (this.us.get_token() == undefined || this.us.get_token() == '') {
@@ -28,12 +31,17 @@ export class PaydeskComponent implements OnInit {
     } else {
       console.log('your token is: [' + this.us.get_token() + ']');
     }
+    this.us.get_users().subscribe((data) => {
+      const a: any = data;
+      a.forEach( (d) => this.users.push(d) );
+    });
+    console.log(this.users);
   }
 
   send(name, password) {
     this.user.username = name;
     this.user.password = password;
-    this.user.role = this.newRoleSelected.toUpperCase();
+    this.user.role = this.newRoleSelected;
     this.signup();
   }
 

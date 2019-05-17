@@ -2,12 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../client/src/app/order-http.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/order-http.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/paydesk/paydesk.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/paydesk/paydesk.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/paydesk/paydesk.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/paydesk/paydesk.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/user-http.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/user-http.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Item.js" beforeDir="false" afterPath="$PROJECT_DIR$/Item.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Table.js" beforeDir="false" afterPath="$PROJECT_DIR$/Table.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ticket.js" beforeDir="false" afterPath="$PROJECT_DIR$/Ticket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/User.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.js" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/restaurant-server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -23,8 +25,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="137" column="5" selection-start-line="137" selection-start-column="5" selection-end-line="137" selection-end-column="5" />
+            <state relative-caret-position="97">
+              <caret line="59" column="43" selection-start-line="59" selection-start-column="43" selection-end-line="59" selection-end-column="43" />
+              <folding>
+                <element signature="e#380#418#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -61,6 +66,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -72,7 +78,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -109,11 +114,15 @@
       <workItem from="1557752367397" duration="250000" />
       <workItem from="1557774282076" duration="96000" />
       <workItem from="1557905511388" duration="161000" />
+      <workItem from="1558080020765" duration="80000" />
+      <workItem from="1558080111760" duration="55000" />
+      <workItem from="1558080325742" duration="45000" />
+      <workItem from="1558080656106" duration="25000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="507000" />
+    <option name="totallyTimeSpent" value="712000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
@@ -167,8 +176,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="137" column="5" selection-start-line="137" selection-start-column="5" selection-end-line="137" selection-end-column="5" />
+        <state relative-caret-position="97">
+          <caret line="59" column="43" selection-start-line="59" selection-start-column="43" selection-end-line="59" selection-end-column="43" />
+          <folding>
+            <element signature="e#380#418#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
