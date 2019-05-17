@@ -446,7 +446,7 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
 });
 
 //NON RIESCO A FARLA FUNZIONARE
-app.get('/tickets/orders', auth, (req,res,next) => {
+/*app.get('/tickets/orders', auth, (req,res,next) => {
    var filter: any = {}
    if(req.query.start)
      filter.start = req.query.start;
@@ -458,15 +458,15 @@ app.get('/tickets/orders', auth, (req,res,next) => {
 
    ticket.getModel().find({}).then( (ticketslist) => {
       var orderslist = [];
-      /*ticketslist.forEach(function(element/*: ticket.Ticket){
-         orderslist.push(element);
-      });*/
+         ticketslist.forEach(function(element/*: ticket.Ticket){
+            orderslist.push(element);
+         });
       return res.status(200).json(orderslist);
       //return res.status(200).json( ticketslist ); 
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
    });
-});
+});*/
 
 app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
    

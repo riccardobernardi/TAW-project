@@ -8,6 +8,9 @@ import {BehaviorSubject, Observable, of} from 'rxjs';
 import {mockorders} from '../mock-orders';
 import {UserHttpService} from '../user-http.service';
 import {OrderHttpService} from '../order-http.service';
+import {ItemService} from '../item-http.service'
+import {Item} from '../Item';
+
 
 @Component({
   selector: 'app-waiter',
@@ -15,33 +18,37 @@ import {OrderHttpService} from '../order-http.service';
   styleUrls: ['./waiter.component.css']
 })
 export class WaiterComponent implements OnInit {
-  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private order: OrderHttpService) { }
+  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private order: OrderHttpService, private item: ItemService) { }
   private tables = [1, 2];
   /*private menu = ['pasta', 'riso'];*/
-  private menu = [];
+  private items : Item[] = [];
   private selTable = undefined;
   private selMenuEntry = undefined;
   private deleteOrder = undefined;
-  private id = 1;
+  //private id = 1;
   private orders: Order[] = [];
 
   ngOnInit() {
     if (this.us.get_token() == undefined || this.us.get_token() == '') {
       this.us.logout();
+    } else {
+      this.item.get_Items().subscribe((data : Item[] ) => {
+        this.items = data;
+        console.log(this.items);
+      });
     }
-    const o = {nick: '--', selTable: -1, selMenuEntry: '--',
+    /*const o = {nick: '--', selTable: -1, selMenuEntry: '--',
       ready: false, id: this.get_id(), in_progress: false, timestamp: Date.now(), type: ''};
-    this.orders.unshift(o);
-
-    this.order.get_items().subscribe((data) => this.menu.push(data));
+    this.orders.unshift(o);*/
+    
+    
   }
 
-  logout() {
-    this.us.logout();
-    this.router.navigate(['/']);
+  a() {
+    console.log(Object.keys(this.selMenuEntry));
   }
 
-  orders_size() {
+  /*orders_size() {
     return this.orders.length;
   }
 
@@ -68,6 +75,6 @@ export class WaiterComponent implements OnInit {
   delete() {
     this.orders = this.arrayRemove(this.orders, this.deleteOrder );
     console.log(this.orders);
-  }
+  }*/
 
 }

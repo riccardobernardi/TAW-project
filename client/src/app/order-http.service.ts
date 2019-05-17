@@ -11,18 +11,18 @@ import {Observable, of} from 'rxjs';
   providedIn: 'root'
 })
 export class OrderHttpService {
-  public items: any = [];
+  /*public items: any = [];*/
 
   constructor(private us: UserHttpService, private router: Router, private http: HttpClient  ) {
-    this.orders.push({id: 1, nick : '--' , selTable : -1 , selMenuEntry : '--',
-      in_progress: false, ready: false, timestamp: Date.now(), type: ''});
-    console.log('Message service instantiated');
+    /*this.orders.push({id: 1, nick : '--' , selTable : -1 , selMenuEntry : '--',
+      in_progress: false, ready: false, timestamp: Date.now(), type: ''});*/
+    console.log('Order service instantiated');
     // console.log('User service token: ' + us.get_token() );
     // this.get_items();
     // console.log(JSON.stringify(this.items));
   }
 
-  public orders: Order[] = mockorders;
+  /*public orders: Order[] = mockorders;*/
   private id = 2;
 
   public url = 'http://localhost:8080';
@@ -39,12 +39,12 @@ export class OrderHttpService {
 
     // console.log('qui gli items');
 
-    return this.http.get( this.url + '/items', options ).pipe(
+    return this.http.get( this.url + '/items', options )/*.pipe(
       tap( (data) => {
         this.items.push(data);
         // console.log(data);
       })
-    );
+    );*/
   }
 
   /*private messageSource = new BehaviorSubject(this.orders);
@@ -77,13 +77,13 @@ export class OrderHttpService {
       return new Error('Something bad happened; please try again later.');
     }*/
 
-  get(val?) {
+  /*get(val?) {
     let m ;
     if (val === undefined) {
       m = this.orders;
     } else {
       m = this.orders.filter(obj => (obj.selTable == val || obj.selTable == -1));
-    }
+    }*/
 
     /*return this.http.get<Order[]>( this.us.url + '/messages', this.create_options( {limit: '10', skip: '0'} ) ).pipe(
       tap( (data) => console.log(JSON.stringify(data))) ,
@@ -91,8 +91,8 @@ export class OrderHttpService {
     );*/
     // return new Observable(m);
     // console.log(m);
-    return m;
-  }
+    //return m;
+  //}
 
   /*  private create_options( params = {} ) {
       return  {
@@ -129,18 +129,18 @@ export class OrderHttpService {
       );
     }*/
 
-  orders_size() {
+  /*orders_size() {
     return this.orders.length;
-  }
+  }*/
 
-  get_id() {
+  /*get_id() {
     this.id += 1;
     return (this.id - 1);
-  }
+  }*/
 
-  post_order(o: Order): Observable<Order>  {
-    this.orders.unshift(o);
+  post_order(o: Order)/*: Observable<Order>*/  {
+    /*this.orders.unshift(o);
     this.posted.emit(o);
-    return of(o);
+    return of(o);*/
   }
 }

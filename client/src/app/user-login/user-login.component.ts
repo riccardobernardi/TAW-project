@@ -16,6 +16,7 @@ export class UserLoginComponent implements OnInit {
   private role = undefined
 
   ngOnInit() {
+    console.log("SONO QUIIIIIIIIII");
     this.us.renew().subscribe( (d) => {
       console.log('Renew succeded: ' + JSON.stringify(d) );
       // this.role = this.us.get_role();

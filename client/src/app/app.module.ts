@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 
+
 import { AppComponent } from './app.component';
 // import { MessageEditorComponent } from './message-editor/message-editor.component';
 // import { MessageListComponent } from './message-list/message-list.component';
@@ -22,6 +23,7 @@ import { BarmanComponent } from './barman/barman.component';
 import {SocketioService} from './socketio.service';
 import {OrderService} from './order.service';
 import {OrderHttpService} from './order-http.service';
+import {ItemService} from "./item-http.service"
 // import { SocketioService } from './socketio.service';
 
 

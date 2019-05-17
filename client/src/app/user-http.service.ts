@@ -4,16 +4,13 @@ import { tap, catchError } from 'rxjs/operators';
 
 import { throwError } from 'rxjs';
 
-
 import * as jwt_decode from 'jwt-decode';
-
-
 
 // import { Observable } from 'rxjs/Observable';
 // import jwt_decode = require('jwt-decode');
 // import { ErrorObservable } from 'rxjs/observable';
 
-import 'rxjs/observable/';
+/*import 'rxjs/observable/';*/
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
 
@@ -22,7 +19,7 @@ export class UserHttpService {
 
   public token = '';
   public url = 'http://localhost:8080';
-  public users = []
+  //public users = []
 
   constructor( private http: HttpClient, private router: Router ) {
     console.log('User service instantiated');
@@ -41,15 +38,15 @@ export class UserHttpService {
 
     return this.http.get( this.url + '/login',  options, ).pipe(
       tap( (data) => {
-        // console.log(JSON.stringify(data));
+        console.log(JSON.stringify(data));
         this.token = data.token;
-        localStorage.setItem('postmessages_token', this.token );
+        localStorage.setItem('restaurant_token', this.token );
       }));
   }
 
   renew(): Observable<any> {
 
-    const tk = localStorage.getItem('postmessages_token');
+    const tk = localStorage.getItem('restaurant_token');
     if ( !tk || tk.length < 1 ) {
       return throwError({error: {errormessage: 'No token found in local storage'}});
     }
@@ -67,14 +64,14 @@ export class UserHttpService {
       tap( (data) => {
         console.log(JSON.stringify(data));
         this.token = data.token;
-        localStorage.setItem('postmessages_token', this.token );
+        localStorage.setItem('restaurant_token', this.token );
       }));
   }
 
   logout() {
     console.log('Logging out');
     this.token = '';
-    localStorage.setItem('postmessages_token', this.token);
+    localStorage.removeItem('restaurant_token');
     this.router.navigate(['/']);
   }
 
@@ -98,6 +95,7 @@ export class UserHttpService {
   }
 
   get_token() {
+    console.log(this.token);
     return this.token;
   }
 
@@ -135,7 +133,7 @@ export class UserHttpService {
   }
 
   changePasswordUser(selUser, newPwd) {
-    console.log('new pwd is : ' + newPwd + 'for user : ' + selUser);
+    /*console.log('new pwd is : ' + newPwd + 'for user : ' + selUser);
 
     const user = { username: selUser, password: newPwd, role: '' };
     user.role = this.users.filter((u) => u.username == selUser)[0].role.toUpperCase();
@@ -154,7 +152,7 @@ export class UserHttpService {
         console.log(options);
         console.log(JSON.stringify(data) );
       })
-    );
+    );*/
   }
 
   get_tables() {
