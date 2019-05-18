@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { UserLoginComponent } from './user-login/user-login.component';
 import { AppComponent } from './app.component';
-// import { MessageListComponent } from './message-list/message-list.component';
-import {WaiterComponent} from './waiter/waiter.component';
+import {WaiterTablesComponent} from './waiter/waiter-tables/waiter-tables.component';
 import {CookComponent} from './cook/cook.component';
 import {PaydeskComponent} from './paydesk/paydesk.component';
 import {BarmanComponent} from './barman/barman.component';
@@ -12,7 +11,7 @@ import {BarmanComponent} from './barman/barman.component';
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: UserLoginComponent },
-  { path: 'waiter', component:  WaiterComponent},
+  { path: 'waiter', loadChildren: './waiter/waiterDashboard.module#WaiterDashboardModule'},
   { path: 'cook', component:  CookComponent},
   { path: 'paydesk', component:  PaydeskComponent},
   { path: 'desk', component:  PaydeskComponent},

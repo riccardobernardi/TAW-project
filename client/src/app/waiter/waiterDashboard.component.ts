@@ -8,17 +8,17 @@ import {BehaviorSubject, Observable, of} from 'rxjs';
 import {mockorders} from '../mock-orders';
 import {UserHttpService} from '../user-http.service';
 import {OrderHttpService} from '../order-http.service';
-import {ItemService} from '../item-http.service'
+import {ItemHttpService} from '../item-http.service'
 import {Item} from '../Item';
 
 
 @Component({
   selector: 'app-waiter',
-  templateUrl: './waiter.component.html',
-  styleUrls: ['./waiter.component.css']
+  templateUrl: './waiterDashboard.component.html',
+  styleUrls: ['./waiterDashboard.component.css']
 })
-export class WaiterComponent implements OnInit {
-  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private order: OrderHttpService, private item: ItemService) { }
+export class WaiterDashboardComponent implements OnInit {
+  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private order: OrderHttpService, private item: ItemHttpService) { }
   private tables = [1, 2];
   /*private menu = ['pasta', 'riso'];*/
   private items : Item[] = [];

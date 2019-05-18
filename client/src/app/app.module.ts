@@ -16,24 +16,22 @@ import { AppComponent } from './app.component';
 import { UserLoginComponent } from './user-login/user-login.component';
 import { AppRoutingModule } from './app-routing.module';
 import { UserHttpService } from './user-http.service';
-import { WaiterComponent } from './waiter/waiter.component';
+import { WaiterDashboardModule } from './waiter/waiterDashboard.module';
 import { PaydeskComponent } from './paydesk/paydesk.component';
 import { CookComponent } from './cook/cook.component';
 import { BarmanComponent } from './barman/barman.component';
 import {SocketioService} from './socketio.service';
 import {OrderService} from './order.service';
 import {OrderHttpService} from './order-http.service';
-import {ItemService} from "./item-http.service"
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { WaiterRoutingModule } from './waiter/waiter-routing.module'
 // import { SocketioService } from './socketio.service';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    // MessageEditorComponent,
-    // MessageListComponent,
     UserLoginComponent,
-    WaiterComponent,
     PaydeskComponent,
     CookComponent,
     BarmanComponent,
@@ -43,12 +41,12 @@ import {ItemService} from "./item-http.service"
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
+    NgbModule.forRoot(),
   ],
   providers: [
     {provide: UserHttpService, useClass: UserHttpService },
     {provide: SocketioService, useClass: SocketioService },
-    {provide: OrderService, useClass: OrderHttpService },
-    // {provide: MessageService, useClass: MessageHttpService /* Here we can select the specifc service instance */}
+    //{provide: OrderService, useClass: OrderHttpService },
   ],
   bootstrap: [AppComponent]
 })

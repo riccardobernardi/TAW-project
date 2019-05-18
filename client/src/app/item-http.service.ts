@@ -7,7 +7,7 @@ import {Item} from "./Item"
 @Injectable({
   providedIn: 'root'
 })
-export class ItemService {
+export class ItemHttpService {
 
   public url = 'http://localhost:8080';
 
