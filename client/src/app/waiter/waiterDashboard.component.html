@@ -1,62 +1,7 @@
-<!--<ngb-tabset>
-  <ngb-tab title="Tables">
-    <ng-template ngbTabContent>
-      
-    </ng-template>
-  </ngb-tab>
-  <ngb-tab title="Actually served">
-    <ng-template ngbTabContent>
-      
-    </ng-template>
-  </ngb-tab>
-  <ngb-tab title="Insert order">
-    <ng-template ngbTabContent>
-      <div class="container" style="width: 400px; margin-top: 20px;" >
-
-        <form>
-      
-          <div class="form-group">
-            <p>Your nick is {{this.us.get_nick()}}</p>
-            <p for="button">Your role is {{this.us.get_role()}}</p>
-      
-            <label for="tables">Seleziona un tavolo</label>
-            <select class="form-control" [(ngModel)]="selTable" name="tables" id="tables">
-              <option *ngFor="let table of tables" [value]="table">{{table}}</option>
-            </select>
-      
-            <p [style.display]="selTable === undefined?'none':'inherit'">Hai selezionato il tavolo {{selTable}}</p>
-      
-            <label for="ordini">Seleziona un prodotto da aggiungere</label>
-            <select class="form-control" [(ngModel)]="selMenuEntry" name="ordini" id="ordini" (change)="a()">
-              <option *ngFor="let item of items" [ngValue]="item">{{item.name}}</option>
-            </select>
-      
-            <p *ngIf="selMenuEntry != undefined">Hai selezionato il prodotto {{selMenuEntry.name}}</p>
-      
-            <!--<button id = "send" class="btn btn-lg btn-primary btn-block" (click)="this.send()" >Invia</button>
-      
-            <label for="menu">Ordini già evasi per questo tavolo</label>
-            <select class="form-control" [(ngModel)]="deleteOrder" name="menu" id="menu">
-              <option *ngFor="let ord of this.orders" value="{{ord.id}}">{{ord.id + " " + ord.selMenuEntry}}</option>
-            </select>
-      
-            <p [style.display]="deleteOrder === undefined?'none':'inherit'">Stai eliminando la comanda {{deleteOrder}}</p>
-      
-            <button id = "delete" class="btn btn-lg btn-primary btn-block" (click)="this.delete();" >Delete</button>
-      
-            <p>orders_size = {{this.orders_size()}}</p>
-      
-            <button id = "logout" class="btn btn-lg btn-primary btn-block" (click)="this.us.logout()" >Logout</button>
-      
-          </div>
-      
-        </form>
-      </div>
-    </ng-template>
-  </ngb-tab>
-</ngb-tabset>-->
-<nav>
-  <a routerLink="/tables">Tables</a>
-</nav>
+<ul class="nav nav-pills mb-3 nav-fill" role="tablist">
+  <li class="nav-item"><a routerLink="tables" class="nav-link" data-toggle="pill" role="tab" aria-selected="true">Tables</a></li>
+  <li class="nav-item"><a routerLink="served" class="nav-link" data-toggle="pill" role="tab" aria-selected="false">Served</a></li>
+  <li class="nav-item"><a routerLink="insertOrders" class="nav-link" data-toggle="pill" role="tab" aria-selected="false">Insert Orders</a></li>
+</ul>
 <router-outlet></router-outlet>
 

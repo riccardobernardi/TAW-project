@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { WaiterDashboardComponent } from './waiterDashboard.component';
 import { WaiterTablesComponent } from './waiter-tables/waiter-tables.component';
+import { WaiterServedComponent } from './waiter-served/waiter-served.component';
+import { WaiterInsertOrdersComponent } from './waiter-insert-orders/waiter-insert-orders.component'
 
 
 const routes: Routes = [
@@ -12,6 +14,14 @@ const routes: Routes = [
       {
         path: 'tables',
         component:  WaiterTablesComponent
+      },
+      {
+        path: 'served',
+        component: WaiterServedComponent
+      },
+      {
+        path: 'insertOrders',
+        component: WaiterInsertOrdersComponent
       }
     ]
   }

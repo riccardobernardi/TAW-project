@@ -7,10 +7,6 @@ import {SocketioService} from '../socketio.service';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {mockorders} from '../mock-orders';
 import {UserHttpService} from '../user-http.service';
-import {OrderHttpService} from '../order-http.service';
-import {ItemHttpService} from '../item-http.service'
-import {Item} from '../Item';
-
 
 @Component({
   selector: 'app-waiter',
@@ -18,63 +14,12 @@ import {Item} from '../Item';
   styleUrls: ['./waiterDashboard.component.css']
 })
 export class WaiterDashboardComponent implements OnInit {
-  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private order: OrderHttpService, private item: ItemHttpService) { }
-  private tables = [1, 2];
-  /*private menu = ['pasta', 'riso'];*/
-  private items : Item[] = [];
-  private selTable = undefined;
-  private selMenuEntry = undefined;
-  private deleteOrder = undefined;
-  //private id = 1;
-  private orders: Order[] = [];
+  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router) { }
 
   ngOnInit() {
     if (this.us.get_token() == undefined || this.us.get_token() == '') {
       this.us.logout();
-    } else {
-      this.item.get_Items().subscribe((data : Item[] ) => {
-        this.items = data;
-        console.log(this.items);
-      });
     }
-    /*const o = {nick: '--', selTable: -1, selMenuEntry: '--',
-      ready: false, id: this.get_id(), in_progress: false, timestamp: Date.now(), type: ''};
-    this.orders.unshift(o);*/
-    
-    
   }
-
-  a() {
-    console.log(Object.keys(this.selMenuEntry));
-  }
-
-  /*orders_size() {
-    return this.orders.length;
-  }
-
-  get_id() {
-    this.id += 1;
-    return (this.id - 1);
-  }
-
-  send() {
-    const o = {nick: this.us.get_nick(), selTable: this.selTable, selMenuEntry: this.selMenuEntry,
-      ready: false, id: this.get_id(), in_progress: false, timestamp: Date.now(), type: ''};
-    this.orders.unshift(o);
-  }
-
-  arrayRemove(arr, value) {
-    return arr.filter((ele) => {
-      if (ele.id == 1) {
-        return true;
-      }
-      return ele.id != value;
-    });
-  }
-
-  delete() {
-    this.orders = this.arrayRemove(this.orders, this.deleteOrder );
-    console.log(this.orders);
-  }*/
 
 }

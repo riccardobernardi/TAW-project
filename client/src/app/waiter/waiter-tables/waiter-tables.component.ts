@@ -10,6 +10,7 @@ export class WaiterTablesComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    
   }
 
 }

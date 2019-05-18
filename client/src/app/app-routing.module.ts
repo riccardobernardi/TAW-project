@@ -17,7 +17,6 @@ const routes: Routes = [
   { path: 'desk', component:  PaydeskComponent},
   { path: 'barman', component:  BarmanComponent},
   { path: 'bartender', component:  BarmanComponent},
-  // { path: 'messages', component: MessageListComponent }
 ];
 
 @NgModule({
