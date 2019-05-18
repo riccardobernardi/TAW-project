@@ -40,6 +40,38 @@ var auth = jwt( {secret: process.env.JWT_SECRET} );
 
 var ios = undefined;
 
+function emitEvent(eventType, data){
+   socketEvents[eventType].destRooms.forEach(r => {
+      ios.emit(eventType, data).on(r);
+   });
+};
+
+var socketEvents = {
+   "modified table": {
+      destRooms: [rooms[0], rooms[2]],
+      //senderRole: user.roles[0]
+   },
+   
+   "ordered dish": {
+      destRooms: [rooms[1]],
+      //senderRole: user.roles[0]
+   },
+   "ordered drink":{
+      destRooms: [rooms[3]],
+      //senderRole: user.roles[0]
+   },
+   "dish in preparation": {
+      destRooms: [rooms[1]],
+      //senderRole: user.roles[1]
+   },
+   "ready item": {
+      destRooms: [rooms[0]],
+      //senderRole: user.roles[1]
+   }
+};
+
+
+
 app.use( cors() );
 
 // Install the top-level middleware "bodyparser"
@@ -66,7 +98,7 @@ app.route("/users").get(auth, (req,res,next) => {
    console.log(JSON.stringify(req.headers));
    console.log(typeof(req.body.date));
    if(!user.newUser(req.user).hasDeskRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
    //aggiungere filtri skip e limit come nell'esempio per supportare la paginazione?
    var filter: any = {}
    if(req.query.role)
@@ -80,12 +112,12 @@ app.route("/users").get(auth, (req,res,next) => {
 }).post(auth, (req, res, next) => {
 
    if(!user.newUser(req.user).hasDeskRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
    var u = user.newUser( req.body );
 
    //TODO controlli isUser
    if( !req.body.password ) {
-   return next({ statusCode:404, error: true, errormessage: "Password field missing"} );
+   return next({ statusCode:400, error: true, errormessage: "Password field missing"} );
    }
    u.setPassword( req.body.password );
 
@@ -93,23 +125,23 @@ app.route("/users").get(auth, (req,res,next) => {
       return res.status(200).json({ error: false, errormessage: "", id: data._id });
    }).catch( (reason) => {
    if( reason.code === 11000 )
-      return next({statusCode:404, error:true, errormessage: "User already exists"} );
-   return next({ statusCode:404, error: true, errormessage: "DB error: "+reason.errmsg });
+      return next({statusCode:409, error:true, errormessage: "User already exists"} );
+   return next({ statusCode:500, error: true, errormessage: "DB error: "+reason.errmsg });
    })
 });
 
 //cambiare username con id restituito da mongo e maagari aggiungere filtri su username in get users?
 app.route("/users/:username").delete(auth, (req, res, next) => {
    if(!user.newUser(req.user).hasDeskRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
    user.getModel().deleteOne( {username: req.params.username } ).then( ()=> {
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason)=> {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
    });
 }).put(auth, (req, res, next) => {
    if(!user.newUser(req.user).hasDeskRole()){
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
    }
 
    var u = user.newUser( req.body );
@@ -121,7 +153,7 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
    user.getModel().findOneAndUpdate({username: req.params.username}, {$set : {username : req.body.username, password:req.body.password, role: req.body.role}}).then( (data : user.User)=> {
       return res.status(200).json( data );
    }).catch( (reason)=> {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
    });
 
 });
@@ -130,7 +162,7 @@ app.route("/tables").get(auth, (req, res, next) => {
 
    var sender = user.newUser(req.user);
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
    table.getModel().find({}, {number:1, max_people:1, _id: 0}).then( (tableslist) => {
       return res.status(200).json( tableslist ); 
@@ -140,7 +172,7 @@ app.route("/tables").get(auth, (req, res, next) => {
 }).post(auth, (req, res, next) => {
    var sender = user.newUser(req.user);
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
    var Table = table.getModel();
    (new Table(req.body)).save().then( (data : table.Table) => {
@@ -149,7 +181,7 @@ app.route("/tables").get(auth, (req, res, next) => {
          max_people: data.number
       }); 
    }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
 });;
 
@@ -158,7 +190,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
    var sender = user.newUser(req.user);
    
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
    table.getModel().find({number: req.params.number}, {number: 1, max_people: 1}).then( (table) => {
       return res.status(200).json( table ); 
@@ -169,22 +201,18 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
    var sender = user.newUser(req.user);
    
    if(!sender.hasDeskRole() && !sender.hasWaiterRole()){
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
    }
 
    /*if ( !req.body || (req.body.number && typeof(req.body.number) != 'number') || (req.body.max_people && typeof(req.body.max_people) != 'number') || (req.body.state && typeof(req.body.state) != 'string')){
       return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
    }*/
 
-   if ( !req.body || (req.body.number && isNaN(parseInt(req.body.number))) || (req.body.max_people && isNaN(parseInt(req.body.max_people))) || (req.body.state && typeof(req.body.state) != 'string')){
-      return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
+   if ( !req.body ||(req.body.max_people && isNaN(parseInt(req.body.max_people))) || (req.body.state && typeof(req.body.state) != 'string')){
+      return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
 
    var update: any = {};
-   
-   if (req.body.number){
-      update.number = req.body.number;
-   }
 
    if (req.body.max_people){
       update.max_people = req.body.max_people;
@@ -197,13 +225,18 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
    //perchè la patch con findOneAndUpdate ritora sempre un valore vecchio?
    table.getModel().findOneAndUpdate( {number: req.params.number}, { $set: update}, ).then( (data : table.Table) => {
       
+      emitEvent("modified table", req.params.number)
+
       return res.status(200).json( {
          number: data.number,
          max_people: data.number,
          state: data.state
       });
+
+      
+
    }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
 
 });
@@ -439,7 +472,16 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    newer.username_waiter = req.user.username;
 
    ticket.getModel().update( { _id: req.params.id}, { $push: { orders: newer } }).then( () => {
-      return res.status(200).json( {error:false, errormessage:""} ); 
+      item.getModel().findOne({ name: newer.name_item}).then( (i: item.Item) => {
+         if (i.type == item.type[0]){
+            emitEvent("ordered dish", req.params.id);
+         } else if (i.type == item.type[1]){
+            emitEvent("ordered drink", req.params.id);
+         }
+         return res.status(200).json( {error:false, errormessage:""} );
+      }).catch(() => {
+         return res.status(404).json( {error:true, errormessage:"Cannot find item"} );
+      });
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
    });
@@ -489,11 +531,19 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
       toChange[0].state = req.body.state;
       data.save();
       
+      if (req.body.state == ticket.orderState[2]){
+         emitEvent("ready item", req.params.idTicket);
+      }
+      else if(req.body.state == ticket.orderState[1]){
+         emitEvent("dish in preparation", req.params.idTicket);
+      }
+
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
    });
 });
+
 
 app.get('/renew', auth, (req,res,next) => {
    var tokendata = req.user;
@@ -744,15 +794,8 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
    let server = http.createServer(app);
    ios = io(server);
    ios.on('connection', function(client) {
-      console.log( "Socket.io client connected");
-
-      for (let event in socketEvents){
-         client.on(event, (body, callback) => {
-            forwardSocketMessage(event, socketEvents[event].senderRole, body.token,socketEvents[event].destRooms, body.data);
-         });
-      }
-      
-      } );
+      console.log( "Socket.io client connected");      
+   });
    server.listen( 8080, () => console.log("HTTP Server started on port 8080") );
 
 }, function onrejected() {
@@ -760,46 +803,15 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
     process.exit(-2);
 });
 
-var socketEvents = {
-   "occupied table": {
-      destRooms: [rooms[0], rooms[2]],
-      //senderRole: user.roles[0]
-   },
-   
-   "ordered dish": {
-      destRooms: [rooms[1]],
-      //senderRole: user.roles[0]
-   },
-   "ordered drink":{
-      destRooms: [rooms[3]],
-      //senderRole: user.roles[0]
-   },
-   "dish in preparation": {
-      destRooms: [rooms[1]],
-      //senderRole: user.roles[1]
-   },
-   "ready dish": {
-      destRooms: [rooms[0]],
-      //senderRole: user.roles[1]
-   },
-   "ready drink": {
-      destRooms: [rooms[0]],
-      //senderRole: user.roles[3]
-   },
-   "table free": {
-      destRooms: [rooms[0], rooms[2]],
-      //senderRole: user.roles[2]
-   }
-   
-};
 
-function forwardSocketMessage(event: string, senderRole: string, senderToken: string,roomsDestination: Array<string>, data){
-   if ( jsonwebtoken.verify(senderToken, process.env.JWT_SECRET) && jsonwebtoken.decode(senderToken).payload.role === senderRole){
-      roomsDestination.forEach(function(room){
-         ios.to(room).emit(event, data);
-      });
-   }
-};
+
+//fuctnion forwardSocketMessage(event: string, senderRole: string, senderToken: string,roomsDestination: Array<string>, data){
+//   if ( jsonwebtoken.verify(senderToken, process.env.JWT_SECRET) && jsonwebtoken.decode(senderToken).payload.role === senderRole){
+//      roomsDestination.forEach(function(room){
+//         ios.to(room).emit(event, data);
+//      });
+//   }
+//};
 
 //TODO mettere dei filtri per i dati da forwardare
 /*function forwardSocketMessage(event: string, senderRole: string, senderToken: string,roomsDestination: Array<string>, data){
