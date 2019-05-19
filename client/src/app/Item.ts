@@ -4,9 +4,9 @@ export interface Item {
     name: string;
     type: [string];
     price: number;
-    required_time : number;
+    required_time: number;
 }
 
 export function isOrder(arg: any): arg is Item {
-    return arg;
-  }
+  return arg;
+}

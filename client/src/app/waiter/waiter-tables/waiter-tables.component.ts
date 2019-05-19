@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {UserHttpService} from '../../user-http.service';
 
 @Component({
   selector: 'app-waiter-tables',
@@ -7,10 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WaiterTablesComponent implements OnInit {
 
-  constructor() { }
+  constructor(private us: UserHttpService) { }
 
   ngOnInit() {
-    
+    if (this.us.get_token() == undefined || this.us.get_token() == '') {
+      this.us.logout();
+    }
   }
 
 }

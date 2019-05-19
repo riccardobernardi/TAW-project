@@ -11,6 +11,8 @@ import {Observable, of} from 'rxjs';
   providedIn: 'root'
 })
 export class OrderHttpService {
+  private items: any;
+  private orders: any = mockorders;
   /*public items: any = [];*/
 
   constructor(private us: UserHttpService, private router: Router, private http: HttpClient  ) {
@@ -39,12 +41,14 @@ export class OrderHttpService {
 
     // console.log('qui gli items');
 
-    return this.http.get( this.url + '/items', options )/*.pipe(
+    this.http.get( this.url + '/items', options ).pipe(
       tap( (data) => {
         this.items.push(data);
         // console.log(data);
       })
-    );*/
+    );
+    console.log(this.items)
+    return this.items;
   }
 
   /*private messageSource = new BehaviorSubject(this.orders);
@@ -77,13 +81,13 @@ export class OrderHttpService {
       return new Error('Something bad happened; please try again later.');
     }*/
 
-  /*get(val?) {
+  get(val?) {
     let m ;
     if (val === undefined) {
       m = this.orders;
     } else {
       m = this.orders.filter(obj => (obj.selTable == val || obj.selTable == -1));
-    }*/
+    }
 
     /*return this.http.get<Order[]>( this.us.url + '/messages', this.create_options( {limit: '10', skip: '0'} ) ).pipe(
       tap( (data) => console.log(JSON.stringify(data))) ,
@@ -91,8 +95,8 @@ export class OrderHttpService {
     );*/
     // return new Observable(m);
     // console.log(m);
-    //return m;
-  //}
+    return m;
+  }
 
   /*  private create_options( params = {} ) {
       return  {

@@ -2,6 +2,8 @@
 
 cd /Users/rr/Git_repo/TAW-project/server
 
+npm run compile
+
 echo "running mongo..."
 
 mongod &

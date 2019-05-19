@@ -325,6 +325,8 @@ var queryOrderStates;
 (queryOrderStates = Array.from(ticket.orderState)).push("all");
 
 app.route("/tickets").get(auth, (req, res, next) => {
+
+   console.log("entro nella ticket api----");
    var sender = user.newUser(req.user);
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
@@ -360,8 +362,12 @@ app.route("/tickets").get(auth, (req, res, next) => {
                });
             }
          });
+         console.log("vado in if" + orders);
          return res.status(200).json(orders);
-      } else return res.status(200).json( ticketslist ); 
+      } else {
+         console.log("vado in else" + ticketslist);
+         return res.status(200).json( ticketslist );
+      }
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
    });

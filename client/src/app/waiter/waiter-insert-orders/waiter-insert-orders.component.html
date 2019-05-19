@@ -19,21 +19,9 @@
 
       <p *ngIf="selMenuEntry != undefined">Hai selezionato il prodotto {{selMenuEntry.name}}</p>
 
-      <!--<button id = "send" class="btn btn-lg btn-primary btn-block" (click)="this.send()" >Invia</button>
+      <br>
 
-      <label for="menu">Ordini già evasi per questo tavolo</label>
-      <select class="form-control" [(ngModel)]="deleteOrder" name="menu" id="menu">
-        <option *ngFor="let ord of this.orders" value="{{ord.id}}">{{ord.id + " " + ord.selMenuEntry}}</option>
-      </select>
-
-      <p [style.display]="deleteOrder === undefined?'none':'inherit'">Stai eliminando la comanda {{deleteOrder}}</p>
-
-      <button id = "delete" class="btn btn-lg btn-primary btn-block" (click)="this.delete();" >Delete</button>
-
-      <p>orders_size = {{this.orders_size()}}</p>
-
-      <button id = "logout" class="btn btn-lg btn-primary btn-block" (click)="this.us.logout()" >Logout</button>
-    -->
+      <button id = "send" class="btn btn-lg btn-primary btn-block" (click)="send()" >Invia</button>
     </div>
 
   </form>

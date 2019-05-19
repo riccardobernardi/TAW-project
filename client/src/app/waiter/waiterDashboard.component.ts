@@ -21,5 +21,4 @@ export class WaiterDashboardComponent implements OnInit {
       this.us.logout();
     }
   }
-
 }

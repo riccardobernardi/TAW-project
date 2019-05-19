@@ -19,7 +19,7 @@ export class UserHttpService {
 
   public token = '';
   public url = 'http://localhost:8080';
-  //public users = []
+  // public users = []
 
   constructor( private http: HttpClient, private router: Router ) {
     console.log('User service instantiated');
@@ -100,7 +100,7 @@ export class UserHttpService {
   }
 
   get_nick() {
-    return jwt_decode(this.token).nick;
+    return jwt_decode(this.token).username;
   }
 
   get_role() {
