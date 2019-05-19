@@ -331,7 +331,6 @@ app.route("/tickets").get(auth, (req, res, next) => {
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
-
    var filter: any = {}
    if(req.query.start)
       filter.start = req.query.start;
@@ -346,6 +345,8 @@ app.route("/tickets").get(auth, (req, res, next) => {
    if(req.query.table){
       filter.table = req.query.table;
    }
+
+   console.log(filter);
 
    if(req.query.orders && !queryOrderStates.filter((val) => val === req.query.orders))
       return next({ statusCode:404, error: true, errormessage: "The state of orders accepted are ordered, preparation, ready, delivered and all"})
@@ -392,12 +393,9 @@ app.route("/tickets").get(auth, (req, res, next) => {
    newer.table = req.body.table;
    newer.start = startdate.toString();
 
-
-
    var t = new (ticket.getModel()) (newer);
    console.log(t);
    
-      
    t.save().then( (data) => {
       return res.status(200).json({ error: false, errormessage: "", id: data._id });
    }).catch( (reason) => {
@@ -463,7 +461,7 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
       return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
-      console.log(req.body);
+   console.log(req.body);
 
    if (!req.body || !req.body.name_item || !req.body.price || /*req.body.added ||*/ typeof(req.body.name_item) != 'string' || typeof(req.body.price) != 'number' /*|| Array.isArray(req.body.added)*/){
       return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
@@ -475,18 +473,23 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    newer.price = req.body.price;
    newer.added = req.body.added;
    newer.state = ticket.orderState[0];
-   newer.username_waiter = req.user.username;
+   //VEDERE CON CECCHINI
+   //newer.username_waiter = req.user.username;
+   newer.username_waiter = req.body.username_waiter;
 
    ticket.getModel().update( { _id: req.params.id}, { $push: { orders: newer } }).then( () => {
       item.getModel().findOne({ name: newer.name_item}).then( (i: item.Item) => {
+         console.log("AAAAAAA:\n" + i + "\n");
          if (i.type == item.type[0]){
+            console.log("DISH")
             emitEvent("ordered dish", req.params.id);
          } else if (i.type == item.type[1]){
+            console.log("DRINK");
             emitEvent("ordered drink", req.params.id);
          }
          return res.status(200).json( {error:false, errormessage:""} );
-      }).catch(() => {
-         return res.status(404).json( {error:true, errormessage:"Cannot find item"} );
+      }).catch((err) => {
+         return res.status(404).json( {error:true, errormessage:err} );
       });
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
@@ -776,7 +779,7 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
 
       var ti2 = new ticketModel({
          waiter: "waiter2",
-         table: 1,
+         table: 2,
          start: new Date("05/05/2019, 08:49:36 PM"),
          orders: [{
             //id_order: new ObjectID(),

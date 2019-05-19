@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Ticket } from "../../Ticket"
+import { Item } from "../../Item"
+import {ItemHttpService} from '../../item-http.service';
 import {UserHttpService} from '../../user-http.service';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {tap} from 'rxjs/operators';
-import * as url from 'url';
+import { TicketHttpService } from 'src/app/ticket-http.service';
 
 @Component({
   selector: 'app-waiter-served',
@@ -11,38 +12,23 @@ import * as url from 'url';
 })
 export class WaiterServedComponent implements OnInit {
 
-  constructor(private http: HttpClient, private us: UserHttpService) { }
+  private items : Item[] = [];
+  private tickets : Ticket[] = []
 
-  public url = 'http://localhost:8080';
+  constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService) { }
 
   ngOnInit() {
-    if (this.us.get_token() == undefined || this.us.get_token() == '') {
-      this.us.logout();
-    }
+    this.ticket.get_tickets({state: "open"}).toPromise().then((data : Ticket[] ) => {
+      this.tickets = data;
+      console.log(this.tickets);
+    }).catch((err) => console.log(err));
   }
 
-  get() {
-    const options = {
-      headers: new HttpHeaders({
-        'cache-control': 'no-cache',
-        'Content-Type':  'application/json',
-      }).append('Authorization', 'Bearer ' + this.us.get_token())
-    };
-
-    let a = [];
-
-    this.http.get( this.url + '/tickets', options ).pipe(
-      tap( (data) => {
-        // console.log(options);
-        console.log(JSON.stringify(data) );
-        a.push(JSON.stringify(data));
-        a.push('ghesbò');
-      })
-    );
-
-    console.log(a);
-
-    return a;
+  deliver(ticket_index : number, order_index : number, state : string) {
+    let ticket = this.tickets[ticket_index];
+    this.ticket.changeOrderState(ticket._id, ticket.orders[order_index]._id, "delivered").toPromise().then((data) => {
+      //faccio nulla dato che poi dovrebbe arrivare l'evento dal socket
+    }).catch((err) => console.log(err));
   }
 
 }

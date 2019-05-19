@@ -6,22 +6,34 @@
       <p for="button">Your role is {{this.us.get_role()}}</p>
 
       <label for="tables">Seleziona un tavolo</label>
-      <select class="form-control" [(ngModel)]="selTable" name="tables" id="tables">
-        <option *ngFor="let table of tables" [ngValue]="table">{{table}}</option>
+      <select class="form-control" [(ngModel)]="selTicket" name="tables" id="tables">
+        <option *ngFor="let ticket of tickets" [ngValue]="ticket">{{ticket.table}}</option>
       </select>
 
-      <p *ngIf="selTable != undefined">Hai selezionato il tavolo {{selTable}}</p>
+      <div>
+       
+        <label for="ordini">Seleziona un prodotto da aggiungere</label>
+        <select class="form-control" [(ngModel)]="selMenuEntry" name="ordini" id="ordini">
+          <option *ngFor="let item of items" [ngValue]="item">{{item.name}}</option>
+        </select>
 
-      <label for="ordini">Seleziona un prodotto da aggiungere</label>
-      <select class="form-control" [(ngModel)]="selMenuEntry" name="ordini" id="ordini" (change)="a()">
-        <option *ngFor="let item of items" [ngValue]="item">{{item.name}}</option>
-      </select>
+        
+        <input type="number" #counter class="form-control" style="text-align:center;" >
 
-      <p *ngIf="selMenuEntry != undefined">Hai selezionato il prodotto {{selMenuEntry.name}}</p>
+        <button (click)="insertItem(selMenuEntry, counter.value)">Insert</button>
+      </div>
 
-      <br>
+      <div>
+        <label>Elementi inseriti nell'ordine per il tavolo {{selTable}}</label>
+        <ul>
+          <li *ngFor="let item of itemsSelected; let i = index">
+            {{item.name}}
+            <button (click)="deleteItemFromSelected(i)">Delete</button>
+          </li>
+        </ul>
+      </div>
 
-      <button id = "send" class="btn btn-lg btn-primary btn-block" (click)="send()" >Invia</button>
+      <button (click)="sendOrders(selTicket.id, this.us.get_nick(), itemsSelected)">Invia ordini</button>
     </div>
 
   </form>
