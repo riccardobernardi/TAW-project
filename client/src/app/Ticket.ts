@@ -1,10 +1,10 @@
-import { Order } from './Order';
+import { TicketOrder } from './TicketOrder';
 
 export interface Ticket {
-    id: string, 
+    _id: string, 
     waiter: string,
     table: number,
-    orders: Order[],
+    orders: TicketOrder[],
     start: Date,
     end: Date,
     state: string, 

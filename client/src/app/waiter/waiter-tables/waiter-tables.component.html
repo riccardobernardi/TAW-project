@@ -1,9 +1,6 @@
 <div>
-    <li *ngFor="let table of tables">
-        <button [disabled] = "table.state" (click) = "open_ticket(table)">
-            Number: {{table.number}}, 
-            Max_people:{{table.max_people}},
-            State: {{table.state}}
-        </button>
-    </li>
+    <button *ngFor="let table of tables" [disabled] = "table.state" (click) = "open_ticket(table)">
+        Number: {{table.number}}, 
+        Max_people:{{table.max_people}}
+    </button>
 </div>

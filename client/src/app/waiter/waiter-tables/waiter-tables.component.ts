@@ -27,9 +27,9 @@ export class WaiterTablesComponent implements OnInit {
 
   open_ticket(table_to_change: Table) {
     this.ticket.open_ticket(this.user.get_nick(), table_to_change.number).toPromise().then((data : Ticket) => {
-      console.log(data)
-      table_to_change.state = data.id;
+      table_to_change.state = data._id;
       return this.table.change_table(table_to_change);
+      //update del tavolo da rimuovere perchè si deve usare il websocket
     }).then().catch(err => {
       console.log(err);
     });
