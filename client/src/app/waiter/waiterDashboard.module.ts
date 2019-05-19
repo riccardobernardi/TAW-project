@@ -6,12 +6,14 @@ import { UserHttpService } from '../user-http.service';
 import { WaiterDashboardComponent } from './waiterDashboard.component';
 import { SocketioService } from '../socketio.service';
 import { OrderHttpService } from '../order-http.service';
-import { ItemHttpService } from '../item-http.service';
+import { ItemHttpService } from "../item-http.service"
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { WaiterTablesComponent } from './waiter-tables/waiter-tables.component';
-import { WaiterRoutingModule } from './waiter-routing.module';
-import { WaiterServedComponent } from './waiter-served/waiter-served.component';
-import { WaiterInsertOrdersComponent} from './waiter-insert-orders/waiter-insert-orders.component';
+import { WaiterTablesComponent } from './waiter-tables/waiter-tables.component'
+import { WaiterRoutingModule } from "./waiter-routing.module";
+import { WaiterServedComponent } from "./waiter-served/waiter-served.component";
+import { WaiterInsertOrdersComponent} from "./waiter-insert-orders/waiter-insert-orders.component";
+import { TableHttpService } from '../table-http.service';
+import { TicketHttpService } from '../ticket-http.service';
 
 @NgModule({
   declarations: [WaiterDashboardComponent, WaiterTablesComponent, WaiterServedComponent,
@@ -25,7 +27,9 @@ import { WaiterInsertOrdersComponent} from './waiter-insert-orders/waiter-insert
   ],
   providers: [
     {provide: OrderHttpService, useClass: OrderHttpService},
-    {provide: ItemHttpService, useClass: ItemHttpService}
+    {provide: ItemHttpService, useClass: ItemHttpService},
+    {provide: TableHttpService, useClass: TableHttpService},
+    {provide: TicketHttpService, useClass: TicketHttpService}
   ]
 })
 
