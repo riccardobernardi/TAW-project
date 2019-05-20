@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { WaiterDashboardComponent } from './waiterDashboard.component';
+import { Paydesk2DashboardComponent } from './paydesk2Dashboard.component';
 import { WaiterTablesComponent } from '../waiter-tables/waiter-tables.component';
-import { WaiterServedComponent } from '../waiter-served/waiter-served.component';
-import { WaiterInsertOrdersComponent } from '../waiter-insert-orders/waiter-insert-orders.component'
+import { WaiterInsertOrdersComponent } from '../waiter-insert-orders/waiter-insert-orders.component';
+import {WaiterServedComponent} from '../waiter-served/waiter-served.component';
+import {PaydeskComponent} from '../paydesk/paydesk.component';
 
 
 const routes: Routes = [
-  { path: '', 
-    component: WaiterDashboardComponent,
+  { path: '',
+    component: Paydesk2DashboardComponent,
     children: [
       {
         path: 'tables',
@@ -22,6 +23,10 @@ const routes: Routes = [
       {
         path: 'insertOrders',
         component: WaiterInsertOrdersComponent
+      },
+      {
+        path: 'paydesk',
+        component: PaydeskComponent
       }
     ]
   }
@@ -31,4 +36,4 @@ const routes: Routes = [
   imports: [ RouterModule.forChild(routes) ],
   exports: [ RouterModule ]
 })
-export class WaiterRoutingModule {}
+export class Paydesk2RoutingModule {}

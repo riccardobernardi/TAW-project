@@ -3,26 +3,28 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { UserHttpService } from '../user-http.service';
-import { WaiterDashboardComponent } from './waiterDashboard.component';
+import { Paydesk2DashboardComponent } from './paydesk2Dashboard.component';
 import { SocketioService } from '../socketio.service';
 import { OrderHttpService } from '../order-http.service';
-import { ItemHttpService } from "../item-http.service"
+import { ItemHttpService } from '../item-http.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { WaiterTablesComponent } from '../waiter-tables/waiter-tables.component'
-import { WaiterRoutingModule } from "./waiter-routing.module";
-import { WaiterServedComponent } from "../waiter-served/waiter-served.component";
-import { WaiterInsertOrdersComponent} from "../waiter-insert-orders/waiter-insert-orders.component";
+import { WaiterTablesComponent } from '../waiter-tables/waiter-tables.component';
+import { WaiterRoutingModule } from '../waiter/waiter-routing.module';
+import { WaiterServedComponent } from '../waiter-served/waiter-served.component';
+import { WaiterInsertOrdersComponent} from '../waiter-insert-orders/waiter-insert-orders.component';
 import { TableHttpService } from '../table-http.service';
 import { TicketHttpService } from '../ticket-http.service';
+import {Paydesk2RoutingModule} from './paydesk2-routing.module';
+import {PaydeskComponent} from '../paydesk/paydesk.component';
 
 @NgModule({
-  declarations: [WaiterDashboardComponent, WaiterTablesComponent, WaiterServedComponent,
-    WaiterInsertOrdersComponent],
+  declarations: [Paydesk2DashboardComponent, WaiterTablesComponent, WaiterServedComponent,
+    WaiterInsertOrdersComponent, PaydeskComponent],
   imports: [
     CommonModule,
     FormsModule,
     HttpClientModule,
-    WaiterRoutingModule,
+    Paydesk2RoutingModule,
     NgbModule
   ],
   providers: [
@@ -33,4 +35,4 @@ import { TicketHttpService } from '../ticket-http.service';
   ]
 })
 
-export class WaiterDashboardModule { }
+export class Paydesk2DashboardModule { }

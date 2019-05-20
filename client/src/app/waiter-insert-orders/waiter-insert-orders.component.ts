@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {ItemHttpService} from '../../item-http.service';
-import {UserHttpService} from '../../user-http.service';
-import {Item} from '../../Item';
+import {ItemHttpService} from '../item-http.service';
+import {UserHttpService} from '../user-http.service';
+import {Item} from '../Item';
 import { TicketHttpService } from 'src/app/ticket-http.service';
 import { Ticket } from 'src/app/Ticket';
 
@@ -14,9 +14,9 @@ import { Ticket } from 'src/app/Ticket';
 export class WaiterInsertOrdersComponent implements OnInit {
 
   private tickets = [];
-  private items : Item[] = [];
+  private items: Item[] = [];
   private selTicket = undefined;
-  private itemsSelected : Item[] = []
+  private itemsSelected: Item[] = []
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService) { }
 

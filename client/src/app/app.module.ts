@@ -7,7 +7,6 @@ import { UserLoginComponent } from './user-login/user-login.component';
 import { AppRoutingModule } from './app-routing.module';
 import { UserHttpService } from './user-http.service';
 import { WaiterDashboardModule } from './waiter/waiterDashboard.module';
-import { PaydeskComponent } from './paydesk/paydesk.component';
 import { CookComponent } from './cook/cook.component';
 import { BarmanComponent } from './barman/barman.component';
 import {SocketioService} from './socketio.service';
@@ -20,7 +19,6 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
   declarations: [
     AppComponent,
     UserLoginComponent,
-    PaydeskComponent,
     CookComponent,
     BarmanComponent,
   ],

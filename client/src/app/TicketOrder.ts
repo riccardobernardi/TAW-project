@@ -1,10 +1,10 @@
 export interface TicketOrder {
-  _id : string,
-  name_item : string,
-  username_waiter : string,
-  state : string,
-  price : number,
-  added: []
+  _id: string;
+  name_item: string;
+  username_waiter: string;
+  state: string;
+  price: number;
+  added: [];
 }
 
 // User defined type guard

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserHttpService } from "./user-http.service";
+import { UserHttpService } from './user-http.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Table } from './Table';
 
@@ -8,10 +8,10 @@ import { Table } from './Table';
 })
 export class TableHttpService {
 
-  public url = 'http://localhost:8080' + "/tables";
+  public url = 'http://localhost:8080' + '/tables';
 
   constructor(private us: UserHttpService, private http: HttpClient) {}
-  
+
   private create_options( params = {} ) {
     return  {
       headers: new HttpHeaders({
@@ -23,14 +23,14 @@ export class TableHttpService {
   }
 
   get_tables() {
-    return this.http.get<Table[]>(this.url, this.create_options())
+    return this.http.get<Table[]>(this.url, this.create_options());
   }
 
-  get_table(number : Number) {
-    return this.http.get<Table[]>(this.url + "/" + number, this.create_options())
+  get_table(num: number) {
+    return this.http.get<Table[]>(this.url + '/' + num, this.create_options());
   }
 
-  change_table(new_table : Table) {
-    return this.http.patch<Table>(this.url + "/" + new_table.number, new_table, this.create_options());
+  change_table(newTable: Table) {
+    return this.http.patch<Table>(this.url + '/' + newTable.num, newTable, this.create_options());
   }
 }

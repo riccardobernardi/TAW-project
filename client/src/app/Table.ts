@@ -1,7 +1,7 @@
 export interface Table {
-    number: number,  
-    max_people: number,
-    state: string
+    num: number;
+    max_people: number;
+    state: string;
 }
 
 // User defined type guard

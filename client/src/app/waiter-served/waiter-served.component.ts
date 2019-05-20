@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Ticket } from "../../Ticket"
-import { Item } from "../../Item"
-import {ItemHttpService} from '../../item-http.service';
-import {UserHttpService} from '../../user-http.service';
+import { Ticket } from "../Ticket"
+import { Item } from "../Item"
+import {ItemHttpService} from '../item-http.service';
+import {UserHttpService} from '../user-http.service';
 import { TicketHttpService } from 'src/app/ticket-http.service';
 
 @Component({

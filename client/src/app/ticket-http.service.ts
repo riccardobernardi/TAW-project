@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
-import { UserHttpService } from "./user-http.service";
+import { UserHttpService } from './user-http.service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Ticket } from './Ticket';
-import { map } from 'rxjs/operators'; 
+import { map } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-import { TicketOrder } from "./TicketOrder";
-import { Item } from "./Item";
+import { TicketOrder } from './TicketOrder';
+import { Item } from './Item';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TicketHttpService {
 
-  public url = 'http://localhost:8080' + "/tickets";
+  public url = 'http://localhost:8080' + '/tickets';
 
   constructor(private us: UserHttpService, private http: HttpClient) { }
 
@@ -27,8 +27,8 @@ export class TicketHttpService {
     };
   }
 
-  open_ticket(waiter : string, table : number) {
-    return this.http.post<Ticket>(this.url, {waiter: waiter, table: table, start: Date()}, this.create_options())
+  open_ticket(waiter: string, table: number) {
+    return this.http.post<Ticket>(this.url, {waiter, table, start: Date()}, this.create_options());
   }
 
   get_tickets(filters) {
@@ -48,14 +48,14 @@ export class TicketHttpService {
       added: [],
       price: item.price,
       state: null,
-      username_waiter: username_waiter,
+      username_waiter,
       _id: null
     }
     console.log(ticket_id, orders);
-    return this.http.post(this.url + "/" + ticket_id + "/" + "orders", orders, this.create_options());
+    return this.http.post(this.url + '/' + ticket_id + '/' + 'orders', orders, this.create_options());
   }
 
   changeOrderState(ticket_id, order_id, state) {
-    return this.http.patch(this.url + "/" + ticket_id + "/" + order_id, {state: state}, this.create_options());
+    return this.http.patch(this.url + '/' + ticket_id + '/' + order_id, {state}, this.create_options());
   }
 }
