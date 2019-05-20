@@ -243,7 +243,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
 app.route("/items").get(auth, (req,res,next) => {
    var sender = user.newUser(req.user);
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
    var filter: any = {}
    if(req.query.type)
@@ -257,21 +257,21 @@ app.route("/items").get(auth, (req,res,next) => {
 }).post(auth, (req, res, next) => {
    
    if(!user.newUser(req.user).hasDeskRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
    
    var i = new (item.getModel()) (req.body);
    
    console.log(i)
    if (!item.isItem(i)){
-      return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
+      return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
       
    i.save().then( (data) => {
       return res.status(200).json({ error: false, errormessage: "", id: data._id });
    }).catch( (reason) => {
    if( reason.code === 11000 )
-      return next({statusCode:404, error:true, errormessage: "Item already exists"} );
-   return next({ statusCode:404, error: true, errormessage: "DB error: "+reason.errmsg });
+      return next({statusCode:409, error:true, errormessage: "Item already exists"} );
+   return next({ statusCode:500, error: true, errormessage: "DB error: "+reason.errmsg });
    })
    
 });
@@ -280,7 +280,7 @@ app.route("/items").get(auth, (req,res,next) => {
 app.route("/items/:id").get(auth, (req,res,next) => {
    var sender = user.newUser(req.user);
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
   
    item.getModel().findById(req.params.id).then( (item) => {
@@ -291,13 +291,13 @@ app.route("/items/:id").get(auth, (req,res,next) => {
 }).put(auth, (req, res, next) => {
    
    if(!user.newUser(req.user).hasDeskRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
    
    
    var i = new (item.getModel()) (req.body);
    
    if (!item.isItem(i)){
-      return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
+      return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
 
    item.getModel().findById(req.params.id).then( (item) => {
@@ -305,18 +305,18 @@ app.route("/items/:id").get(auth, (req,res,next) => {
    }).then((item) => {
       return res.status(200).json( item );
    }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    })
 }).delete(auth, (req, res, next) => {
    
    if(!user.newUser(req.user).hasDeskRole()){
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
    }
    
    item.getModel().findOneAndDelete({_id:req.params.id}).then( ()=> {
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason)=> {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
    })
 });
 
@@ -326,7 +326,7 @@ var queryOrderStates;
 app.route("/tickets").get(auth, (req, res, next) => {
    var sender = user.newUser(req.user);
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
 
    var filter: any = {}
@@ -345,7 +345,7 @@ app.route("/tickets").get(auth, (req, res, next) => {
    }
 
    if(req.query.orders && !queryOrderStates.filter((val) => val === req.query.orders))
-      return next({ statusCode:404, error: true, errormessage: "The state of orders accepted are ordered, preparation, ready, delivered and all"})
+      return next({ statusCode:400, error: true, errormessage: "The state of orders accepted are ordered, preparation, ready, delivered and all"})
 
    ticket.getModel().find(filter).then( (ticketslist : ticket.Ticket[]) => {
       if(req.query.orders && (req.query.orders != queryOrderStates[4])){
@@ -362,13 +362,13 @@ app.route("/tickets").get(auth, (req, res, next) => {
          return res.status(200).json(orders);
       } else return res.status(200).json( ticketslist ); 
    }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
    
 }).post(auth, (req, res, next) => {
    var sender = user.newUser(req.user);
    if(!sender.hasDeskRole() && !sender.hasWaiterRole()){
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
    }
 
    var startdate: Date = new Date(req.body.start);
@@ -377,7 +377,7 @@ app.route("/tickets").get(auth, (req, res, next) => {
    console.log(typeof(req.body.table));
 
    if (!req.body || !req.body.waiter || !req.body.table || !req.body.start || typeof(req.body.waiter) != 'string' || typeof(req.body.table) != 'number' || startdate.toString() == 'Invalid Date' ){
-      return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
+      return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
 
    var newer: any = {};
@@ -395,8 +395,8 @@ app.route("/tickets").get(auth, (req, res, next) => {
       return res.status(200).json({ error: false, errormessage: "", id: data._id });
    }).catch( (reason) => {
    if( reason.code === 11000 )
-      return next({statusCode:404, error:true, errormessage: "Ticket already exists"} );
-   return next({ statusCode:404, error: true, errormessage: "DB error: "+reason.errmsg });
+      return next({statusCode:409, error:true, errormessage: "Ticket already exists"} );
+   return next({ statusCode:500, error: true, errormessage: "DB error: "+reason.errmsg });
    })
 });
 
@@ -404,7 +404,7 @@ app.route('/tickets/:id').get(auth, (req, res, next) => {
    var sender = user.newUser(req.user);
    
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
    
 
@@ -417,14 +417,14 @@ app.route('/tickets/:id').get(auth, (req, res, next) => {
    var sender = user.newUser(req.user);
    
    if(!sender.hasDeskRole()){
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
    }
 
    var enddate: Date = new Date(req.body.end); 
    console.log(enddate);
 
    if ( !req.body || (req.body.end && enddate.toString() == 'Invalid Date') || (req.body.state && typeof(req.body.state) != 'string')){
-      return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
+      return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
 
    var update: any = {};
@@ -440,7 +440,7 @@ app.route('/tickets/:id').get(auth, (req, res, next) => {
    ticket.getModel().findOneAndUpdate( {_id: req.params.id}, { $set: update}, ).then( (data : ticket.Ticket) => {
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
 });
 
@@ -454,12 +454,12 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    var sender = user.newUser(req.user);
    
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
       console.log(req.body);
 
    if (!req.body || !req.body.name_item || !req.body.price || /*req.body.added ||*/ typeof(req.body.name_item) != 'string' || typeof(req.body.price) != 'number' /*|| Array.isArray(req.body.added)*/){
-      return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
+      return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
 
    var newer: any = {};
@@ -482,7 +482,7 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
          return res.status(404).json( {error:true, errormessage:"Cannot find item"} );
       });
    }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
 });
 
@@ -505,7 +505,7 @@ app.get('/tickets/orders', auth, (req,res,next) => {
       return res.status(200).json(orderslist);
       //return res.status(200).json( ticketslist ); 
    }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
 });
 
@@ -513,7 +513,7 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
    
    
    if ( !req.body || (req.body.state && typeof(req.body.state) != 'string')){
-      return next({ statusCode:404, error: true, errormessage: "Wrong format"} );
+      return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
 
    
@@ -539,7 +539,7 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
 
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
 });
 
