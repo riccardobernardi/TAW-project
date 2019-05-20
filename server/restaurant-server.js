@@ -314,7 +314,7 @@ app.route("/tickets").get(auth, function (req, res, next) {
     var t = new (ticket.getModel())(newer);
     console.log(t);
     t.save().then(function (data) {
-        return res.status(200).json({ error: false, errormessage: "", id: data._id });
+        return res.status(200).json({ error: false, errormessage: "", _id: data._id });
     })["catch"](function (reason) {
         if (reason.code === 11000)
             return next({ statusCode: 404, error: true, errormessage: "Ticket already exists" });
