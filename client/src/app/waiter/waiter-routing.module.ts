@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { WaiterDashboardComponent } from './waiterDashboard.component';
-import { WaiterTablesComponent } from '../waiter-tables/waiter-tables.component';
-import { WaiterServedComponent } from '../waiter-served/waiter-served.component';
-import { WaiterInsertOrdersComponent } from '../waiter-insert-orders/waiter-insert-orders.component'
+import { TablesViewComponent } from '../tables-view/tables-view.component';
+import { OrdersServedComponent } from '../orders-served/orders-served.component';
+import { InsertOrdersComponent } from '../insert-orders/insert-orders.component'
 import {LogoutComponent} from '../logout/logout.component';
 
 
@@ -14,16 +14,20 @@ const routes: Routes = [
     children: [
       {
         path: 'tables',
-        component:  WaiterTablesComponent
+        component:  TablesViewComponent
       },
       {
         path: 'served',
-        component: WaiterServedComponent
+        component: OrdersServedComponent
       },
       {
         path: 'insertOrders',
-        component: WaiterInsertOrdersComponent
+        component: InsertOrdersComponent
       },
+      {
+        path: 'logout',
+        component: LogoutComponent
+      }
     ]
   }
 ];

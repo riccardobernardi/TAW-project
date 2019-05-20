@@ -21,8 +21,7 @@ import { LogoutComponent } from './logout/logout.component';
     AppComponent,
     UserLoginComponent,
     CookComponent,
-    BarmanComponent,
-    LogoutComponent,
+    BarmanComponent
   ],
   imports: [
     BrowserModule,
@@ -30,6 +29,7 @@ import { LogoutComponent } from './logout/logout.component';
     HttpClientModule,
     AppRoutingModule,
     NgbModule.forRoot(),
+    WaiterDashboardModule
   ],
   providers: [
     {provide: UserHttpService, useClass: UserHttpService },

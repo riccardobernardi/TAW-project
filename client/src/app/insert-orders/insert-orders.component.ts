@@ -7,11 +7,11 @@ import { Ticket } from 'src/app/Ticket';
 
 
 @Component({
-  selector: 'app-waiter-insert-orders',
-  templateUrl: './waiter-insert-orders.component.html',
-  styleUrls: ['./waiter-insert-orders.component.css']
+  selector: 'app-insert-orders',
+  templateUrl: './insert-orders.component.html',
+  styleUrls: ['./insert-orders.component.css']
 })
-export class WaiterInsertOrdersComponent implements OnInit {
+export class InsertOrdersComponent implements OnInit {
 
   private tickets = [];
   private items: Item[] = [];

@@ -328,8 +328,8 @@ app.route("/tickets").get(auth, (req, res, next) => {
 
    console.log("entro nella ticket api----");
    var sender = user.newUser(req.user);
-   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+   /*if(!sender.hasDeskRole() && !sender.hasWaiterRole())
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );*/
 
    var filter: any = {}
    if(req.query.start)
@@ -788,6 +788,12 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
             state: ticket.orderState[0],
             price: 6,
             added: ["Mozzarella"]
+         }, {
+            //id_order: new ObjectID(),
+            name_item: "Bistecca alla griglia",
+            username_waiter: "waiter1",
+            state: ticket.orderState[0],
+            price: 9
          }],
          state: ticket.ticketState[0],
          total: 0

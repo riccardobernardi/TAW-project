@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {UserHttpService} from '../user-http.service';
+import { UserHttpService } from '../user-http.service';
 
 @Component({
   selector: 'app-logout',
@@ -8,9 +8,7 @@ import {UserHttpService} from '../user-http.service';
 })
 export class LogoutComponent implements OnInit {
 
-  constructor(us: UserHttpService) {
-    us.logout();
-  }
+  constructor(private us: UserHttpService) {}
 
   ngOnInit() {
   }

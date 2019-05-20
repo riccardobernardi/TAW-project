@@ -8,21 +8,21 @@ import { SocketioService } from '../socketio.service';
 import { OrderHttpService } from '../order-http.service';
 import { ItemHttpService } from '../item-http.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { WaiterTablesComponent } from '../waiter-tables/waiter-tables.component';
+import { TablesViewComponent } from '../tables-view/tables-view.component';
 import { WaiterRoutingModule } from './waiter-routing.module';
-import { WaiterServedComponent } from '../waiter-served/waiter-served.component';
-import { WaiterInsertOrdersComponent} from '../waiter-insert-orders/waiter-insert-orders.component';
+import { OrdersServedComponent } from '../orders-served/orders-served.component';
+import { InsertOrdersComponent} from '../insert-orders/insert-orders.component';
 import { TableHttpService } from '../table-http.service';
 import { TicketHttpService } from '../ticket-http.service';
-import {LogoutComponent} from '../logout/logout.component';
-import {PaydeskComponent} from '../paydesk/paydesk.component';
+import { LogoutComponent } from '../logout/logout.component';
 
 @NgModule({
   declarations: [
     WaiterDashboardComponent,
-    WaiterTablesComponent,
-    WaiterServedComponent,
-    WaiterInsertOrdersComponent,
+    TablesViewComponent,
+    OrdersServedComponent,
+    InsertOrdersComponent,
+    LogoutComponent
   ],
   imports: [
     CommonModule,
