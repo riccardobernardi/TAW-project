@@ -313,15 +313,9 @@ app.route("/tickets").get(auth, (req, res, next) => {
     newer.start = startdate.toString();
     var t = new (ticket.getModel())(newer);
     console.log(t);
-/*<<<<<<< HEAD
     t.save().then((data) => {
-        return res.status(200).json({ error: false, errormessage: "", id: data._id });
-    }).catch((reason) => {
-=======*/
-    t.save().then(function (data) {
         return res.status(200).json({ error: false, errormessage: "", _id: data._id });
-    })["catch"](function (reason) {
-/*>>>>>>> c78ea882af92bbd412ebe3113a26698f733a1fb6*/
+    }).catch((reason) => {
         if (reason.code === 11000)
             return next({ statusCode: 404, error: true, errormessage: "Ticket already exists" });
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason.errmsg });

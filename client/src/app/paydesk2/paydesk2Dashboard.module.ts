@@ -16,10 +16,16 @@ import { TableHttpService } from '../table-http.service';
 import { TicketHttpService } from '../ticket-http.service';
 import {Paydesk2RoutingModule} from './paydesk2-routing.module';
 import {PaydeskComponent} from '../paydesk/paydesk.component';
+import {LogoutComponent} from '../logout/logout.component';
 
 @NgModule({
-  declarations: [Paydesk2DashboardComponent, WaiterTablesComponent, WaiterServedComponent,
-    WaiterInsertOrdersComponent, PaydeskComponent],
+  declarations: [
+    Paydesk2DashboardComponent,
+    WaiterTablesComponent,
+    WaiterServedComponent,
+    WaiterInsertOrdersComponent,
+    PaydeskComponent,
+  ],
   imports: [
     CommonModule,
     FormsModule,

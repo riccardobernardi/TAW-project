@@ -6,6 +6,8 @@ import { WaiterTablesComponent } from '../waiter-tables/waiter-tables.component'
 import { WaiterInsertOrdersComponent } from '../waiter-insert-orders/waiter-insert-orders.component';
 import {WaiterServedComponent} from '../waiter-served/waiter-served.component';
 import {PaydeskComponent} from '../paydesk/paydesk.component';
+import {UserHttpService} from '../user-http.service';
+import {LogoutComponent} from '../logout/logout.component';
 
 
 const routes: Routes = [
@@ -27,7 +29,7 @@ const routes: Routes = [
       {
         path: 'paydesk',
         component: PaydeskComponent
-      }
+      },
     ]
   }
 ];

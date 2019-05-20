@@ -13,6 +13,7 @@ import {SocketioService} from './socketio.service';
 import {OrderService} from './order.service';
 import {OrderHttpService} from './order-http.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { LogoutComponent } from './logout/logout.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     UserLoginComponent,
     CookComponent,
     BarmanComponent,
+    LogoutComponent,
   ],
   imports: [
     BrowserModule,

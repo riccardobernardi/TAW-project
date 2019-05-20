@@ -5,10 +5,11 @@ import { WaiterDashboardComponent } from './waiterDashboard.component';
 import { WaiterTablesComponent } from '../waiter-tables/waiter-tables.component';
 import { WaiterServedComponent } from '../waiter-served/waiter-served.component';
 import { WaiterInsertOrdersComponent } from '../waiter-insert-orders/waiter-insert-orders.component'
+import {LogoutComponent} from '../logout/logout.component';
 
 
 const routes: Routes = [
-  { path: '', 
+  { path: '',
     component: WaiterDashboardComponent,
     children: [
       {
@@ -22,7 +23,7 @@ const routes: Routes = [
       {
         path: 'insertOrders',
         component: WaiterInsertOrdersComponent
-      }
+      },
     ]
   }
 ];

@@ -14,10 +14,16 @@ import { WaiterServedComponent } from '../waiter-served/waiter-served.component'
 import { WaiterInsertOrdersComponent} from '../waiter-insert-orders/waiter-insert-orders.component';
 import { TableHttpService } from '../table-http.service';
 import { TicketHttpService } from '../ticket-http.service';
+import {LogoutComponent} from '../logout/logout.component';
+import {PaydeskComponent} from '../paydesk/paydesk.component';
 
 @NgModule({
-  declarations: [WaiterDashboardComponent, WaiterTablesComponent, WaiterServedComponent,
-    WaiterInsertOrdersComponent],
+  declarations: [
+    WaiterDashboardComponent,
+    WaiterTablesComponent,
+    WaiterServedComponent,
+    WaiterInsertOrdersComponent,
+  ],
   imports: [
     CommonModule,
     FormsModule,
