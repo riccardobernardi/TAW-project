@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WaiterTablesComponent } from './waiter-tables.component';
+import { TablesViewComponent } from './tables-view.component';
 
-describe('WaiterTablesComponent', () => {
-  let component: WaiterTablesComponent;
-  let fixture: ComponentFixture<WaiterTablesComponent>;
+describe('TablesComponent', () => {
+  let component: TablesViewComponent;
+  let fixture: ComponentFixture<TablesViewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WaiterTablesComponent ]
+      declarations: [ TablesViewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(WaiterTablesComponent);
+    fixture = TestBed.createComponent(TablesViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

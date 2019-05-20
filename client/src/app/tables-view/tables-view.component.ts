@@ -6,11 +6,11 @@ import { Ticket } from 'src/app/Ticket';
 import {Table} from '../Table';
 
 @Component({
-  selector: 'app-waiter-tables',
-  templateUrl: './waiter-tables.component.html',
-  styleUrls: ['./waiter-tables.component.css']
+  selector: 'app-tables-view',
+  templateUrl: './tables-view.component.html',
+  styleUrls: ['./tables-view.component.css']
 })
-export class WaiterTablesComponent implements OnInit {
+export class TablesViewComponent implements OnInit {
 
   private tables: Table[] = [];
 

@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { Paydesk2DashboardComponent } from './paydesk2Dashboard.component';
-import { WaiterTablesComponent } from '../waiter-tables/waiter-tables.component';
-import { WaiterInsertOrdersComponent } from '../waiter-insert-orders/waiter-insert-orders.component';
-import {WaiterServedComponent} from '../waiter-served/waiter-served.component';
+import { TablesViewComponent } from '../tables-view/tables-view.component';
+import { InsertOrdersComponent } from '../insert-orders/insert-orders.component';
+import {OrdersServedComponent} from '../orders-served/orders-served.component';
 import {PaydeskComponent} from '../paydesk/paydesk.component';
 import {UserHttpService} from '../user-http.service';
 import {LogoutComponent} from '../logout/logout.component';
@@ -16,15 +16,15 @@ const routes: Routes = [
     children: [
       {
         path: 'tables',
-        component:  WaiterTablesComponent
+        component:  TablesViewComponent
       },
       {
         path: 'served',
-        component: WaiterServedComponent
+        component: OrdersServedComponent
       },
       {
         path: 'insertOrders',
-        component: WaiterInsertOrdersComponent
+        component: InsertOrdersComponent
       },
       {
         path: 'paydesk',

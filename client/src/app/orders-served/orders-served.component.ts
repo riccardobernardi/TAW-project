@@ -6,11 +6,11 @@ import {UserHttpService} from '../user-http.service';
 import { TicketHttpService } from 'src/app/ticket-http.service';
 
 @Component({
-  selector: 'app-waiter-served',
-  templateUrl: './waiter-served.component.html',
-  styleUrls: ['./waiter-served.component.css']
+  selector: 'app-orders-served',
+  templateUrl: './orders-served.component.html',
+  styleUrls: ['./orders-served.component.css']
 })
-export class WaiterServedComponent implements OnInit {
+export class OrdersServedComponent implements OnInit {
 
   private items : Item[] = [];
   private tickets : Ticket[] = []
