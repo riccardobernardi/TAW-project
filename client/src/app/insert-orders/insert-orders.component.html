@@ -7,7 +7,7 @@
 
       <label for="tables">Seleziona un tavolo</label>
       <select class="form-control" [(ngModel)]="selTicket" name="tables" id="tables">
-        <option *ngFor="let ticket of tickets" [ngValue]="ticket">{{ticket.table}}</option>
+        <option *ngFor="let tl of tickets" [ngValue]="tl">{{tl.table}}</option>
       </select>
 
       <div>
@@ -33,7 +33,7 @@
         </ul>
       </div>
 
-      <button (click)="sendOrders(selTicket.id, this.us.get_nick(), itemsSelected)">Invia ordini</button>
+      <button (click)="sendOrders(selTicket._id, this.us.get_nick(), itemsSelected)">Invia ordini</button>
     </div>
 
   </form>

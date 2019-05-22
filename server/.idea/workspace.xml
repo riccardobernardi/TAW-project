@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="" />
+    <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../client/src/app/Table.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/Table.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/insert-orders/insert-orders.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/insert-orders/insert-orders.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/insert-orders/insert-orders.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/insert-orders/insert-orders.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/item-http.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/item-http.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/table-http.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/table-http.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/tables-view/tables-view.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/tables-view/tables-view.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/ticket-http.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/ticket-http.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Item.js" beforeDir="false" afterPath="$PROJECT_DIR$/Item.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Table.js" beforeDir="false" afterPath="$PROJECT_DIR$/Table.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ticket.js" beforeDir="false" afterPath="$PROJECT_DIR$/Ticket.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/User.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/restaurant-server.js" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/restaurant-server.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js.map" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -16,10 +30,22 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="217">
-              <caret line="172" column="21" selection-start-line="172" selection-start-column="13" selection-end-line="172" selection-end-column="21" />
+            <state relative-caret-position="500">
+              <caret line="133" lean-forward="true" selection-start-line="133" selection-end-line="133" />
               <folding>
                 <element signature="e#380#418#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/User.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="365">
+              <caret line="128" column="12" selection-start-line="128" selection-start-column="12" selection-end-line="128" selection-end-column="12" />
+              <folding>
+                <element signature="n#mongoose#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -138,7 +164,7 @@
     <option name="totallyTimeSpent" value="4464000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <frame x="0" y="0" width="1280" height="800" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
@@ -190,8 +216,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="172" column="21" selection-start-line="172" selection-start-column="13" selection-end-line="172" selection-end-column="21" />
+        <state relative-caret-position="500">
+          <caret line="133" lean-forward="true" selection-start-line="133" selection-end-line="133" />
           <folding>
             <element signature="e#380#418#0" expanded="true" />
           </folding>

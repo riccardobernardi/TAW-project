@@ -4,6 +4,7 @@ import {UserHttpService} from '../user-http.service';
 import {Item} from '../Item';
 import { TicketHttpService } from 'src/app/ticket-http.service';
 import { Ticket } from 'src/app/Ticket';
+import {TableHttpService} from '../table-http.service';
 import { Observable } from 'rxjs/Observable';
 import { WaiterSocketioService } from '../waiter-socketio.service';
 
@@ -30,8 +31,8 @@ export class InsertOrdersComponent implements OnInit {
       this.items = data;
       console.log(this.items);
       return this.ticket.get_tickets({waiter: this.us.get_nick(), state: "open"}).toPromise()
-    }).then((tickets : Ticket[]) => {
-        tickets.forEach((ticket : Ticket) => {
+    }).then((tickets: Ticket[]) => {
+        tickets.forEach((ticket: Ticket) => {
           console.log(ticket);
           this.tickets.push({
             id: ticket._id,
@@ -51,27 +52,47 @@ export class InsertOrdersComponent implements OnInit {
         });
     }).catch((err) => {
       console.log(err);
+    });*/
+
+    console.log(this.tickets);
+    this.item.get_Items().subscribe( (dd) => {
+      dd.forEach( (ss) => {
+        this.items.push(ss);
+      });
     });
+
+    this.ticket.get_tickets({waiter: this.us.get_nick(), state: 'open'}).subscribe((dd) => {
+      dd.forEach( (ss) => {
+        this.tickets.push(ss);
+      });
+    });
+    /*this.tt.get_tables().subscribe((dd) => {
+      dd.forEach( (ss) => {
+        this.tables.push(ss);
+        console.log(ss);
+      });
+    });*/
   }
 
-  insertItem(item : Item, quantity : number) {
-    for(let i = 0; i < quantity; i++)
+  insertItem(item: Item, quantity: number) {
+    for (let i = 0; i < quantity; i++) {
       this.itemsSelected.push(item);
+    }
   }
 
   deleteItemFromSelected(i: number) {
     this.itemsSelected.splice(i, 1);
   }
 
-  sendOrders(ticket_id, waiter_username, items) {
+  sendOrders(ticketId, waiterUsername, items) {
     console.log(this.selTicket);
-    console.log(ticket_id, waiter_username, items);
-    let promises = []
-    items.forEach((item : Item) => {
-      promises.push(this.ticket.addOrders(ticket_id, waiter_username, item).toPromise());
+    console.log(ticketId, waiterUsername, items);
+    let promises = [];
+    items.forEach((item: Item) => {
+      promises.push(this.ticket.addOrders(ticketId, waiterUsername, item).toPromise());
     });
     Promise.all(promises).then((data) => {
-      console.log("Evasione riuscita!")
+      console.log('Evasione riuscita!')
       this.itemsSelected = []
     }).catch((err) => {
       console.log(err);

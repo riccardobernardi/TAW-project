@@ -42,8 +42,8 @@ export class TicketHttpService {
   }
 
   addOrders(ticketId, usernameWaiter, item) {
-    let orders: TicketOrder;
-    orders = {
+    let order: TicketOrder;
+    order = {
       name_item : item.name,
       added: [],
       price: item.price,
@@ -51,8 +51,8 @@ export class TicketHttpService {
       username_waiter: usernameWaiter,
       _id: null
     }
-    console.log(ticketId, orders);
-    return this.http.post(this.url + '/' + ticketId + '/' + 'orders', orders, this.create_options());
+    console.log(ticketId, order);
+    return this.http.post(this.url + '/' + ticketId + '/' + 'orders', order, this.create_options());
   }
 
   changeOrderState(ticketId, orderId, state) {

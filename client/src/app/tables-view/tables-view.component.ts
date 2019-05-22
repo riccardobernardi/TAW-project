@@ -39,7 +39,7 @@ export class TablesViewComponent implements OnInit {
   }
 
   open_ticket(tableToChange: Table) {
-    this.ticket.open_ticket(this.user.get_nick(), tableToChange.number).toPromise().then((data : Ticket) => {
+    this.ticket.open_ticket(this.user.get_nick(), tableToChange.number).toPromise().then((data: Ticket) => {
       console.log(data);
       //tableToChange.state = data._id;
       let table = Object.assign({}, tableToChange);
