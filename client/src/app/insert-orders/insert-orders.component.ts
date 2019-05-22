@@ -6,7 +6,8 @@ import { TicketHttpService } from 'src/app/ticket-http.service';
 import { Ticket } from 'src/app/Ticket';
 import {TableHttpService} from '../table-http.service';
 import { Observable } from 'rxjs/Observable';
-import { WaiterSocketioService } from '../waiter-socketio.service';
+import io = require('socket.io-client');
+import {WaiterSocketioService} from '../waiter-socketio.service';
 
 
 @Component({
@@ -18,16 +19,19 @@ export class InsertOrdersComponent implements OnInit {
 
   private tickets = [];
   private items: Item[] = [];
-  private selTicket = undefined;
+  private selTicket = 0;
   private itemsSelected: Item[] = [];
-  private socketObserver : Observable<any>; 
+  private socketObserver : Observable<any>;
+  private counter = 0;
+  selMenuEntry: Item;
+  private socket = io.connect('http://localhost:8080');
 
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService, private sio : WaiterSocketioService) { }
 
   ngOnInit() {
-    this.socketObserver = this.sio.getObserver();
-    this.item.get_Items().toPromise().then((data : Item[] ) => {
+    /*this.socketObserver = this.sio.getObserver();*/
+    /*this.item.get_Items().toPromise().then((data : Item[] ) => {
       this.items = data;
       console.log(this.items);
       return this.ticket.get_tickets({waiter: this.us.get_nick(), state: "open"}).toPromise()
@@ -52,8 +56,13 @@ export class InsertOrdersComponent implements OnInit {
         });
     }).catch((err) => {
       console.log(err);
-    });
+    });*/
+    this.dd();
+    this.socket.on('waiters', this.dd);
+  }
 
+  dd() {
+    console.log('received an emit');
     console.log(this.tickets);
     this.item.get_Items().subscribe( (dd) => {
       dd.forEach( (ss) => {
@@ -66,12 +75,8 @@ export class InsertOrdersComponent implements OnInit {
         this.tickets.push(ss);
       });
     });
-    /*this.tt.get_tables().subscribe((dd) => {
-      dd.forEach( (ss) => {
-        this.tables.push(ss);
-        console.log(ss);
-      });
-    });*/
+    this.selTicket = this.tickets[0];
+    this.selMenuEntry = this.items[0];
   }
 
   insertItem(item: Item, quantity: number) {
@@ -97,6 +102,14 @@ export class InsertOrdersComponent implements OnInit {
     }).catch((err) => {
       console.log(err);
     });
+  }
+
+  add() {
+    this.counter++;
+  }
+
+  sub() {
+    this.counter--;
   }
 }
 

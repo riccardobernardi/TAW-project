@@ -17,14 +17,20 @@
           <option *ngFor="let item of items" [ngValue]="item">{{item.name}}</option>
         </select>
 
+        <br>
         
-        <input type="number" #counter class="form-control" style="text-align:center;" >
+        <!--<input type="number" #counter class="form-control" style="text-align:center;" >-->
+        <form class="form-inline">
+          <div class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="add()">Add</button></div>
+          <span> {{counter}} </span>
+          <div class="form-group mx-sm-3 mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="sub()">Subtract</button></div>
+        </form>
 
-        <button (click)="insertItem(selMenuEntry, counter.value)">Insert</button>
+        <button (click)="insertItem(selMenuEntry, counter)">Insert</button>
       </div>
 
       <div>
-        <label>Elementi inseriti nell'ordine per il tavolo {{selTable}}</label>
+        <label>Elementi inseriti nell'ordine per il tavolo {{selTicket.table}}</label>
         <ul>
           <li *ngFor="let item of itemsSelected; let i = index">
             {{item.name}}

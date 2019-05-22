@@ -11,7 +11,7 @@
     <div *ngFor="let order of ticket.orders">
       <p class="card-text">{{ order.name_item }}</p>
       <form class="form-inline">
-        <div class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2">In progress</button></div>
+        <div class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="inProgress(ticket, order._id)">In progress</button></div>
         <div class="form-group mx-sm-3 mb-2"><button type="submit" class="btn btn-primary mb-2">Completed</button></div>
       </form>
     </div>

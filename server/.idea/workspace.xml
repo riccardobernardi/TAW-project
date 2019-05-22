@@ -2,19 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../client/src/app/Table.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/Table.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/cook/cook.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/cook/cook.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/cook/cook.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/cook/cook.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../client/src/app/insert-orders/insert-orders.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/insert-orders/insert-orders.component.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../client/src/app/insert-orders/insert-orders.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/insert-orders/insert-orders.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/item-http.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/item-http.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/table-http.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/table-http.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/tables-view/tables-view.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/tables-view/tables-view.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/ticket-http.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/ticket-http.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Item.js" beforeDir="false" afterPath="$PROJECT_DIR$/Item.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Table.js" beforeDir="false" afterPath="$PROJECT_DIR$/Table.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ticket.js" beforeDir="false" afterPath="$PROJECT_DIR$/Ticket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/User.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.js" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/restaurant-server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -30,10 +24,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="500">
-              <caret line="133" lean-forward="true" selection-start-line="133" selection-end-line="133" />
+            <state relative-caret-position="209">
+              <caret line="120" column="46" selection-start-line="120" selection-start-column="46" selection-end-line="120" selection-end-column="46" />
               <folding>
+                <element signature="e#168#194#0" expanded="true" />
                 <element signature="e#380#418#0" expanded="true" />
+                <element signature="e#1275#1308#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -42,7 +38,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/User.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="365">
+            <state relative-caret-position="1905">
               <caret line="128" column="12" selection-start-line="128" selection-start-column="12" selection-end-line="128" selection-end-column="12" />
               <folding>
                 <element signature="n#mongoose#0" expanded="true" />
@@ -66,6 +62,10 @@
     <findStrings>
       <find>desks</find>
       <find>paydesks</find>
+      <find>emitevent</find>
+      <find>cook</find>
+      <find>io.emi</find>
+      <find>ioss</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -89,7 +89,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+  <component name="ProjectFrameBounds" fullScreen="true">
     <option name="width" value="1280" />
     <option name="height" value="800" />
   </component>
@@ -99,7 +99,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -111,6 +110,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -157,15 +157,15 @@
       <workItem from="1558269310578" duration="209000" />
       <workItem from="1558519977672" duration="2184000" />
       <workItem from="1558526766052" duration="67000" />
+      <workItem from="1558545642819" duration="3291000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4464000" />
+    <option name="totallyTimeSpent" value="7755000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -180,7 +180,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="TypeScript" order="9" />
+      <window_info active="true" anchor="bottom" id="TypeScript" order="9" visible="true" weight="0.32876712" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.32876712" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -216,10 +216,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="500">
-          <caret line="133" lean-forward="true" selection-start-line="133" selection-end-line="133" />
+        <state relative-caret-position="209">
+          <caret line="120" column="46" selection-start-line="120" selection-start-column="46" selection-end-line="120" selection-end-column="46" />
           <folding>
+            <element signature="e#168#194#0" expanded="true" />
             <element signature="e#380#418#0" expanded="true" />
+            <element signature="e#1275#1308#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/User.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1905">
+          <caret line="128" column="12" selection-start-line="128" selection-start-column="12" selection-end-line="128" selection-end-column="12" />
+          <folding>
+            <element signature="n#mongoose#0" expanded="true" />
           </folding>
         </state>
       </provider>
