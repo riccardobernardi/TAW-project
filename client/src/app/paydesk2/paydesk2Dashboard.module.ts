@@ -34,10 +34,10 @@ import {LogoutComponent} from '../logout/logout.component';
     NgbModule
   ],
   providers: [
-    {provide: OrderHttpService, useClass: OrderHttpService},
+    /*{provide: OrderHttpService, useClass: OrderHttpService},
     {provide: ItemHttpService, useClass: ItemHttpService},
     {provide: TableHttpService, useClass: TableHttpService},
-    {provide: TicketHttpService, useClass: TicketHttpService}
+    {provide: TicketHttpService, useClass: TicketHttpService}*/
   ]
 })
 
