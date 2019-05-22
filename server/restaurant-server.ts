@@ -95,6 +95,7 @@ res.status(200).json( {
 //TODO controlli sui tutti i campi d'ingresso(es query)
 
 app.route("/users").get(auth, (req,res,next) => {
+   console.log(JSON.stringify(req.headers));
    console.log(typeof(req.body.date));
    if(!user.newUser(req.user).hasDeskRole())
       return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
@@ -324,10 +325,15 @@ var queryOrderStates;
 (queryOrderStates = Array.from(ticket.orderState)).push("all");
 
 app.route("/tickets").get(auth, (req, res, next) => {
+
    var sender = user.newUser(req.user);
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
       return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
+   console.log("entro nella ticket api----");
+   var sender = user.newUser(req.user);
+   /*if(!sender.hasDeskRole() && !sender.hasWaiterRole())
+      return next({ statusCode:404, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );*/
 
    var filter: any = {}
    if(req.query.start)
@@ -344,6 +350,8 @@ app.route("/tickets").get(auth, (req, res, next) => {
       filter.table = req.query.table;
    }
 
+   console.log(filter);
+
    if(req.query.orders && !queryOrderStates.filter((val) => val === req.query.orders))
       return next({ statusCode:400, error: true, errormessage: "The state of orders accepted are ordered, preparation, ready, delivered and all"})
 
@@ -359,8 +367,12 @@ app.route("/tickets").get(auth, (req, res, next) => {
                });
             }
          });
+         console.log("vado in if" + orders);
          return res.status(200).json(orders);
-      } else return res.status(200).json( ticketslist ); 
+      } else {
+         console.log("vado in else" + ticketslist);
+         return res.status(200).json( ticketslist );
+      }
    }).catch( (reason) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
@@ -385,14 +397,11 @@ app.route("/tickets").get(auth, (req, res, next) => {
    newer.table = req.body.table;
    newer.start = startdate.toString();
 
-
-
    var t = new (ticket.getModel()) (newer);
    console.log(t);
    
-      
    t.save().then( (data) => {
-      return res.status(200).json({ error: false, errormessage: "", id: data._id });
+      return res.status(200).json({ error: false, errormessage: "", _id: data._id });
    }).catch( (reason) => {
    if( reason.code === 11000 )
       return next({statusCode:409, error:true, errormessage: "Ticket already exists"} );
@@ -456,7 +465,7 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
       return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
-      console.log(req.body);
+   console.log(req.body);
 
    if (!req.body || !req.body.name_item || !req.body.price || /*req.body.added ||*/ typeof(req.body.name_item) != 'string' || typeof(req.body.price) != 'number' /*|| Array.isArray(req.body.added)*/){
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
@@ -468,18 +477,23 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    newer.price = req.body.price;
    newer.added = req.body.added;
    newer.state = ticket.orderState[0];
-   newer.username_waiter = req.user.username;
+   //VEDERE CON CECCHINI
+   //newer.username_waiter = req.user.username;
+   newer.username_waiter = req.body.username_waiter;
 
    ticket.getModel().update( { _id: req.params.id}, { $push: { orders: newer } }).then( () => {
       item.getModel().findOne({ name: newer.name_item}).then( (i: item.Item) => {
+         console.log("AAAAAAA:\n" + i + "\n");
          if (i.type == item.type[0]){
+            console.log("DISH")
             emitEvent("ordered dish", req.params.id);
          } else if (i.type == item.type[1]){
+            console.log("DRINK");
             emitEvent("ordered drink", req.params.id);
          }
          return res.status(200).json( {error:false, errormessage:""} );
-      }).catch(() => {
-         return res.status(404).json( {error:true, errormessage:"Cannot find item"} );
+      }).catch((err) => {
+         return res.status(404).json( {error:true, errormessage:err} );
       });
    }).catch( (reason) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
@@ -487,7 +501,7 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
 });
 
 //NON RIESCO A FARLA FUNZIONARE
-app.get('/tickets/orders', auth, (req,res,next) => {
+/*app.get('/tickets/orders', auth, (req,res,next) => {
    var filter: any = {}
    if(req.query.start)
      filter.start = req.query.start;
@@ -499,15 +513,15 @@ app.get('/tickets/orders', auth, (req,res,next) => {
 
    ticket.getModel().find({}).then( (ticketslist) => {
       var orderslist = [];
-      /*ticketslist.forEach(function(element/*: ticket.Ticket){
-         orderslist.push(element);
-      });*/
+         ticketslist.forEach(function(element/*: ticket.Ticket){
+            orderslist.push(element);
+         });
       return res.status(200).json(orderslist);
       //return res.status(200).json( ticketslist ); 
    }).catch( (reason) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
-});
+});*/
 
 //pulizia codice fatta da qua in giù
 
@@ -762,7 +776,7 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
 
       var ti2 = new ticketModel({
          waiter: "waiter2",
-         table: 1,
+         table: 2,
          start: new Date("05/05/2019, 08:49:36 PM"),
          orders: [{
             //id_order: new ObjectID(),
@@ -771,6 +785,12 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
             state: ticket.orderState[0],
             price: 6,
             added: ["Mozzarella"]
+         }, {
+            //id_order: new ObjectID(),
+            name_item: "Bistecca alla griglia",
+            username_waiter: "waiter1",
+            state: ticket.orderState[0],
+            price: 9
          }],
          state: ticket.ticketState[0],
          total: 0

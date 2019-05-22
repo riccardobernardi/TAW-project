@@ -11,18 +11,20 @@ import {Observable, of} from 'rxjs';
   providedIn: 'root'
 })
 export class OrderHttpService {
-  public items: any = [];
+  private items: any;
+  private orders: any = mockorders;
+  /*public items: any = [];*/
 
   constructor(private us: UserHttpService, private router: Router, private http: HttpClient  ) {
-    this.orders.push({id: 1, nick : '--' , selTable : -1 , selMenuEntry : '--',
-      in_progress: false, ready: false, timestamp: Date.now(), type: ''});
-    console.log('Message service instantiated');
-    console.log('User service token: ' + us.get_token() );
-    this.get_items();
-    console.log(JSON.stringify(this.items));
+    /*this.orders.push({id: 1, nick : '--' , selTable : -1 , selMenuEntry : '--',
+      in_progress: false, ready: false, timestamp: Date.now(), type: ''});*/
+    console.log('Order service instantiated');
+    // console.log('User service token: ' + us.get_token() );
+    // this.get_items();
+    // console.log(JSON.stringify(this.items));
   }
 
-  public orders: Order[] = mockorders;
+  /*public orders: Order[] = mockorders;*/
   private id = 2;
 
   public url = 'http://localhost:8080';
@@ -37,14 +39,16 @@ export class OrderHttpService {
       }).append('Authorization', 'Bearer ' + this.us.get_token())
     };
 
-    console.log('qui gli items');
+    // console.log('qui gli items');
 
-    return this.http.get( this.url + '/items', options ).pipe(
+    this.http.get( this.url + '/items', options ).pipe(
       tap( (data) => {
         this.items.push(data);
-        console.log(data);
+        // console.log(data);
       })
     );
+    console.log(this.items)
+    return this.items;
   }
 
   /*private messageSource = new BehaviorSubject(this.orders);
@@ -90,7 +94,7 @@ export class OrderHttpService {
       catchError( this.handleError )
     );*/
     // return new Observable(m);
-    console.log(m);
+    // console.log(m);
     return m;
   }
 
@@ -129,18 +133,18 @@ export class OrderHttpService {
       );
     }*/
 
-  orders_size() {
+  /*orders_size() {
     return this.orders.length;
-  }
+  }*/
 
-  get_id() {
+  /*get_id() {
     this.id += 1;
     return (this.id - 1);
-  }
+  }*/
 
-  post_order(o: Order): Observable<Order>  {
-    this.orders.unshift(o);
+  post_order(o: Order)/*: Observable<Order>*/  {
+    /*this.orders.unshift(o);
     this.posted.emit(o);
-    return of(o);
+    return of(o);*/
   }
 }

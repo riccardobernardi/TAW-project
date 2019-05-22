@@ -1,19 +1,20 @@
-<p>
+<!--<p>
   cook view
-</p>
+</p>-->
 
-<div *ngFor="let ord of this.orders" class="card" style="margin: 5px" >
+<div *ngFor="let ticket of this.tickets" class="card" style="margin: 5px" >
   <div class="card-body">
     <!--<h5 class="card-title"><i class="far fa-envelope"></i>&nbsp;{{ord.selMenuEntry}}</h5>-->
     <!--<h6 class="card-subtitle mb-2 text-muted">{{ord.timestamp | date}} / {{ord.timestamp | date:'shortTime'}}</h6>-->
-    <p class="card-text">{{ ord.selTable }}</p>
-    <p class="card-text">{{ ord.selMenuEntry }}</p>
-
-
-    <form class="form-inline">
-      <div class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2">In progress</button></div>
-      <div class="form-group mx-sm-3 mb-2"><button type="submit" class="btn btn-primary mb-2">Completed</button></div>
-    </form>
+    <p class="card-text">{{ ticket.table }}</p>
+    
+    <div *ngFor="let order of ticket.orders">
+      <p class="card-text">{{ order.name_item }}</p>
+      <form class="form-inline">
+        <div class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2">In progress</button></div>
+        <div class="form-group mx-sm-3 mb-2"><button type="submit" class="btn btn-primary mb-2">Completed</button></div>
+      </form>
+    </div>
 
 
     <!--<span *ngFor="let tag of message.tags" class="badge badge-secondary tag">{{tag}}</span>-->
