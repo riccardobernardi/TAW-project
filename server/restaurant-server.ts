@@ -23,9 +23,6 @@ import * as item from './Item';
 import { verify } from 'crypto';
 
 
-var rooms = ["waiters", "cookers", "desks", "bartenders"];
-
-var ios = undefined;
 
 var app = express();
 
@@ -38,6 +35,8 @@ var app = express();
 //
 var auth = jwt( {secret: process.env.JWT_SECRET} );
 
+
+//strutture dati e funzione necessarie per il socket
 var ios = undefined;
 
 function emitEvent(eventType, data){
@@ -46,6 +45,10 @@ function emitEvent(eventType, data){
       ios.emit(r);
    });
 };
+
+
+var rooms = ["waiters", "cookers", "desks", "bartenders"];
+
 
 var socketEvents = {
    "modified table": {
@@ -84,27 +87,32 @@ app.get("/", (req,res) => {
 
 res.status(200).json( { 
    api_version: "0.1.0", 
-   endpoints: [ "/login", "/users", "/tables", "/items", "/tickets", "/tickets/:id/command", "/reports" ] } ); // json method sends a JSON response (setting the correct Content-Type) to the client
+   endpoints: [ "/login", "/users", "/tables", "/items", "/tickets", "/tickets/:id/orders", "/reports" ] } ); // json method sends a JSON response (setting the correct Content-Type) to the client
 });
 
-/*
+
+/* da togliere
 - per l'approccio che utilizziamo, websocket del server invia solo (alle chiamate alle API) e websocket del client ascolta gli eventi e poi reinterroga il server (quindi non serve l'autenticazione, perchè se non è autenticato non può interrogare l'api)
 
 - endpoint /tickets?filter=orders per inviare gli ordini relativi ai tickets (magari con un ulteriore parametro filterOrders)
 */
 
-//TODO controlli sui tutti i campi d'ingresso(es query)
 
 app.route("/users").get(auth, (req,res,next) => {
+   //da togliere
    console.log(JSON.stringify(req.headers));
    console.log(typeof(req.body.date));
+   
+   //autenticazione
    if(!user.newUser(req.user).hasDeskRole())
       return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
-   //aggiungere filtri skip e limit come nell'esempio per supportare la paginazione?
+   
+   //creo filtro per la query
    var filter: any = {}
    if(req.query.role)
       filter.role = req.query.role;
 
+   //query
    user.getModel().find(filter, "username role").then( (userslist) => {
       return res.status(200).json( userslist ); 
    }).catch( (reason) => {
@@ -114,15 +122,16 @@ app.route("/users").get(auth, (req,res,next) => {
    //autenticazione
    if(!user.newUser(req.user).hasDeskRole())
       return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
-   var u = user.newUser( req.body );
-
+   
    //controllo formato
    if ( !req.body || !req.body.username || !req.body.password || !req.body.role || typeof(req.body.username) != 'string' || typeof(req.body.password) != 'string' || typeof(req.body.role) != 'string' || user.roles.includes(req.body.role) )
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
 
+   //creo utente da inserire
+   var u = user.newUser( req.body );
    u.setPassword( req.body.password );
 
-
+   //query
    u.save().then( (data) => {
       return res.status(200).json({ error: false, errormessage: "", id: data._id });
    }).catch( (reason) => {
@@ -132,7 +141,6 @@ app.route("/users").get(auth, (req,res,next) => {
    })
 });
 
-//code cleaning fino a qua
 
 
 //cambiare username con id restituito da mongo e maagari aggiungere filtri su username in get users?
