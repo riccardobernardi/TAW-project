@@ -14,12 +14,13 @@ import {UserHttpService} from '../user-http.service';
   styleUrls: ['./waiterDashboard.component.css']
 })
 export class WaiterDashboardComponent implements OnInit {
-  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router) { }
+  constructor(/*private sio: SocketioService,*/ private us: UserHttpService, private router: Router) { }
 
   ngOnInit() {
     if (this.us.get_token() == undefined || this.us.get_token() == '') {
       this.us.logout();
     }
+    
   }
 
 }

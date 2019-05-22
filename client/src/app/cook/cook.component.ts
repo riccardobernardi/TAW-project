@@ -9,6 +9,7 @@ import {UserHttpService} from '../user-http.service';
 import { Ticket } from "../Ticket";
 import {TicketOrder } from "../TicketOrder";
 import { TicketHttpService } from "../ticket-http.service";
+import { Item } from "../Item";
 
 @Component({
   selector: 'app-cook',
@@ -19,6 +20,7 @@ export class CookComponent implements OnInit {
   //private orders: Order[] = mockorders.filter((data) => (data.type === 'food'));
   // private socket = io('http://localhost:4200');
   private tickets : Ticket[] = [];
+  private items: Item[] = [];
 
   constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private ticket: TicketHttpService  ) { }
 
