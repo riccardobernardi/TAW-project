@@ -7,6 +7,8 @@ import {SocketioService} from '../socketio.service';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {mockorders} from '../mock-orders';
 import {UserHttpService} from '../user-http.service';
+import { WaiterSocketioService } from '../waiter-socketio.service';
+import { SinglePropOffsetValuesIndex } from '@angular/core/src/render3/interfaces/styling';
 
 @Component({
   selector: 'app-waiter',
@@ -14,13 +16,19 @@ import {UserHttpService} from '../user-http.service';
   styleUrls: ['./waiterDashboard.component.css']
 })
 export class WaiterDashboardComponent implements OnInit {
-  constructor(/*private sio: SocketioService,*/ private us: UserHttpService, private router: Router) { }
+
+  private waiterObserver : Observable<any>
+
+  constructor(private sio: WaiterSocketioService, private us: UserHttpService, private router: Router) {
+    this.sio.connect();
+  }
 
   ngOnInit() {
     if (this.us.get_token() == undefined || this.us.get_token() == '') {
       this.us.logout();
     }
-    
   }
+
+
 
 }
