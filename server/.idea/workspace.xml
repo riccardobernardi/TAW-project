@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../client/src/app/paydesk/paydesk.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/paydesk/paydesk.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/paydesk2/paydesk2Dashboard.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/paydesk2/paydesk2Dashboard.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/restaurant-server.js" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/restaurant-server.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/restaurant-server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.ts" afterDir="false" />
-    </list>
+    <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -69,7 +63,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
     <option name="width" value="1280" />
     <option name="height" value="800" />
   </component>
@@ -136,14 +130,16 @@
       <workItem from="1558257289604" duration="999000" />
       <workItem from="1558269310578" duration="209000" />
       <workItem from="1558519977672" duration="2184000" />
+      <workItem from="1558526766052" duration="67000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4397000" />
+    <option name="totallyTimeSpent" value="4464000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="6" />
+    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />

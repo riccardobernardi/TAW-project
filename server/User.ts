@@ -134,6 +134,8 @@ export function getModel() : mongoose.Model< User >  { // Return Model as single
     return userModel;
 }
 
+
+
 export function newUser( data ): User {
     var _usermodel = getModel();
     var user = new _usermodel( data );

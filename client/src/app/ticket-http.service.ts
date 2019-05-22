@@ -41,21 +41,21 @@ export class TicketHttpService {
     )*/;
   }
 
-  addOrders(ticket_id, username_waiter, item) {
+  addOrders(ticketId, usernameWaiter, item) {
     let orders : TicketOrder;
     orders = {
       name_item : item.name,
       added: [],
       price: item.price,
       state: null,
-      username_waiter,
+      username_waiter: usernameWaiter,
       _id: null
     }
-    console.log(ticket_id, orders);
-    return this.http.post(this.url + '/' + ticket_id + '/' + 'orders', orders, this.create_options());
+    console.log(ticketId, orders);
+    return this.http.post(this.url + '/' + ticketId + '/' + 'orders', orders, this.create_options());
   }
 
-  changeOrderState(ticket_id, order_id, state) {
-    return this.http.patch(this.url + '/' + ticket_id + '/' + order_id, {state}, this.create_options());
+  changeOrderState(ticketId, orderId, state) {
+    return this.http.patch(this.url + '/' + ticketId + '/' + orderId, {state}, this.create_options());
   }
 }
