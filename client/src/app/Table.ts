@@ -1,5 +1,5 @@
 export interface Table {
-    num: number;
+    number: number;
     max_people: number;
     state: string;
 }

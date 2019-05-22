@@ -27,7 +27,7 @@ export class ItemHttpService {
 
   // lo userservice.getToken() si può cambiare con httpinterceptor e aggiungere in ogni richiesta l'header con il token
 
-  get_Items(): any {
+  get_Items() {
     return this.http.get<Item[]>( this.url + '/items', this.create_options() );
   }
 }
