@@ -467,7 +467,7 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
 
    console.log(req.body);
 
-   if (!req.body || !req.body.name_item || !req.body.price || /*req.body.added ||*/ typeof(req.body.name_item) != 'string' || typeof(req.body.price) != 'number' /*|| Array.isArray(req.body.added)*/){
+   if (!req.body || !req.body.name_item || req.body.name_item || !req.body.price || /*req.body.added ||*/ typeof(req.body.name_item) != 'string' || typeof(req.body.price) != 'number' || typeof(req.body.name_item) != 'string'/*|| Array.isArray(req.body.added)*/){
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
 
@@ -476,19 +476,18 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    newer.name_item = req.body.name_item;
    newer.price = req.body.price;
    newer.added = req.body.added;
+   newer.waiter = req.body.username_waiter;
    newer.state = ticket.orderState[0];
-   //VEDERE CON CECCHINI
-   //newer.username_waiter = req.user.username;
-   newer.username_waiter = req.body.username_waiter;
-
+   newer.state = ticket.orderState[0];
+   
    ticket.getModel().update( { _id: req.params.id}, { $push: { orders: newer } }).then( () => {
       item.getModel().findOne({ name: newer.name_item}).then( (i: item.Item) => {
-         console.log("AAAAAAA:\n" + i + "\n");
+         //console.log("AAAAAAA:\n" + i + "\n");
          if (i.type == item.type[0]){
-            console.log("DISH")
+            //console.log("DISH")
             emitEvent("ordered dish", req.params.id);
          } else if (i.type == item.type[1]){
-            console.log("DRINK");
+            //console.log("DRINK");
             emitEvent("ordered drink", req.params.id);
          }
          return res.status(200).json( {error:false, errormessage:""} );
@@ -499,31 +498,6 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
 });
-
-//NON RIESCO A FARLA FUNZIONARE
-/*app.get('/tickets/orders', auth, (req,res,next) => {
-   var filter: any = {}
-   if(req.query.start)
-     filter.start = req.query.start;
-
-   if(req.query.state){
-      filter.state = req.query.state;
-   }
-
-
-   ticket.getModel().find({}).then( (ticketslist) => {
-      var orderslist = [];
-         ticketslist.forEach(function(element/*: ticket.Ticket){
-            orderslist.push(element);
-         });
-      return res.status(200).json(orderslist);
-      //return res.status(200).json( ticketslist ); 
-   }).catch( (reason) => {
-      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
-   });
-});*/
-
-//pulizia codice fatta da qua in giù
 
 app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
    
