@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { UserLoginComponent } from './user-login/user-login.component';
 import { AppRoutingModule } from './app-routing.module';
 import { UserHttpService } from './user-http.service';
-import { WaiterDashboardModule } from './waiter/waiterDashboard.module';
 import { CookComponent } from './cook/cook.component';
 import { BarmanComponent } from './barman/barman.component';
 import {SocketioService} from './socketio.service';
@@ -14,6 +13,12 @@ import {OrderService} from './order.service';
 import {OrderHttpService} from './order-http.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { LogoutComponent } from './logout/logout.component';
+import {Paydesk2DashboardComponent} from './paydesk2/paydesk2Dashboard.component';
+import {TablesViewComponent} from './tables-view/tables-view.component';
+import {WaiterDashboardComponent} from './waiter/waiterDashboard.component';
+import {PaydeskComponent} from './paydesk/paydesk.component';
+import {InsertOrdersComponent} from './insert-orders/insert-orders.component';
+import {OrdersServedComponent} from './orders-served/orders-served.component';
 
 
 @NgModule({
@@ -21,7 +26,14 @@ import { LogoutComponent } from './logout/logout.component';
     AppComponent,
     UserLoginComponent,
     CookComponent,
-    BarmanComponent
+    BarmanComponent,
+    Paydesk2DashboardComponent,
+    TablesViewComponent,
+    WaiterDashboardComponent,
+    PaydeskComponent,
+    InsertOrdersComponent,
+    LogoutComponent,
+    OrdersServedComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +41,6 @@ import { LogoutComponent } from './logout/logout.component';
     HttpClientModule,
     AppRoutingModule,
     NgbModule.forRoot(),
-    WaiterDashboardModule
   ],
   providers: [
     {provide: UserHttpService, useClass: UserHttpService },

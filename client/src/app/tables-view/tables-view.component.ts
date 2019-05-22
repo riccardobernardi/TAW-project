@@ -19,7 +19,7 @@ export class TablesViewComponent implements OnInit {
   ngOnInit() {
     this.table.get_tables().toPromise().then((data : Table[]) => {
       this.tables = data
-      console.log(this.tables[0].state)
+      console.log(this.tables[0].state);
     }).catch((err) => {
       console.log(err);
     });
