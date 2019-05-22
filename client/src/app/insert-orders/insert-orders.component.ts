@@ -5,6 +5,8 @@ import {Item} from '../Item';
 import { TicketHttpService } from 'src/app/ticket-http.service';
 import { Ticket } from 'src/app/Ticket';
 import {TableHttpService} from '../table-http.service';
+import { Observable } from 'rxjs/Observable';
+import { WaiterSocketioService } from '../waiter-socketio.service';
 
 
 @Component({
@@ -18,13 +20,14 @@ export class InsertOrdersComponent implements OnInit {
   private items: Item[] = [];
   private selTicket = undefined;
   private itemsSelected: Item[] = [];
-  selTable: any;
-  selMenuEntry: any;
+  private socketObserver : Observable<any>; 
 
-  constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService, private tt: TableHttpService) { }
+
+  constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService, private sio : WaiterSocketioService) { }
 
   ngOnInit() {
-    /*this.item.get_Items().toPromise().then((data : Item[] ) => {
+    this.socketObserver = this.sio.getObserver();
+    this.item.get_Items().toPromise().then((data : Item[] ) => {
       this.items = data;
       console.log(this.items);
       return this.ticket.get_tickets({waiter: this.us.get_nick(), state: "open"}).toPromise()
@@ -34,6 +37,17 @@ export class InsertOrdersComponent implements OnInit {
           this.tickets.push({
             id: ticket._id,
             table: ticket.table
+          });
+        });
+        this.socketObserver.subscribe(() => {
+          this.ticket.get_tickets({waiter: this.us.get_nick(), state: "open"}).toPromise().then((ticket: Ticket[]) => {
+            tickets.forEach((ticket : Ticket) => {
+              console.log(ticket);
+              this.tickets.push({
+                id: ticket._id,
+                table: ticket.table
+              });
+            });
           });
         });
     }).catch((err) => {

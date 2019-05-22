@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Ticket } from "../Ticket"
 import { Item } from "../Item"
 import {ItemHttpService} from '../item-http.service';
 import {UserHttpService} from '../user-http.service';
 import { TicketHttpService } from 'src/app/ticket-http.service';
+import { Observable } from 'rxjs/Observable';
+import { WaiterSocketioService } from '../waiter-socketio.service';
+
 
 @Component({
   selector: 'app-orders-served',
@@ -12,16 +15,24 @@ import { TicketHttpService } from 'src/app/ticket-http.service';
 })
 export class OrdersServedComponent implements OnInit {
 
-  private items : Item[] = [];
-  private tickets : Ticket[] = []
+  private tickets : Ticket[] = [];
+  socketObserver : Observable<any>; 
 
-  constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService) { }
+  constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService, private sio : WaiterSocketioService) { }
 
   ngOnInit() {
+    this.socketObserver = this.sio.getObserver();
     this.ticket.get_tickets({state: "open"}).toPromise().then((data : Ticket[] ) => {
       this.tickets = data;
       console.log(this.tickets);
+      this.socketObserver.subscribe(() => {
+        this.ticket.get_tickets({state : "open"}).toPromise().then((data : Ticket[]) => {
+          this.tickets = data;
+          console.log("Evento ricevuto "+ this.tickets);
+        })
+      });
     }).catch((err) => console.log(err));
+    
   }
 
   deliver(ticket_index : number, order_index : number, state : string) {

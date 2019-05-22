@@ -76,8 +76,8 @@ app.get("/", (req, res) => {
    console.log("trigger");
    ios.emit("paydesks");
 })*/
-app.route("/users").get(auth, (req, res, next) => {
-    //da togliere
+app.route("/users").get(auth, function (req, res, next) {
+
     console.log(JSON.stringify(req.headers));
     console.log(typeof (req.body.date));
     //autenticazione
@@ -87,8 +87,7 @@ app.route("/users").get(auth, (req, res, next) => {
     var filter = {};
     if (req.query.role)
         filter.role = req.query.role;
-    //query
-    user.getModel().find(filter, "username role").then((userslist) => {
+    user.getModel().find(filter, "username role").then(function (userslist) {
         return res.status(200).json(userslist);
     }).catch((reason) => {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
@@ -261,6 +260,7 @@ app.route("/items/:id").get(auth, (req, res, next) => {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
 }).put(auth, (req, res, next) => {
+>>>>>> master
     //autenticazione
     if (!user.newUser(req.user).hasDeskRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
