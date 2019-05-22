@@ -1,5 +1,3 @@
-
-
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {UserHttpService} from '../user-http.service';

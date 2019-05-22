@@ -197,7 +197,7 @@ app.route("/tables").get(auth, (req, res, next) => {
 
 
    //query al DB
-   table.getModel().find({}, {number:1, max_people:1, _id: 0}).then( (tableslist) => {
+   table.getModel().find({}, {number:1, max_people:1, _id: 0, state:1}).then( (tableslist) => {
       return res.status(200).json( tableslist ); 
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
@@ -505,7 +505,7 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    //console.log(req.body);
 
    //controllo formato richiesta
-   if (!req.body || !req.body.name_item || req.body.name_item || !req.body.price || /*req.body.added ||*/ typeof(req.body.name_item) != 'string' || typeof(req.body.price) != 'number' || typeof(req.body.name_item) != 'string'/*|| Array.isArray(req.body.added)*/){
+   if (!req.body || !req.body.name_item  || !req.body.price || /*req.body.added ||*/ typeof(req.body.name_item) != 'string' || typeof(req.body.price) != 'number'/*|| Array.isArray(req.body.added)*/){
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
 
