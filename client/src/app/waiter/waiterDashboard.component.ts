@@ -29,6 +29,4 @@ export class WaiterDashboardComponent implements OnInit {
     }
   }
 
-
-
 }
