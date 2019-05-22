@@ -52,7 +52,7 @@ export class InsertOrdersComponent implements OnInit {
         });
     }).catch((err) => {
       console.log(err);
-    });*/
+    });
 
     console.log(this.tickets);
     this.item.get_Items().subscribe( (dd) => {
