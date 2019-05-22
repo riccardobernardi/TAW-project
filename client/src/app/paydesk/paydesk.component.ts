@@ -25,6 +25,7 @@ export class PaydeskComponent implements OnInit {
   selTable: any;
   users = [];
   selChangePwdUser: any;
+  private socket;
 
   ngOnInit() {
     if (this.us.get_token() == undefined || this.us.get_token() == '') {
@@ -35,7 +36,18 @@ export class PaydeskComponent implements OnInit {
 
     console.log(this.users);
 
+    this.dd();
+    this.socket = io('http://localhost:8080');
+    // this.socket.connect()
+    this.socket.on('paydesks', this.dd );
+  }
 
+  dd() {
+    this.us.get_users().subscribe((data) => {
+      const a: any = data;
+      a.forEach( (d) => this.users.push(d) );
+    });
+    console.log('ricarica');
   }
 
   send(name, password) {
