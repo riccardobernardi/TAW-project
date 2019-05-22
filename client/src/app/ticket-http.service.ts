@@ -42,7 +42,7 @@ export class TicketHttpService {
   }
 
   addOrders(ticketId, usernameWaiter, item) {
-    let orders : TicketOrder;
+    let orders: TicketOrder;
     orders = {
       name_item : item.name,
       added: [],
