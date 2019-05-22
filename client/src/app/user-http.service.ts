@@ -87,7 +87,6 @@ export class UserHttpService {
 
     return this.http.post( this.url + '/users', user, options ).pipe(
       tap( (data) => {
-        console.log(options);
         console.log(JSON.stringify(data) );
       })
     );
@@ -123,20 +122,17 @@ export class UserHttpService {
       }).append('Authorization', 'Bearer ' + this.get_token())
     };
 
-  //
-
     return this.http.get( this.url + '/users', options );
   }
 
   deleteUser(selDelUser) {
     console.log('deleted:' + selDelUser);
-    console.log('for user : ' + selDelUser);
 
     const options = {
       headers: new HttpHeaders({
         'cache-control': 'no-cache',
         'Content-Type':  'application/json',
-        username: [selDelUser],
+        username: selDelUser,
       }).append('Authorization', 'Bearer ' + this.get_token())
     };
 

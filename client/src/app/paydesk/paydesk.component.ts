@@ -54,15 +54,6 @@ export class PaydeskComponent implements OnInit {
     this.user.username = name;
     this.user.password = password;
     this.user.role = this.newRoleSelected;
-    this.signup();
-  }
-
-  logout() {
-    this.us.logout();
-    this.router.navigate(['/']);
-  }
-
-  signup() {
     console.log(this.user);
     this.us.register( this.user ).subscribe( (d) => {
       console.log('Registration ok: ' + JSON.stringify(d) );
@@ -71,8 +62,11 @@ export class PaydeskComponent implements OnInit {
     }, (err) => {
       console.log('Signup error: ' + JSON.stringify(err.error.errormessage) );
       this.errmessage = err.error.errormessage || err.error.message;
-
     });
+  }
 
+  logout() {
+    this.us.logout();
+    this.router.navigate(['/']);
   }
 }
