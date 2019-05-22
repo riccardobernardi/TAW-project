@@ -54,8 +54,6 @@ export class OrderHttpService {
   /*private messageSource = new BehaviorSubject(this.orders);
   currentMessage = this.messageSource.asObservable();*/
 
-  @Output() posted: EventEmitter<Order> = new EventEmitter();
-
   /*changeMessage(o: Order[]) {
     this.messageSource.next(o);
   }*/
