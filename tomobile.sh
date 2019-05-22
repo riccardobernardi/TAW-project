@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#cp -rf client/ mobile/src
+cp -rf client/ mobile/src
 
 #cat mobile/src/angular.json | sed -i 's/\"outputPath\"\: \"d ist\/client\"\,/new/g' '\"outputPath\"\: \"\.\.\/www\"'
 
 
-a= "'outputPath': 'dist/client'"
-b= "'outputPath': '../www'"
+#a= "'outputPath': 'dist/client'"
+#b= "'outputPath': '../www'"
 
-echo "${ a / a / b }"
+#echo "${ a / a / b }"

@@ -98,6 +98,11 @@ res.status(200).json( {
 */
 
 
+/*app.route("mock").get((req,res,next) => {
+   console.log("trigger");
+   ios.emit("paydesks");
+})*/
+
 app.route("/users").get(auth, (req,res,next) => {
    //da togliere
    console.log(JSON.stringify(req.headers));
@@ -190,6 +195,7 @@ app.route("/tables").get(auth, (req, res, next) => {
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
       return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
+
    //query al DB
    table.getModel().find({}, {number:1, max_people:1, _id: 0}).then( (tableslist) => {
       return res.status(200).json( tableslist ); 
@@ -255,6 +261,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
          max_people: data.number,
          state: data.state
       });
+
    }).catch( (reason) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
