@@ -304,7 +304,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | URL       | /tickets/:id/orders                                                                                                 |
 | Metodo    | POST                                                                                                                |
 | Parametri |                                                                                                                     |
-| Corpo     | {dish_name, price, added, state}                                                                                |
+| Corpo     | {dish_name, price, added, state, username.waiter}                                                                   |
 | Successo  |  Codice: 200 Contenuto:                                                                                             |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                                                                                |
 | Errore    | Altri errori                                                                                                        |
