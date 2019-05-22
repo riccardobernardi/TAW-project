@@ -38,6 +38,7 @@ const routes: Routes = [
     ]
   },
   { path: 'cook', component:  CookComponent},
+  { path: 'bartender', component:  BarmanComponent},
   { path: 'paydesk2',
     component: Paydesk2DashboardComponent,
     children: [
@@ -84,8 +85,17 @@ const routes: Routes = [
       }
     ]
   },
-  { path: 'barman', component:  BarmanComponent},
+/*  { path: 'barman', component:  BarmanComponent},
   { path: 'bartender', component:  BarmanComponent},
+  { path: 'desk/insertOrders', component:  InsertOrdersComponent},
+  { path: 'desk/logout', component:  LogoutComponent},
+  { path: 'desk/viewOrders', component:  TablesViewComponent},
+  { path: 'desk/servedOrders', component:  OrdersServedComponent},
+  { path: 'desk/paydesk', component:  PaydeskComponent},
+  { path: 'waiter/insertOrders', component:  InsertOrdersComponent},
+  { path: 'waiter/logout', component:  LogoutComponent},
+  { path: 'waiter/viewOrders', component:  TablesViewComponent},
+  { path: 'waiter/servedOrders', component:  OrdersServedComponent},*/
 ];
 
 @NgModule({

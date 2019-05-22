@@ -5,6 +5,7 @@ import {OrderService} from '../order.service';
 import {Order} from '../Order';
 import {mockorders} from '../mock-orders';
 import {OrderHttpService} from '../order-http.service';
+import * as io from 'socket.io-client';
 
 @Component({
   selector: 'app-paydesk',
@@ -31,11 +32,10 @@ export class PaydeskComponent implements OnInit {
     } else {
       console.log('your token is: [' + this.us.get_token() + ']');
     }
-    this.us.get_users().subscribe((data) => {
-      const a: any = data;
-      a.forEach( (d) => this.users.push(d) );
-    });
+
     console.log(this.users);
+
+
   }
 
   send(name, password) {

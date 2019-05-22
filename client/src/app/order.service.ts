@@ -26,8 +26,6 @@ export class OrderService {
     // console.log('User service token: ' + us.get_token() );
   }
 
-  @Output() posted: EventEmitter<Order> = new EventEmitter();
-
   /*changeMessage(o: Order[]) {
     this.messageSource.next(o);
   }*/
@@ -116,7 +114,6 @@ export class OrderService {
 
   post_order(o: Order): Observable<Order>  {
     this.orders.unshift(o);
-    this.posted.emit(o);
     return of(o);
   }
 }

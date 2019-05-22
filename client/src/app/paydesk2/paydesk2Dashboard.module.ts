@@ -9,14 +9,15 @@ import { OrderHttpService } from '../order-http.service';
 import { ItemHttpService } from '../item-http.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TablesViewComponent } from '../tables-view/tables-view.component';
-import { WaiterRoutingModule } from '../waiter/waiter-routing.module';
+// import { WaiterRoutingModule } from '../waiter/waiter-routing.module';
 import { OrdersServedComponent } from '../orders-served/orders-served.component';
 import { InsertOrdersComponent} from '../insert-orders/insert-orders.component';
 import { TableHttpService } from '../table-http.service';
 import { TicketHttpService } from '../ticket-http.service';
-import {Paydesk2RoutingModule} from './paydesk2-routing.module';
+// import {Paydesk2RoutingModule} from './paydesk2-routing.module';
 import {PaydeskComponent} from '../paydesk/paydesk.component';
 import {LogoutComponent} from '../logout/logout.component';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -30,8 +31,9 @@ import {LogoutComponent} from '../logout/logout.component';
     CommonModule,
     FormsModule,
     HttpClientModule,
-    Paydesk2RoutingModule,
-    NgbModule
+    // Paydesk2RoutingModule,
+    NgbModule,
+    RouterModule
   ],
   providers: [
     /*{provide: OrderHttpService, useClass: OrderHttpService},
