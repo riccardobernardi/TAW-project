@@ -8,9 +8,11 @@ import { UserHttpService } from '../user-http.service';
 })
 export class LogoutComponent implements OnInit {
 
-  constructor(private us: UserHttpService) {}
-
-  ngOnInit() {
+  constructor(private us: UserHttpService) {
+    us.logout();
   }
+
+  ngOnInit() {}
+
 
 }

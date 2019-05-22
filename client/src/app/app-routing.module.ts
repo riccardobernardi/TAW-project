@@ -16,7 +16,7 @@ import { Paydesk2DashboardComponent } from "./paydesk2/paydesk2Dashboard.compone
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: UserLoginComponent },
-  { path: 'waiter', 
+  { path: 'waiter',
     component: WaiterDashboardComponent,
     children: [
       {
@@ -38,7 +38,7 @@ const routes: Routes = [
     ]
   },
   { path: 'cook', component:  CookComponent},
-  { path: 'paydesk2', 
+  { path: 'paydesk2',
     component: Paydesk2DashboardComponent,
     children: [
       {
@@ -78,9 +78,13 @@ const routes: Routes = [
         path: 'paydesk',
         component: PaydeskComponent
       },
+      {
+        path: 'logout',
+        component: LogoutComponent
+      }
     ]
   },
-  { path: 'barman', component:  BarmanComponent},
+/*  { path: 'barman', component:  BarmanComponent},
   { path: 'bartender', component:  BarmanComponent},
   { path: 'desk/insertOrders', component:  InsertOrdersComponent},
   { path: 'desk/logout', component:  LogoutComponent},
@@ -90,7 +94,7 @@ const routes: Routes = [
   { path: 'waiter/insertOrders', component:  InsertOrdersComponent},
   { path: 'waiter/logout', component:  LogoutComponent},
   { path: 'waiter/viewOrders', component:  TablesViewComponent},
-  { path: 'waiter/servedOrders', component:  OrdersServedComponent},
+  { path: 'waiter/servedOrders', component:  OrdersServedComponent},*/
 ];
 
 @NgModule({
