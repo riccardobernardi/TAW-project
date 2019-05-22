@@ -38,14 +38,7 @@ const routes: Routes = [
     ]
   },
   { path: 'cook', component:  CookComponent},
-<<<<<<< HEAD
-<<<<<<< HEAD
   { path: 'bartender', component:  BarmanComponent},
-=======
->>>>>>> c9a95e8ebb6ff5c78b66aad771eac90366a2c58d
-=======
-  { path: 'bartender', component:  BarmanComponent},
->>>>>>> 002aefa99d771cc22945c01318dbbe0ac22373e4
   { path: 'paydesk2',
     component: Paydesk2DashboardComponent,
     children: [
