@@ -31,6 +31,6 @@ export class TableHttpService {
   }
 
   change_table(newTable: Table) {
-    return this.http.patch<Table>(this.url + '/' + newTable.num, newTable, this.create_options());
+    return this.http.patch<Table>(this.url + '/' + newTable.number, newTable, this.create_options());
   }
 }
