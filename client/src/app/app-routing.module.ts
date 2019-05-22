@@ -38,6 +38,7 @@ const routes: Routes = [
     ]
   },
   { path: 'cook', component:  CookComponent},
+  { path: 'bartender', component:  BarmanComponent},
   { path: 'paydesk2',
     component: Paydesk2DashboardComponent,
     children: [
