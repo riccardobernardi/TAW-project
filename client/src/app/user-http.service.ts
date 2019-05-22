@@ -19,7 +19,7 @@ export class UserHttpService {
 
   public token = '';
   public url = 'http://localhost:8080';
-  // public users = []
+  public users = []
 
   constructor( private http: HttpClient, private router: Router ) {
     console.log('User service instantiated');
@@ -130,10 +130,25 @@ export class UserHttpService {
 
   deleteUser(selDelUser) {
     console.log('deleted:' + selDelUser);
+    console.log('for user : ' + selDelUser);
+
+    const options = {
+      headers: new HttpHeaders({
+        'cache-control': 'no-cache',
+        'Content-Type':  'application/json',
+        username: [selDelUser],
+      }).append('Authorization', 'Bearer ' + this.get_token())
+    };
+
+    return this.http.delete( this.url + '/users', options ).pipe(
+      tap( (data) => {
+        console.log(JSON.stringify(data) );
+      })
+    );
   }
 
   changePasswordUser(selUser, newPwd) {
-    /*console.log('new pwd is : ' + newPwd + 'for user : ' + selUser);
+    console.log('new pwd is : ' + newPwd + 'for user : ' + selUser);
 
     const user = { username: selUser, password: newPwd, role: '' };
     user.role = this.users.filter((u) => u.username == selUser)[0].role.toUpperCase();
@@ -152,7 +167,7 @@ export class UserHttpService {
         console.log(options);
         console.log(JSON.stringify(data) );
       })
-    );*/
+    );
   }
 
   get_tables() {

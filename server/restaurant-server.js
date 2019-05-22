@@ -32,12 +32,11 @@ var auth = jwt({ secret: process.env.JWT_SECRET });
 //strutture dati e funzione necessarie per il socket
 var ios = undefined;
 function emitEvent(eventType, data) {
-    socketEvents[eventType].destRooms.forEach(function (r) {
+  socketEvents[eventType].destRooms.forEach(r => {
         //ios.emit(eventType, data).on(r);
         ios.emit(r);
     });
-}
-;
+};
 var rooms = ["waiters", "cookers", "desks", "bartenders"];
 var socketEvents = {
     "modified table": {
@@ -93,7 +92,8 @@ app.route("/users").get(auth, function (req, res, next) {
     })["catch"](function (reason) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
-}).post(auth, function (req, res, next) {
+
+}).post(auth, (req, res, next) => {
     //autenticazione
     if (!user.newUser(req.user).hasDeskRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
@@ -112,18 +112,19 @@ app.route("/users").get(auth, function (req, res, next) {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason.errmsg });
     });
 });
+//code cleaning fino a qua
 //cambiare username con id restituito da mongo e maagari aggiungere filtri su username in get users?
-app.route("/users/:username")["delete"](auth, function (req, res, next) {
+app.route("/users/:username").delete(auth, (req, res, next) => {
     //autenticazione
     if (!user.newUser(req.user).hasDeskRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
     //query al DB
-    user.getModel().deleteOne({ username: req.params.username }).then(function () {
+  user.getModel().deleteOne({ username: req.params.username }).then(() => {
         return res.status(200).json({ error: false, errormessage: "" });
     })["catch"](function (reason) {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
-}).put(auth, function (req, res, next) {
+}).put(auth, (req, res, next) => {
     //autenticazione
     if (!user.newUser(req.user).hasDeskRole()) {
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
@@ -147,18 +148,20 @@ app.route("/users/:username")["delete"](auth, function (req, res, next) {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 });
-app.route("/tables").get(auth, function (req, res, next) {
+
+app.route("/tables").get(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
     //query al DB
-    table.getModel().find({}, { number: 1, max_people: 1, _id: 0 }).then(function (tableslist) {
+
+    table.getModel().find({}, { number: 1, max_people: 1, _id: 0 }).then((tableslist) => {
         return res.status(200).json(tableslist);
     })["catch"](function (reason) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
-}).post(auth, function (req, res, next) {
+}).post(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
@@ -166,7 +169,7 @@ app.route("/tables").get(auth, function (req, res, next) {
     //creo tavolo da aggiungere
     var Table = table.getModel();
     //query al DB
-    (new Table(req.body)).save().then(function (data) {
+    (new Table(req.body)).save().then((data) => {
         return res.status(200).json({
             number: data.number,
             max_people: data.number
@@ -176,18 +179,18 @@ app.route("/tables").get(auth, function (req, res, next) {
     });
 });
 ;
-app.route("/tables/:number").get(auth, function (req, res, next) {
+app.route("/tables/:number").get(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
     //query al DB
-    table.getModel().find({ number: req.params.number }, { number: 1, max_people: 1 }).then(function (table) {
+    table.getModel().find({ number: req.params.number }, { number: 1, max_people: 1 }).then((table) => {
         return res.status(200).json(table);
     })["catch"](function (reason) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
-}).patch(auth, function (req, res, next) {
+}).patch(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
@@ -202,7 +205,7 @@ app.route("/tables/:number").get(auth, function (req, res, next) {
     if (req.body.state)
         update.state = req.body.state;
     //perchè la patch con findOneAndUpdate ritora sempre un valore vecchio?
-    table.getModel().findOneAndUpdate({ number: req.params.number }, { $set: update }).then(function (data) {
+    table.getModel().findOneAndUpdate({ number: req.params.number }, { $set: update }).then((data) => {
         //notifico sul socket
         emitEvent("modified table", req.params.number);
         return res.status(200).json({
@@ -210,11 +213,11 @@ app.route("/tables/:number").get(auth, function (req, res, next) {
             max_people: data.number,
             state: data.state
         });
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 });
-app.route("/items").get(auth, function (req, res, next) {
+app.route("/items").get(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
@@ -224,12 +227,12 @@ app.route("/items").get(auth, function (req, res, next) {
     if (req.query.type)
         filter.type = req.query.type;
     //query al DB
-    item.getModel().find(filter, "name type price required_time ingredients").then(function (itemslist) {
+    item.getModel().find(filter, "name type price required_time ingredients").then((itemslist) => {
         return res.status(200).json(itemslist);
     })["catch"](function (reason) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
-}).post(auth, function (req, res, next) {
+}).post(auth, (req, res, next) => {
     //autenticazione
     if (!user.newUser(req.user).hasDeskRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
@@ -241,7 +244,7 @@ app.route("/items").get(auth, function (req, res, next) {
     if (!item.isItem(i))
         return next({ statusCode: 400, error: true, errormessage: "Wrong format" });
     //inserisco
-    i.save().then(function (data) {
+    i.save().then((data) => {
         return res.status(200).json({ error: false, errormessage: "", id: data._id });
     })["catch"](function (reason) {
         if (reason.code === 11000)
@@ -250,7 +253,7 @@ app.route("/items").get(auth, function (req, res, next) {
     });
 });
 /*DECIDERE SE UTILIZZARE ALTRI CAMPI o SEMPRE ID*/
-app.route("/items/:id").get(auth, function (req, res, next) {
+app.route("/items/:id").get(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
@@ -260,7 +263,7 @@ app.route("/items/:id").get(auth, function (req, res, next) {
     })["catch"](function (reason) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
-}).put(auth, function (req, res, next) {
+}).put(auth, (req, res, next) => {
     //autenticazione
     if (!user.newUser(req.user).hasDeskRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
@@ -269,14 +272,14 @@ app.route("/items/:id").get(auth, function (req, res, next) {
     //controllo validità dell'item creato (formato campi inseriti)
     if (!item.isItem(i))
         return next({ statusCode: 400, error: true, errormessage: "Wrong format" });
-    item.getModel().findById(req.params.id).then(function (item) {
+    item.getModel().findById(req.params.id).then((item) => {
         return item.set(i).save();
     }).then(function (item) {
         return res.status(200).json(item);
     })["catch"](function (reason) {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
-})["delete"](auth, function (req, res, next) {
+}).delete(auth, (req, res, next) => {
     //autenticazione
     if (!user.newUser(req.user).hasDeskRole()) {
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
@@ -287,7 +290,7 @@ app.route("/items/:id").get(auth, function (req, res, next) {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 });
-app.route("/tickets").get(auth, function (req, res, next) {
+app.route("/tickets").get(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
@@ -307,10 +310,10 @@ app.route("/tickets").get(auth, function (req, res, next) {
     console.log(filter);
     //TODO migliorare il controllo del formato
     //controllo formato della query sullo stato degli ordini
-    if (req.query.orders && !ticket.orderState.filter(function (val) { return val === req.query.orders; }))
+    if (req.query.orders && !ticket.orderState.filter((val) => val === req.query.orders))
         return next({ statusCode: 400, error: true, errormessage: "The state of orders accepted are ordered, preparation, ready, delivered and all" });
     //trovo i tickets
-    ticket.getModel().find(filter).then(function (ticketslist) {
+    ticket.getModel().find(filter).then((ticketslist) => {
         //se specificato, filtro gli ordini utilizzando il loro stato
         if (req.query.orders && (req.query.orders != ticket.orderState[4])) {
             var orders = [];
@@ -333,7 +336,7 @@ app.route("/tickets").get(auth, function (req, res, next) {
     })["catch"](function (reason) {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
-}).post(auth, function (req, res, next) {
+}).post(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
@@ -363,18 +366,18 @@ app.route("/tickets").get(auth, function (req, res, next) {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason.errmsg });
     });
 });
-app.route('/tickets/:id').get(auth, function (req, res, next) {
+app.route('/tickets/:id').get(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
     //trovo e restituisco il ticket richiesto
-    ticket.getModel().findById(req.params.id).then(function (data) {
+    ticket.getModel().findById(req.params.id).then((data) => {
         return res.status(200).json(data);
     })["catch"](function (reason) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
-}).patch(auth, function (req, res, next) {
+}).patch(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole()) {
@@ -392,20 +395,20 @@ app.route('/tickets/:id').get(auth, function (req, res, next) {
         update.end = req.body.end;
     if (req.body.state)
         update.state = req.body.state;
-    ticket.getModel().findOneAndUpdate({ _id: req.params.id }, { $set: update }).then(function (data) {
+    ticket.getModel().findOneAndUpdate({ _id: req.params.id }, { $set: update }).then((data) => {
         return res.status(200).json({ error: false, errormessage: "" });
     })["catch"](function (reason) {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 });
-app.route('/tickets/:id/orders').get(auth, function (req, res, next) {
+app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
     //trovo e restituisco gli ordini del ticket richiesto
-    ticket.getModel().findById(req.params.id).then(function (data) {
+    ticket.getModel().findById(req.params.id).then((data) => {
         return res.status(200).json(data.orders);
     })["catch"](function (reason) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
-}).post(auth, function (req, res, next) {
+}).post(auth, (req, res, next) => {
     //autenticazioni
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
@@ -425,9 +428,9 @@ app.route('/tickets/:id/orders').get(auth, function (req, res, next) {
     newer.state = ticket.orderState[0];
     newer.state = ticket.orderState[0];
     //inserisco order nel DB
-    ticket.getModel().update({ _id: req.params.id }, { $push: { orders: newer } }).then(function () {
+    ticket.getModel().update({ _id: req.params.id }, { $push: { orders: newer } }).then(() => {
         //controllo il tipo di order inserito e mando un evento sulla stanza relativa
-        item.getModel().findOne({ name: newer.name_item }).then(function (i) {
+        item.getModel().findOne({ name: newer.name_item }).then((i) => {
             //console.log("AAAAAAA:\n" + i + "\n");
             if (i.type == item.type[0]) {
                 //console.log("DISH")
@@ -438,7 +441,7 @@ app.route('/tickets/:id/orders').get(auth, function (req, res, next) {
                 emitEvent("ordered drink", req.params.id);
             }
             return res.status(200).json({ error: false, errormessage: "" });
-        })["catch"](function (err) {
+        }).catch((err) => {
             return res.status(500).json({ error: true, errormessage: err });
         });
     })["catch"](function (reason) {
