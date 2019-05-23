@@ -136,7 +136,7 @@ export class UserHttpService {
       }).append('Authorization', 'Bearer ' + this.get_token())
     };
 
-    return this.http.delete( this.url + '/users', options ).pipe(
+    return this.http.delete( this.url + '/users/' + selDelUser, options ).pipe(
       tap( (data) => {
         console.log(JSON.stringify(data) );
       })
