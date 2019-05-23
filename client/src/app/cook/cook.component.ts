@@ -34,7 +34,7 @@ export class CookComponent implements OnInit {
 
   dd() {
     console.log('received an emit');
-    this.ticket.get_tickets({state: 'open'}).toPromise().then((data : Ticket[]) => {
+    this.ticket.get_tickets({state: 'open'}).toPromise().then((data: Ticket[]) => {
       console.log(data);
       this.tickets = data;
       this.tickets.forEach((ticket: Ticket) => {

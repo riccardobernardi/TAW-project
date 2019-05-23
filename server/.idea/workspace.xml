@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../client/src/app/barman/barman.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/barman/barman.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/cook/cook.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/cook/cook.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/insert-orders/insert-orders.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/insert-orders/insert-orders.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/socketio.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/socketio.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/waiter-socketio.service.spec.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/waiter-socketio.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/restaurant-server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.ts" afterDir="false" />
-    </list>
+    <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />

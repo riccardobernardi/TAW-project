@@ -5,6 +5,7 @@ import { TicketHttpService } from '../ticket-http.service';
 import { Ticket } from 'src/app/Ticket';
 import {Table} from '../Table';
 import { Observable } from 'rxjs/Observable';
+import {SocketioService} from '../socketio.service';
 
 
 @Component({
@@ -18,30 +19,26 @@ export class TablesViewComponent implements OnInit {
   private socketObserver: Observable<any>;
 
 
-  constructor(private table: TableHttpService, private user: UserHttpService, private ticket: TicketHttpService) { }
+  constructor(private table: TableHttpService, private user: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService) { }
 
   ngOnInit() {
-    /*this.socketObserver = this.ios.getObserver();
-    this.table.get_tables().toPromise().then((data : Table[]) => {
-      this.tables = data
-      console.log(this.tables[0].state);
-      this.socketObserver.subscribe(() => {
-        console.log("Sta accadendo!");
-        this.table.get_tables().toPromise().then((data : Table[]) => {
-          console.log(data);
-          this.tables = data;
-        });
+    this.dd()
+    this.socketio.get().on('waiters', this.dd);
+  }
+
+  dd() {
+    this.table.get_tables().subscribe( (dd) => {
+      dd.forEach( (ss) => {
+        this.tables.push(ss);
       });
-    }).catch((err) => {
-      console.log(err);
-    });*/
+    });
   }
 
   open_ticket(tableToChange: Table) {
     this.ticket.open_ticket(this.user.get_nick(), tableToChange.number).toPromise().then((data: Ticket) => {
       console.log(data);
-      //tableToChange.state = data._id;
-      let table = Object.assign({}, tableToChange);
+      // tableToChange.state = data._id;
+      const table = Object.assign({}, tableToChange);
       table.state = data._id;
       console.log(tableToChange.state);
       return this.table.change_table(table).toPromise();

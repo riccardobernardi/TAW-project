@@ -4,6 +4,7 @@ import {UserHttpService} from '../user-http.service';
 import {Item} from '../Item';
 import { TicketHttpService } from 'src/app/ticket-http.service';
 import {SocketioService} from '../socketio.service';
+import {Ticket} from '../Ticket';
 
 
 @Component({
@@ -15,7 +16,7 @@ export class InsertOrdersComponent implements OnInit {
 
   private tickets = [];
   private items: Item[] = [];
-  private selTicket = 0;
+  private selTicket: Ticket;
   private itemsSelected: Item[] = [];
   private counter = 0;
   selMenuEntry: Item;
@@ -33,13 +34,13 @@ export class InsertOrdersComponent implements OnInit {
       dd.forEach( (ss) => {
         this.items.push(ss);
       });
-    }).unsubscribe();
+    });
 
     this.ticket.get_tickets({waiter: this.us.get_nick(), state: 'open'}).subscribe((dd) => {
       dd.forEach( (ss) => {
         this.tickets.push(ss);
       });
-    }).unsubscribe();
+    });
     this.selTicket = this.tickets[0];
     this.selMenuEntry = this.items[0];
   }

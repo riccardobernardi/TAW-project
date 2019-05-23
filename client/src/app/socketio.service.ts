@@ -8,9 +8,8 @@ import {UserHttpService} from './user-http.service';
 export class SocketioService {
 
   private socket;
-  constructor( private us: UserHttpService ) { }
 
-  connect(){
+  constructor( private us: UserHttpService ) {
     this.socket = io(this.us.url);
   }
 
