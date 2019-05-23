@@ -119,7 +119,7 @@ app.route("/mock").get( (req,res,next) => {
    ioss.emit("cooks");
 
    return res.status(200).json( "bella vecchio" );
-})
+});
 
 app.route("/users").get(auth, (req,res,next) => {
    //da togliere
@@ -131,7 +131,7 @@ app.route("/users").get(auth, (req,res,next) => {
       return next({ statusCode:401, error: false, errormessage: "Unauthorized: user is not a desk"} );
    
    //creo filtro per la query
-   var filter: any = {}
+   var filter: any = {};
    if(req.query.role)
       filter.role = req.query.role;
 

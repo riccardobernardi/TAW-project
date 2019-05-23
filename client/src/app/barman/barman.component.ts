@@ -5,6 +5,7 @@ import {SocketioService} from '../socketio.service';
 import {Router} from '@angular/router';
 import {OrderService} from '../order.service';
 import {UserHttpService} from '../user-http.service';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-barman',
@@ -13,7 +14,7 @@ import {UserHttpService} from '../user-http.service';
 })
 export class BarmanComponent implements OnInit {
 
-  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private order: OrderService  ) { }
+  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private order: OrderService, private socketio: SocketioService   ) { }
 
   private orders: Order[] = mockorders.filter((data) => (data.type === 'beverage'));
 
@@ -21,11 +22,9 @@ export class BarmanComponent implements OnInit {
     if (this.us.get_token() === undefined || this.us.get_token() === '') {
       this.us.logout();
     }
-    // this.get_orders();
+    this.get_orders();
 
-    /*this.sio.connect().subscribe( (m) => {
-      this.get_orders();
-    });*/
+    this.socketio.get().on('bartenders', this.get_orders());
   }
 
   logout() {

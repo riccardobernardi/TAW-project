@@ -18,14 +18,10 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
   styleUrls: ['./cook.component.css']
 })
 export class CookComponent implements OnInit {
-  // private orders: Order[] = mockorders.filter((data) => (data.type === 'food'));
-  // private socket = io('http://localhost:4200');
   private tickets: Ticket[] = [];
-  private items: Item[] = [];
   private url = 'http://localhost:8080';
-  private socket = io.connect('http://localhost:8080');
 
-  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private ticket: TicketHttpService, private http: HttpClient  ) { }
+  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private ticket: TicketHttpService, private http: HttpClient, private socketio: SocketioService  ) { }
 
   ngOnInit() {
     if (this.us.get_token() === undefined || this.us.get_token() === '') {
@@ -33,7 +29,7 @@ export class CookComponent implements OnInit {
     }
 
     this.dd();
-    this.socket.on('cooks', this.dd);
+    this.socketio.get().on('cooks', this.dd);
   }
 
   dd() {
