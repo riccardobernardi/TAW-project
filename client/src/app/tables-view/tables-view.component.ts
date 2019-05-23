@@ -5,7 +5,6 @@ import { TicketHttpService } from '../ticket-http.service';
 import { Ticket } from 'src/app/Ticket';
 import {Table} from '../Table';
 import { Observable } from 'rxjs/Observable';
-import { WaiterSocketioService } from "../waiter-socketio.service";
 
 
 @Component({
@@ -16,13 +15,13 @@ import { WaiterSocketioService } from "../waiter-socketio.service";
 export class TablesViewComponent implements OnInit {
 
   private tables: Table[] = [];
-  private socketObserver : Observable<any>; 
+  private socketObserver: Observable<any>;
 
 
-  constructor(private table: TableHttpService, private user: UserHttpService, private ticket: TicketHttpService, private ios : WaiterSocketioService) { }
+  constructor(private table: TableHttpService, private user: UserHttpService, private ticket: TicketHttpService) { }
 
   ngOnInit() {
-    this.socketObserver = this.ios.getObserver();
+    /*this.socketObserver = this.ios.getObserver();
     this.table.get_tables().toPromise().then((data : Table[]) => {
       this.tables = data
       console.log(this.tables[0].state);
@@ -35,7 +34,7 @@ export class TablesViewComponent implements OnInit {
       });
     }).catch((err) => {
       console.log(err);
-    });
+    });*/
   }
 
   open_ticket(tableToChange: Table) {

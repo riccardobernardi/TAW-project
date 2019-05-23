@@ -5,10 +5,7 @@ import * as io from 'socket.io-client';
 import {Order} from '../Order';
 import {SocketioService} from '../socketio.service';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {mockorders} from '../mock-orders';
 import {UserHttpService} from '../user-http.service';
-import { WaiterSocketioService } from '../waiter-socketio.service';
-import { SinglePropOffsetValuesIndex } from '@angular/core/src/render3/interfaces/styling';
 
 @Component({
   selector: 'app-waiter',
@@ -19,8 +16,7 @@ export class WaiterDashboardComponent implements OnInit {
 
   private waiterObserver : Observable<any>
 
-  constructor(private sio: WaiterSocketioService, private us: UserHttpService, private router: Router) {
-    this.sio.connect();
+  constructor(private us: UserHttpService, private router: Router) {
   }
 
   ngOnInit() {
