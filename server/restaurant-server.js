@@ -39,7 +39,7 @@ var auth = jwt({ secret: process.env.JWT_SECRET });
 //strutture dati e funzione necessarie per il socket
 var ios = undefined;
 function emitEvent(eventType, data) {
-    socketEvents[eventType].destRooms.forEach(function (r) {
+    socketEvents[eventType].destRooms.forEach(r => {
         //ios.emit(eventType, data).on(r);
         console.log("Entered, " + r);
         ios.emit(r);
@@ -718,7 +718,7 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
             console.log("Unable to save tickets: " + reason);
         });
     });
-    var server = http.createServer(app);
+    let server = http.createServer(app);
     ios = io(server);
     ios.on('connection', function (client) {
         console.log("Socket.io client connected");
