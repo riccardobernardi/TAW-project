@@ -22,6 +22,7 @@ export interface Order {
     state: String,
     price: Number, 
     added: [String],
+    type_item: string
 }
 
 export const orderState = ["ordered", "preparation", "ready", "delivered"];
@@ -55,6 +56,7 @@ var ticketSchema = new mongoose.Schema( {
             state: String,
             price: Number, 
             added: [String],
+            type_item: String
         }],
         required: false
     },

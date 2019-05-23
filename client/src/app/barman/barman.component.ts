@@ -6,6 +6,10 @@ import {Router} from '@angular/router';
 import {OrderService} from '../order.service';
 import {UserHttpService} from '../user-http.service';
 import {HttpClient} from '@angular/common/http';
+import { Ticket } from '../Ticket';
+import {TicketOrder } from '../TicketOrder';
+import { TicketHttpService } from '../ticket-http.service';
+
 
 @Component({
   selector: 'app-barman',
@@ -14,17 +18,38 @@ import {HttpClient} from '@angular/common/http';
 })
 export class BarmanComponent implements OnInit {
 
-  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private order: OrderService, private socketio: SocketioService   ) { }
+  private tickets: Ticket[] = [];
+  private dd;
 
-  private orders: Order[] = mockorders.filter((data) => (data.type === 'beverage'));
+  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) {
+    // tslint:disable-next-line:variable-name
+    const ticket_sup = this.tickets;
+    this.dd = () => {
+      ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
+        ticket_sup.splice(0, ticket_sup.length);
+        dd.forEach( (ss) => {
+          console.log(ss.orders);
+          var orders = ss.orders.filter((order : TicketOrder) => order.state != "ready" && order.state != "delivered" && order.type_item != "dish");
+          if(orders.length != 0) {
+            ticket_sup.push(ss);
+            orders.sort((a: TicketOrder, b: TicketOrder) => {
+              return a.price - b.price;
+            });
+            ss.orders = orders;
+          }
+        });
+        console.log(ticket_sup);
+      });
+    };
+  }
 
   ngOnInit() {
     if (this.us.get_token() === undefined || this.us.get_token() === '') {
       this.us.logout();
     }
-    this.get_orders();
 
-    this.socketio.get().on('bartenders', this.get_orders());
+    this.dd();
+    this.socketio.get().on('cooks', this.dd);
   }
 
   logout() {
@@ -32,28 +57,21 @@ export class BarmanComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  get_orders() {
-    console.log('received an emit');
-    /*this.orders = this.order.get();*/
-    /*console.log(this.orders)*/
-    console.log('event received');
+  setOrderinProgress(ticketid: string, orderid: string) {
+    console.log(ticketid, orderid);
+    this.ticket.changeOrderState(ticketid, orderid, "preparation").toPromise().then(() => {
+      console.log("Changing state to preparation OK");
+    }).catch((err) => {
+      console.log("Changing state to prepation failed: " + err);
+    });
+  }
 
-    this.order.get().subscribe(
-      ( messages ) => {
-        this.orders = messages;
-
-      } , (err) => {
-
-        // Try to renew the token
-        this.us.renew().subscribe( () => {
-          // Succeeded
-          this.get_orders();
-        }, (err2) => {
-          // Error again, we really need to logout
-          this.logout();
-        } );
-      }
-    );
+  setOrderCompleted(ticketid: string, orderid: string) {
+    this.ticket.changeOrderState(ticketid, orderid, "ready").toPromise().then(() => {
+      console.log("Changing state to ready OK");
+    }).catch((err) => {
+      console.log("Changing state to ready failed: " + err);
+    });
   }
 
 }

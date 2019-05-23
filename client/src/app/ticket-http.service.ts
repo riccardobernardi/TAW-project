@@ -49,13 +49,16 @@ export class TicketHttpService {
       price: item.price,
       state: null,
       username_waiter: usernameWaiter,
-      _id: null
+      _id: null,
+      type_item: item.type
     }
     console.log(ticketId, order);
     return this.http.post(this.url + '/' + ticketId + '/' + 'orders', order, this.create_options());
   }
 
   changeOrderState(ticketId, orderId, state) {
-    return this.http.patch(this.url + '/' + ticketId + '/' + orderId, {state}, this.create_options());
+    console.log(ticketId, orderId);
+    return this.http.patch(this.url + '/' + ticketId + '/' + "orders" + "/" + orderId, {state}, this.create_options());
   }
+
 }
