@@ -50,6 +50,7 @@ var ios = undefined;
 function emitEvent(eventType, data){
    socketEvents[eventType].destRooms.forEach(r => {
       //ios.emit(eventType, data).on(r);
+      console.log("Entered, " + r);
       ios.emit(r);
    });
 };
@@ -854,7 +855,7 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
    });
 
    let server = http.createServer(app);
-   var ios = io(server);
+   ios = io(server);
    ios.on('connection', function(client) {
       console.log( "Socket.io client connected");      
    });
