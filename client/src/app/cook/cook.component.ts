@@ -21,7 +21,7 @@ export class CookComponent implements OnInit {
   private tickets: Ticket[] = [];
   private url = 'http://localhost:8080';
 
-  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private ticket: TicketHttpService, private http: HttpClient, private socketio: SocketioService  ) { }
+  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) { }
 
   ngOnInit() {
     if (this.us.get_token() === undefined || this.us.get_token() === '') {
@@ -33,16 +33,16 @@ export class CookComponent implements OnInit {
   }
 
   dd() {
-    console.log('received an emit');
-    this.ticket.get_tickets({state: 'open'}).toPromise().then((data: Ticket[]) => {
-      console.log(data);
-      this.tickets = data;
-      this.tickets.forEach((ticket: Ticket) => {
-        ticket.orders.sort((a : TicketOrder, b : TicketOrder) => {
-          return a.price - b.price;
+    this.ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
+      dd.forEach( (ss) => {
+        this.tickets = dd;
+        this.tickets.forEach((ticket: Ticket) => {
+          ticket.orders.sort((a: TicketOrder, b: TicketOrder) => {
+            return a.price - b.price;
+          });
         });
       });
-    }).catch((err) => console.log(err));
+    });
   }
 
   logout() {

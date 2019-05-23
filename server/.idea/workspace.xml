@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="" />
+    <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../client/src/app/cook/cook.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/cook/cook.component.ts" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -16,8 +18,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="351">
-              <caret line="101" column="27" lean-forward="true" selection-start-line="101" selection-start-column="27" selection-end-line="101" selection-end-column="27" />
+            <state relative-caret-position="-253">
+              <caret line="50" selection-start-line="50" selection-end-line="50" />
               <folding>
                 <element signature="e#168#194#0" expanded="true" />
                 <element signature="e#380#418#0" expanded="true" />
@@ -151,16 +153,15 @@
       <workItem from="1558526766052" duration="67000" />
       <workItem from="1558545642819" duration="3291000" />
       <workItem from="1558601233992" duration="1241000" />
-      <workItem from="1558606410823" duration="659000" />
+      <workItem from="1558606410823" duration="1162000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9655000" />
+    <option name="totallyTimeSpent" value="10158000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -211,8 +212,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="351">
-          <caret line="101" column="27" lean-forward="true" selection-start-line="101" selection-start-column="27" selection-end-line="101" selection-end-column="27" />
+        <state relative-caret-position="-253">
+          <caret line="50" selection-start-line="50" selection-end-line="50" />
           <folding>
             <element signature="e#168#194#0" expanded="true" />
             <element signature="e#380#418#0" expanded="true" />
