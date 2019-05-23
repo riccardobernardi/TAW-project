@@ -6,6 +6,11 @@ import {Order} from '../Order';
 import {mockorders} from '../mock-orders';
 import {OrderHttpService} from '../order-http.service';
 import * as io from 'socket.io-client';
+import {TicketHttpService} from '../ticket-http.service';
+import {Ticket} from '../Ticket';
+import {SocketioService} from '../socketio.service';
+import {HttpClient} from '@angular/common/http';
+import {TicketOrder} from '../TicketOrder';
 
 @Component({
   selector: 'app-paydesk',
@@ -13,8 +18,6 @@ import * as io from 'socket.io-client';
   styleUrls: ['./paydesk.component.css']
 })
 export class PaydeskComponent implements OnInit {
-
-  constructor(private us: UserHttpService, private router: Router, private order: OrderHttpService  ) { }
 
   private roles: string[] = ['waiter', 'cook', 'bartender', 'admin'];
   private newRoleSelected: string = undefined;
@@ -26,6 +29,23 @@ export class PaydeskComponent implements OnInit {
   users = [];
   selChangePwdUser: any;
   private socket;
+  private tickets: Ticket[] = [];
+
+  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) {
+    // tslint:disable-next-line:variable-name
+    const ticket_sup = this.tickets;
+    this.dd = () => {
+      ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
+        ticket_sup.splice(0, ticket_sup.length);
+        dd.forEach( (ss) => {
+          ticket_sup.push(ss);
+          ss.orders.sort((a: TicketOrder, b: TicketOrder) => {
+            return a.price - b.price;
+          });
+        });
+      });
+    };
+  }
 
   ngOnInit() {
     if (this.us.get_token() == undefined || this.us.get_token() == '') {

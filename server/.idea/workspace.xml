@@ -2,14 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../client/src/app/cook/cook.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/cook/cook.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Item.js" beforeDir="false" afterPath="$PROJECT_DIR$/Item.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Table.js" beforeDir="false" afterPath="$PROJECT_DIR$/Table.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ticket.js" beforeDir="false" afterPath="$PROJECT_DIR$/Ticket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/User.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/paydesk/paydesk.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/paydesk/paydesk.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/paydesk/paydesk.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/paydesk/paydesk.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/user-http.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/user-http.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.js" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/restaurant-server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -25,8 +23,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-253">
-              <caret line="50" selection-start-line="50" selection-end-line="50" />
+            <state relative-caret-position="2700">
+              <caret line="180" column="203" selection-start-line="180" selection-start-column="203" selection-end-line="180" selection-end-column="203" />
               <folding>
                 <element signature="e#168#194#0" expanded="true" />
                 <element signature="e#380#418#0" expanded="true" />
@@ -160,12 +158,12 @@
       <workItem from="1558526766052" duration="67000" />
       <workItem from="1558545642819" duration="3291000" />
       <workItem from="1558601233992" duration="1241000" />
-      <workItem from="1558606410823" duration="1336000" />
+      <workItem from="1558606410823" duration="1800000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10332000" />
+    <option name="totallyTimeSpent" value="10796000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
@@ -220,8 +218,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-253">
-          <caret line="50" selection-start-line="50" selection-end-line="50" />
+        <state relative-caret-position="2700">
+          <caret line="180" column="203" selection-start-line="180" selection-start-column="203" selection-end-line="180" selection-end-column="203" />
           <folding>
             <element signature="e#168#194#0" expanded="true" />
             <element signature="e#380#418#0" expanded="true" />
