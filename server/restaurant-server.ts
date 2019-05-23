@@ -56,7 +56,7 @@ function emitEvent(eventType, data){
 
 
 
-var rooms = ["waiters", "cookers", "desks", "bartenders"];
+var rooms = ["waiters", "cooks", "desks", "bartenders"];
 
 
 var socketEvents = {
