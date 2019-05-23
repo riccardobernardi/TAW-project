@@ -23,11 +23,11 @@ export class CookComponent implements OnInit {
   private dd;
 
   constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) {
-    var ticket_sup = this.tickets; 
-    this.dd = function () {
-      console.log(this.ticket);
-      ticket_sup.length = 0;
+    // tslint:disable-next-line:variable-name
+    const ticket_sup = this.tickets;
+    this.dd = () => {
       ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
+        ticket_sup.splice(0, ticket_sup.length);
         dd.forEach( (ss) => {
           ticket_sup.push(ss);
           ss.orders.sort((a: TicketOrder, b: TicketOrder) => {
@@ -35,7 +35,7 @@ export class CookComponent implements OnInit {
           });
         });
       });
-    }
+    };
   }
 
   ngOnInit() {
