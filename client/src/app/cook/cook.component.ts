@@ -23,7 +23,6 @@ export class CookComponent implements OnInit {
   private dd;
 
   constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) {
-    // tslint:disable-next-line:variable-name
     const ticket_sup = this.tickets;
     this.dd = () => {
       ticket.get_tickets({state: 'open'}).subscribe( (dd) => {

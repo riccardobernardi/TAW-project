@@ -177,17 +177,22 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
       return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
    }
 
+   console.log(req.body);
+
    //controllo formato
    if ( !req.body || !req.body.username || !req.body.password || !req.body.role || typeof(req.body.username) != 'string' || typeof(req.body.password) != 'string' || typeof(req.body.role) != 'string' || !user.roles.includes(req.body.role) )
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
 
    //creo utente da inserire
-   var newer;
+   var newer = Object.create({});
    newer.username = req.body.username;
    newer.password = req.body.password;
    newer.role = req.body.role;
    var u = user.newUser( newer );
+   console.log("AAAAAA" + u);
+
    u.setPassword(newer.password);
+   console.log("AAAAAA" + u);
 
    //query dal DB
    //errore strano con findOneAndReplace, poi vedere, altrimenti tenere findOneAndUpdate
