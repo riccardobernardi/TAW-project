@@ -19,7 +19,6 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 })
 export class CookComponent implements OnInit {
   private tickets: Ticket[] = [];
-  private url = 'http://localhost:8080';
   private dd;
 
   constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) {
@@ -29,11 +28,17 @@ export class CookComponent implements OnInit {
       ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
         ticket_sup.splice(0, ticket_sup.length);
         dd.forEach( (ss) => {
-          ticket_sup.push(ss);
-          ss.orders.sort((a: TicketOrder, b: TicketOrder) => {
-            return a.price - b.price;
-          });
+          console.log(ss.orders);
+          var orders = ss.orders.filter((order : TicketOrder) => order.state != "ready" && order.state != "delivered" && order.type_item != "beverage");
+          if(orders.length != 0) {
+            ticket_sup.push(ss);
+            orders.sort((a: TicketOrder, b: TicketOrder) => {
+              return a.price - b.price;
+            });
+            ss.orders = orders;
+          }
         });
+        console.log(ticket_sup);
       });
     };
   }
@@ -90,25 +95,28 @@ export class CookComponent implements OnInit {
     );*/
   }
 
-  private create_options( params = {} ) {
-    return  {
-      headers: new HttpHeaders({
-        authorization: 'Bearer ' + this.us.get_token(),
-        'cache-control': 'no-cache',
-        'Content-Type':  'application/json',
-      }),
-      params : new HttpParams( {fromObject: params} )
-    };
-  }
-
-  open_ticket(waiter: string, table: number) {
+  /*open_ticket(waiter: string, table: number) {
     return this.http.post<Ticket>(this.url, {waiter, table, start: Date()}, this.create_options());
+  }*/
+
+  setOrderinProgress(ticketid: string, orderid: string) {
+    /*console.log(this.url + '/tickets/' + ticketid + '/orders/' + orderid);
+    this.http.patch(this.url + '/tickets/' + ticketid + '/orders/' + orderid, {state: 'in_progress'}, this.create_options()).subscribe( (dd) => {
+      console.log(dd);
+    });*/
+    console.log(ticketid, orderid);
+    this.ticket.changeOrderState(ticketid, orderid, "preparation").toPromise().then(() => {
+      console.log("Changing state to preparation OK");
+    }).catch((err) => {
+      console.log("Changing state to prepation failed: " + err);
+    });
   }
 
-  inProgress(ticket: Ticket, orderid: string) {
-    console.log(this.url + '/tickets/' + ticket._id + '/orders/' + orderid);
-    this.http.patch(this.url + '/tickets/' + ticket._id + '/orders/' + orderid, {state: 'in_progress'}, this.create_options()).subscribe( (dd) => {
-      console.log(dd);
+  setOrderCompleted(ticketid: string, orderid: string) {
+    this.ticket.changeOrderState(ticketid, orderid, "ready").toPromise().then(() => {
+      console.log("Changing state to ready OK");
+    }).catch((err) => {
+      console.log("Changing state to ready failed: " + err);
     });
   }
 }

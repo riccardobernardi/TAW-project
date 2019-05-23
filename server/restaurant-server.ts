@@ -68,7 +68,7 @@ var socketEvents = {
       //senderRole: user.roles[1]
    },
    "ready item": {
-      destRooms: [rooms[0]],
+      destRooms: [rooms[0], rooms[1]],
       //senderRole: user.roles[1]
    }
 };
@@ -798,7 +798,15 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
             name_item: "Bistecca alla griglia",
             username_waiter: "waiter1",
             state: ticket.orderState[0],
-            price: 9
+            price: 9,
+            type_item: item.type[0]
+         },
+         {
+            name_item: "Coca cola",
+            username_waiter: "waiter1",
+            state: ticket.orderState[0],
+            price: 2.5,
+            type_item: item.type[1]
          }],
          state: ticket.ticketState[0],
          total: 0
@@ -813,7 +821,8 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
             name_item: "Bistecca alla griglia",
             username_waiter: "waiter1",
             state: ticket.orderState[0],
-            price: 9
+            price: 9,
+            type_item: item.type[0]
          }],
          state: ticket.ticketState[0],
          total: 0
@@ -829,13 +838,22 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
             username_waiter: "waiter2",
             state: ticket.orderState[0],
             price: 6,
-            added: ["Mozzarella"]
+            added: ["Mozzarella"],
+            type_item: item.type[0]
          }, {
             //id_order: new ObjectID(),
             name_item: "Bistecca alla griglia",
             username_waiter: "waiter1",
             state: ticket.orderState[0],
-            price: 9
+            price: 9,
+            type_item: item.type[0]
+         },
+         {
+            name_item: "Chinotto",
+            username_waiter: "waiter1",
+            state: ticket.orderState[0],
+            price: 2.5,
+            type_item: item.type[1]
          }],
          state: ticket.ticketState[0],
          total: 0

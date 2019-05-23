@@ -17,7 +17,7 @@
           <td>{{order.name_item}}</td>
           <td> 
             <div class="custom-control custom-switch">            
-              <input type="checkbox" class="custom-control-input" id="customSwitch{{order._id}}" [disabled]="order.state != 'ready'" (change)="deliver(j, i)">
+              <input type="checkbox" class="custom-control-input" id="customSwitch{{order._id}}" [checked]="order.state == 'delivered'" [disabled]="order.state != 'ready'" (change)="deliver(j, i)">
               <label *ngIf="order.state != 'ready' || order.state != 'delivered'" class="custom-control-label" for="customSwitch{{order._id}}"></label>
               <label *ngIf="order.state == 'ready'" class="custom-control-label" for="customSwitch{{order._id}}">To be delivered</label>
               <label *ngIf="order.state == 'delivered'" class="custom-control-label" for="customSwitch{{order._id}}">Delivered, good work!</label>
