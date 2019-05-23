@@ -132,23 +132,22 @@ export class UserHttpService {
       headers: new HttpHeaders({
         'cache-control': 'no-cache',
         'Content-Type':  'application/json',
+        username: selDelUser,
       }).append('Authorization', 'Bearer ' + this.get_token())
     };
 
-    console.log('deleting: ' + this.url + '/users/' + selDelUser);
-
-    return this.http.delete( this.url + '/users/' + selDelUser, options ).pipe(
+    return this.http.delete( this.url + '/users', options ).pipe(
       tap( (data) => {
-        console.log('user deleted:' + JSON.stringify(data) );
+        console.log(JSON.stringify(data) );
       })
-    ).subscribe();
+    );
   }
 
   changePasswordUser(selUser, newPwd) {
     console.log('new pwd is : ' + newPwd + 'for user : ' + selUser);
 
     const user = { username: selUser, password: newPwd, role: '' };
-    user.role = this.users.filter((u) => u.username == selUser)[0].role;
+    user.role = this.users.filter((u) => u.username == selUser)[0].role.toUpperCase();
 
     const options = {
       headers: new HttpHeaders({
@@ -157,13 +156,21 @@ export class UserHttpService {
       }).append('Authorization', 'Bearer ' + this.get_token())
     };
 
-    console.log(this.url + '/users/' + selUser );
+    console.log(options);
 
-    return this.http.put( this.url + '/users/' + selUser, user, options ).pipe(
+    return this.http.put( this.url + '/users/selUser', user, options ).pipe(
       tap( (data) => {
         console.log(options);
         console.log(JSON.stringify(data) );
       })
-    ).subscribe();
+    );
+  }
+
+  get_tables() {
+    return [1, 2, 3, 4];
+  }
+
+  emitReceipt(seltable) {
+    return 'price is ' + seltable * 20 + '$';
   }
 }

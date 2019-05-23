@@ -140,7 +140,7 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
     }
     //controllo formato
-    if (!req.body || !req.body.username || !req.body.password || !req.body.role || typeof (req.body.username) != 'string' || typeof (req.body.password) != 'string' || typeof (req.body.role) != 'string' || !user.roles.includes(req.body.role))
+    if (!req.body || !req.body.username || !req.body.password || !req.body.role || typeof (req.body.username) != 'string' || typeof (req.body.password) != 'string' || typeof (req.body.role) != 'string' || user.roles.includes(req.body.role))
         return next({ statusCode: 400, error: true, errormessage: "Wrong format" });
     //creo utente da inserire
     var newer;
