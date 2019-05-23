@@ -140,14 +140,14 @@ export class UserHttpService {
       tap( (data) => {
         console.log(JSON.stringify(data) );
       })
-    );
+    ).subscribe();
   }
 
   changePasswordUser(selUser, newPwd) {
     console.log('new pwd is : ' + newPwd + 'for user : ' + selUser);
 
     const user = { username: selUser, password: newPwd, role: '' };
-    user.role = this.users.filter((u) => u.username == selUser)[0].role.toUpperCase();
+    user.role = this.users.filter((u) => u.username == selUser)[0].role;
 
     const options = {
       headers: new HttpHeaders({
@@ -156,14 +156,13 @@ export class UserHttpService {
       }).append('Authorization', 'Bearer ' + this.get_token())
     };
 
-    console.log(options);
+    console.log(this.url + '/users/' + selUser );
 
-    return this.http.put( this.url + '/users/selUser', user, options ).pipe(
+    return this.http.put( this.url + '/users/' + selUser, user, options ).pipe(
       tap( (data) => {
         console.log(options);
         console.log(JSON.stringify(data) );
-      })
-    );
+      })).subscribe();
   }
 
   get_tables() {
