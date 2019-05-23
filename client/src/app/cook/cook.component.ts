@@ -20,8 +20,23 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 export class CookComponent implements OnInit {
   private tickets: Ticket[] = [];
   private url = 'http://localhost:8080';
+  private dd;
 
-  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) { }
+  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) {
+    var ticket_sup = this.tickets; 
+    this.dd = function () {
+      console.log(this.ticket);
+      ticket_sup.length = 0;
+      ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
+        dd.forEach( (ss) => {
+          ticket_sup.push(ss);
+          ss.orders.sort((a: TicketOrder, b: TicketOrder) => {
+            return a.price - b.price;
+          });
+        });
+      });
+    }
+  }
 
   ngOnInit() {
     if (this.us.get_token() === undefined || this.us.get_token() === '') {
@@ -32,7 +47,8 @@ export class CookComponent implements OnInit {
     this.socketio.get().on('cooks', this.dd);
   }
 
-  dd() {
+  /*dd() {
+    console.log(this.ticket);
     this.ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
       dd.forEach( (ss) => {
         this.tickets = dd;
@@ -43,7 +59,7 @@ export class CookComponent implements OnInit {
         });
       });
     });
-  }
+  }*/
 
   logout() {
     this.us.logout();
