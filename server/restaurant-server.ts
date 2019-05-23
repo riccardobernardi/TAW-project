@@ -20,8 +20,6 @@ import * as table from './Table';
 import * as user from './User';
 import * as ticket from './Ticket';
 import * as item from './Item';
-import { verify } from 'crypto';
-
 
 
 var app = express();
@@ -36,18 +34,17 @@ var ioss = require('socket.io')(http);*/
 // decoded to be used by later middleware for authorization and access control.
 //
 
-let server = http.createServer(app);
+/*let server = http.createServer(app);
 var ioss = io(server);
 ioss.on('connection', function(client) {
    console.log( "Socket.io client connected");
-});
+});*/
 
 
 var auth = jwt( {secret: process.env.JWT_SECRET} );
 
 
 //strutture dati e funzione necessarie per il socket
-/*
 var ios = undefined;
 
 function emitEvent(eventType, data){
@@ -56,7 +53,7 @@ function emitEvent(eventType, data){
       ios.emit(r);
    });
 };
-*/
+
 
 
 var rooms = ["waiters", "cookers", "desks", "bartenders"];
@@ -116,7 +113,7 @@ res.status(200).json( {
 })*/
 
 app.route("/mock").get( (req,res,next) => {
-   ioss.emit("cooks");
+   ios.emit("cooks");
 
    return res.status(200).json( "bella vecchio" );
 });
@@ -272,7 +269,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
    //perchè la patch con findOneAndUpdate ritora sempre un valore vecchio?
    table.getModel().findOneAndUpdate( {number: req.params.number}, { $set: update}, ).then( (data : table.Table) => {
       //notifico sul socket
-      /*emitEvent("modified table", req.params.number)*/
+      emitEvent("modified table", req.params.number)
 
       return res.status(200).json( {
          number: data.number,
@@ -402,9 +399,9 @@ app.route("/tickets").get(auth, (req, res, next) => {
    if(req.query.orders && !ticket.orderState.filter((val) => val === req.query.orders))
       return next({ statusCode:400, error: true, errormessage: "The state of orders accepted are ordered, preparation, ready, delivered and all"})
 
-   ioss.emit("cooks");
-   ioss.emit("waiters");
-   ioss.emit("paydesks");
+   //ioss.emit("cooks");
+   //ioss.emit("waiters");
+   //ioss.emit("paydesks");
 
    //trovo i tickets
    ticket.getModel().find(filter).then( (ticketslist : ticket.Ticket[]) => {
@@ -547,11 +544,11 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
       item.getModel().findOne({ name: newer.name_item}).then( (i: item.Item) => {
          //console.log("AAAAAAA:\n" + i + "\n");
          if (i.type == item.type[0]){
-            //console.log("DISH")
-            /*emitEvent("ordered dish", req.params.id);*/
+            console.log("DISH")
+            emitEvent("ordered dish", req.params.id);
          } else if (i.type == item.type[1]){
-            //console.log("DRINK");
-            /*emitEvent("ordered drink", req.params.id);*/
+            console.log("DRINK");
+            emitEvent("ordered drink", req.params.id);
          }
          return res.status(200).json( {error:false, errormessage:""} );
       }).catch((err) => {
@@ -585,10 +582,10 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
       data.save();
       
       if (req.body.state == ticket.orderState[2]){
-         /*emitEvent("ready item", req.params.idTicket);*/
+         emitEvent("ready item", req.params.idTicket);
       }
       else if(req.body.state == ticket.orderState[1]){
-         /*emitEvent("dish in preparation", req.params.idTicket);*/
+         emitEvent("dish in preparation", req.params.idTicket);
       }
 
       return res.status(200).json( {error:false, errormessage:""} );
@@ -856,12 +853,12 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
       });
    });
 
-   /*let server = http.createServer(app);
-   var ioss = io(server);
-   ioss.on('connection', function(client) {
+   let server = http.createServer(app);
+   var ios = io(server);
+   ios.on('connection', function(client) {
       console.log( "Socket.io client connected");      
-   });*/
-   server.listen( 8080, () => console.log("HTTP Server started on port 8080") );
+   });
+   //server.listen( 8080, () => console.log("HTTP Server started on port 8080") );
 
 }, function onrejected() {
     console.log("Unable to connect to MongoDB");
