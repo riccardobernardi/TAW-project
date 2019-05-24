@@ -22,50 +22,33 @@ export class InsertOrdersComponent implements OnInit {
   private selMenuEntry: Item;
   private dd;
 
-  constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {
-    const tickets_sup = this.tickets;
-    const items_sup = this.items;
-    this.dd = function () {
-      items_sup.splice(0, items_sup.length);
+  constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
+              private socketio: SocketioService) {
+    const ticketsSup = this.tickets;
+    const itemsSup = this.items;
+    this.dd = () => {
+      itemsSup.splice(0, itemsSup.length);
       console.log('received an emit');
-      console.log(items_sup);
+      console.log(itemsSup);
       item.get_Items().subscribe( (dd) => {
         dd.forEach( (ss) => {
-          items_sup.push(ss);
+          itemsSup.push(ss);
         });
       });
 
-      tickets_sup.splice(0, items_sup.length);
+      ticketsSup.splice(0, itemsSup.length);
       ticket.get_tickets({waiter: us.get_nick(), state: 'open'}).subscribe((dd) => {
         dd.forEach( (ss) => {
-          tickets_sup.push(ss);
+          ticketsSup.push(ss);
         });
       });
-    }
+    };
   }
 
   ngOnInit() {
     this.dd();
     this.socketio.get().on('waiters', this.dd);
   }
-
-  /*dd() {
-    console.log('received an emit');
-    console.log(this.tickets);
-    this.item.get_Items().subscribe( (dd) => {
-      dd.forEach( (ss) => {
-        this.items.push(ss);
-      });
-    });
-
-    this.ticket.get_tickets({waiter: this.us.get_nick(), state: 'open'}).subscribe((dd) => {
-      dd.forEach( (ss) => {
-        this.tickets.push(ss);
-      });
-    });
-    this.selTicket = this.tickets[0];
-    this.selMenuEntry = this.items[0];
-  }*/
 
   insertItem(item: Item, quantity: number) {
     for (let i = 0; i < quantity; i++) {
