@@ -24,6 +24,7 @@ export class OrdersServedComponent implements OnInit {
     this.dd = () => {
       ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
         ticket_sup.splice(0, ticket_sup.length);
+        console.log(dd);
         dd.forEach( (ss) => {
           ticket_sup.push(ss);
           ss.orders.sort((a: TicketOrder, b: TicketOrder) => {
@@ -32,6 +33,7 @@ export class OrdersServedComponent implements OnInit {
         });
         console.log(ticket_sup);
       });
+      console.log(ticket_sup);
     };
   }
 

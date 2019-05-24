@@ -29,7 +29,7 @@
         <button (click)="insertItem(selMenuEntry, counter)">Insert</button>
       </div>
 
-      <div>
+      <div *ngIf="selTicket">
         <label>Elementi inseriti nell'ordine per il tavolo {{selTicket.table}}</label>
         <ul>
           <li *ngFor="let item of itemsSelected; let i = index">
