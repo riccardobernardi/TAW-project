@@ -94,6 +94,7 @@ export class UserHttpService {
   }
 
   get_token() {
+    this.token = localStorage.getItem("restaurant_token")
     console.log(this.token);
     return this.token;
   }
