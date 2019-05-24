@@ -1,25 +1,25 @@
 "use strict";
-exports.__esModule = true;
-var result = require('dotenv').config({ path: __dirname + '/.env' }); // The dotenv module will load a file named ".env"
+Object.defineProperty(exports, "__esModule", { value: true });
+const result = require('dotenv').config({ path: __dirname + '/.env' }); // The dotenv module will load a file named ".env"
 var ObjectID = require('mongodb').ObjectID;
-var http = require("http"); // HTTP module
+const http = require("http"); // HTTP module
 /*import colors = require('colors');
 colors.enabled = true;*/
-var mongoose = require("mongoose");
-var express = require("express");
-var bodyparser = require("body-parser"); // body-parser middleware is used to parse the request body and
+const mongoose = require("mongoose");
+const express = require("express");
+const bodyparser = require("body-parser"); // body-parser middleware is used to parse the request body and
 // directly provide a Javascript object if the "Content-type" is
 // application/json
-var passport = require("passport"); // authentication middleware for express
-var passportHTTP = require("passport-http"); // implements Basic and Digest authentication for HTTP (used for /login endpoint)
-var jsonwebtoken = require("jsonwebtoken"); // JWT generation
-var jwt = require("express-jwt"); // JWT parsing middleware for express
-var cors = require("cors"); // Enable CORS middleware
-var io = require("socket.io"); // Socket.io websocket library
-var table = require("./Table");
-var user = require("./User");
-var ticket = require("./Ticket");
-var item = require("./Item");
+const passport = require("passport"); // authentication middleware for express
+const passportHTTP = require("passport-http"); // implements Basic and Digest authentication for HTTP (used for /login endpoint)
+const jsonwebtoken = require("jsonwebtoken"); // JWT generation
+const jwt = require("express-jwt"); // JWT parsing middleware for express
+const cors = require("cors"); // Enable CORS middleware
+const io = require("socket.io"); // Socket.io websocket library
+const table = require("./Table");
+const user = require("./User");
+const ticket = require("./Ticket");
+const item = require("./Item");
 var app = express();
 /*var http = require('http').Server(app);
 var ioss = require('socket.io')(http);*/
@@ -41,23 +41,23 @@ var ios = undefined;
 var rooms = ["waiters", "cooks", "desks", "bartenders"];
 var socketEvents = {
     "modified table": {
-        destRooms: [rooms[0], rooms[2]]
+        destRooms: [rooms[0], rooms[2]],
     },
     "ordered dish": {
-        destRooms: [rooms[1]]
+        destRooms: [rooms[1]],
     },
     "ordered drink": {
-        destRooms: [rooms[3]]
+        destRooms: [rooms[3]],
     },
     "dish in preparation": {
-        destRooms: [rooms[1]]
+        destRooms: [rooms[1]],
     },
     "ready item": {
-        destRooms: [rooms[0], rooms[1]]
+        destRooms: [rooms[0], rooms[1]],
     }
 };
 function emitEvent(eventType, data) {
-    socketEvents[eventType].destRooms.forEach(function (r) {
+    socketEvents[eventType].destRooms.forEach(r => {
         //ios.emit(eventType, data).on(r);
         ios.emit(r);
     });
@@ -68,7 +68,7 @@ app.use(cors());
 app.use(bodyparser.json());
 // Add API routes to express application
 //
-app.get("/", function (req, res) {
+app.get("/", (req, res) => {
     res.status(200).json({
         api_version: "0.1.0",
         endpoints: ["/login", "/users", "/tables", "/items", "/tickets", "/tickets/:id/orders", "/reports"]
@@ -83,11 +83,11 @@ app.get("/", function (req, res) {
    console.log("trigger");
    ios.emit("paydesks");
 })*/
-app.route("/mock").get(function (req, res, next) {
+app.route("/mock").get((req, res, next) => {
     ios.emit("cooks");
     return res.status(200).json("bella vecchio");
 });
-app.route("/users").get(auth, function (req, res, next) {
+app.route("/users").get(auth, (req, res, next) => {
     //da togliere
     console.log(JSON.stringify(req.headers));
     console.log(typeof (req.body.date));
@@ -99,12 +99,12 @@ app.route("/users").get(auth, function (req, res, next) {
     if (req.query.role)
         filter.role = req.query.role;
     //query
-    user.getModel().find(filter, "username role").then(function (userslist) {
+    user.getModel().find(filter, "username role").then((userslist) => {
         return res.status(200).json(userslist);
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
-}).post(auth, function (req, res, next) {
+}).post(auth, (req, res, next) => {
     //autenticazione
     if (!user.newUser(req.user).hasDeskRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
@@ -115,26 +115,26 @@ app.route("/users").get(auth, function (req, res, next) {
     var u = user.newUser(req.body);
     u.setPassword(req.body.password);
     //query
-    u.save().then(function (data) {
+    u.save().then((data) => {
         return res.status(200).json({ error: false, errormessage: "", id: data._id });
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         if (reason.code === 11000)
             return next({ statusCode: 409, error: true, errormessage: "User already exists" });
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason.errmsg });
     });
 });
 //cambiare username con id restituito da mongo e maagari aggiungere filtri su username in get users?
-app.route("/users/:username")["delete"](auth, function (req, res, next) {
+app.route("/users/:username").delete(auth, (req, res, next) => {
     //autenticazione
     if (!user.newUser(req.user).hasDeskRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
     //query al DB
-    user.getModel().deleteOne({ username: req.params.username }).then(function () {
+    user.getModel().deleteOne({ username: req.params.username }).then(() => {
         return res.status(200).json({ error: false, errormessage: "" });
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
-}).put(auth, function (req, res, next) {
+}).put(auth, (req, res, next) => {
     //autenticazione
     if (!user.newUser(req.user).hasDeskRole()) {
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
@@ -152,24 +152,24 @@ app.route("/users/:username")["delete"](auth, function (req, res, next) {
     //query dal DB
     //errore strano con findOneAndReplace, poi vedere, altrimenti tenere findOneAndUpdate
     //occhio al setting dei campi, si può fare diversamente?
-    user.getModel().findOneAndUpdate({ username: req.params.username }, { $set: { username: req.body.username, password: req.body.password, role: req.body.role } }).then(function (data) {
+    user.getModel().findOneAndUpdate({ username: req.params.username }, { $set: { username: req.body.username, password: req.body.password, role: req.body.role } }).then((data) => {
         return res.status(200).json(data);
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 });
-app.route("/tables").get(auth, function (req, res, next) {
+app.route("/tables").get(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
     //query al DB
-    table.getModel().find({}, { number: 1, max_people: 1, _id: 0, state: 1 }).then(function (tableslist) {
+    table.getModel().find({}, { number: 1, max_people: 1, _id: 0, state: 1 }).then((tableslist) => {
         return res.status(200).json(tableslist);
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
-}).post(auth, function (req, res, next) {
+}).post(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
@@ -177,28 +177,28 @@ app.route("/tables").get(auth, function (req, res, next) {
     //creo tavolo da aggiungere
     var Table = table.getModel();
     //query al DB
-    (new Table(req.body)).save().then(function (data) {
+    (new Table(req.body)).save().then((data) => {
         return res.status(200).json({
             number: data.number,
             max_people: data.number
         });
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 });
 ;
-app.route("/tables/:number").get(auth, function (req, res, next) {
+app.route("/tables/:number").get(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
     //query al DB
-    table.getModel().find({ number: req.params.number }, { number: 1, max_people: 1 }).then(function (table) {
+    table.getModel().find({ number: req.params.number }, { number: 1, max_people: 1 }).then((table) => {
         return res.status(200).json(table);
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
-}).patch(auth, function (req, res, next) {
+}).patch(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
@@ -213,7 +213,7 @@ app.route("/tables/:number").get(auth, function (req, res, next) {
     if (req.body.state)
         update.state = req.body.state;
     //perchè la patch con findOneAndUpdate ritora sempre un valore vecchio?
-    table.getModel().findOneAndUpdate({ number: req.params.number }, { $set: update }).then(function (data) {
+    table.getModel().findOneAndUpdate({ number: req.params.number }, { $set: update }).then((data) => {
         //notifico sul socket
         emitEvent("modified table", req.params.number);
         return res.status(200).json({
@@ -221,11 +221,11 @@ app.route("/tables/:number").get(auth, function (req, res, next) {
             max_people: data.number,
             state: data.state
         });
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 });
-app.route("/items").get(auth, function (req, res, next) {
+app.route("/items").get(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
@@ -235,12 +235,12 @@ app.route("/items").get(auth, function (req, res, next) {
     if (req.query.type)
         filter.type = req.query.type;
     //query al DB
-    item.getModel().find(filter, "name type price required_time ingredients").then(function (itemslist) {
+    item.getModel().find(filter, "name type price required_time ingredients").then((itemslist) => {
         return res.status(200).json(itemslist);
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
-}).post(auth, function (req, res, next) {
+}).post(auth, (req, res, next) => {
     //autenticazione
     if (!user.newUser(req.user).hasDeskRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
@@ -252,26 +252,26 @@ app.route("/items").get(auth, function (req, res, next) {
     if (!item.isItem(i))
         return next({ statusCode: 400, error: true, errormessage: "Wrong format" });
     //inserisco
-    i.save().then(function (data) {
+    i.save().then((data) => {
         return res.status(200).json({ error: false, errormessage: "", id: data._id });
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         if (reason.code === 11000)
             return next({ statusCode: 409, error: true, errormessage: "Item already exists" });
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason.errmsg });
     });
 });
 /*DECIDERE SE UTILIZZARE ALTRI CAMPI o SEMPRE ID*/
-app.route("/items/:id").get(auth, function (req, res, next) {
+app.route("/items/:id").get(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
-    item.getModel().findById(req.params.id).then(function (item) {
+    item.getModel().findById(req.params.id).then((item) => {
         return res.status(200).json(item);
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
-}).put(auth, function (req, res, next) {
+}).put(auth, (req, res, next) => {
     //autenticazione
     if (!user.newUser(req.user).hasDeskRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
@@ -280,25 +280,25 @@ app.route("/items/:id").get(auth, function (req, res, next) {
     //controllo validità dell'item creato (formato campi inseriti)
     if (!item.isItem(i))
         return next({ statusCode: 400, error: true, errormessage: "Wrong format" });
-    item.getModel().findById(req.params.id).then(function (item) {
+    item.getModel().findById(req.params.id).then((item) => {
         return item.set(i).save();
-    }).then(function (item) {
+    }).then((item) => {
         return res.status(200).json(item);
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
-})["delete"](auth, function (req, res, next) {
+}).delete(auth, (req, res, next) => {
     //autenticazione
     if (!user.newUser(req.user).hasDeskRole()) {
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
     }
-    item.getModel().findOneAndDelete({ _id: req.params.id }).then(function () {
+    item.getModel().findOneAndDelete({ _id: req.params.id }).then(() => {
         return res.status(200).json({ error: false, errormessage: "" });
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 });
-app.route("/tickets").get(auth, function (req, res, next) {
+app.route("/tickets").get(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole() && !sender.hasCookRole)
@@ -318,18 +318,18 @@ app.route("/tickets").get(auth, function (req, res, next) {
     console.log(filter);
     //TODO migliorare il controllo del formato
     //controllo formato della query sullo stato degli ordini
-    if (req.query.orders && !ticket.orderState.filter(function (val) { return val === req.query.orders; }))
+    if (req.query.orders && !ticket.orderState.filter((val) => val === req.query.orders))
         return next({ statusCode: 400, error: true, errormessage: "The state of orders accepted are ordered, preparation, ready, delivered and all" });
     //ioss.emit("cooks");
     //ioss.emit("waiters");
     //ioss.emit("paydesks");
     //trovo i tickets
-    ticket.getModel().find(filter).then(function (ticketslist) {
+    ticket.getModel().find(filter).then((ticketslist) => {
         //se specificato, filtro gli ordini utilizzando il loro stato
         if (req.query.orders && (req.query.orders != ticket.orderState[4])) {
             var orders = [];
-            ticketslist.forEach(function (ticket) {
-                var ticket_orders = ticket.orders.filter((function (order) { return order.state == req.query.orders; }));
+            ticketslist.forEach((ticket) => {
+                var ticket_orders = ticket.orders.filter((order => order.state == req.query.orders));
                 if (ticket_orders.length != 0) {
                     orders.push({
                         ticket_id: ticket.id,
@@ -344,10 +344,10 @@ app.route("/tickets").get(auth, function (req, res, next) {
             console.log("vado in else" + ticketslist);
             return res.status(200).json(ticketslist);
         }
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
-}).post(auth, function (req, res, next) {
+}).post(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
@@ -369,26 +369,26 @@ app.route("/tickets").get(auth, function (req, res, next) {
     var t = new (ticket.getModel())(newer);
     //da togliere
     console.log(t);
-    t.save().then(function (data) {
+    t.save().then((data) => {
         return res.status(200).json({ error: false, errormessage: "", _id: data._id });
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         if (reason.code === 11000)
             return next({ statusCode: 409, error: true, errormessage: "Ticket already exists" });
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason.errmsg });
     });
 });
-app.route('/tickets/:id').get(auth, function (req, res, next) {
+app.route('/tickets/:id').get(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
     //trovo e restituisco il ticket richiesto
-    ticket.getModel().findById(req.params.id).then(function (data) {
+    ticket.getModel().findById(req.params.id).then((data) => {
         return res.status(200).json(data);
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
-}).patch(auth, function (req, res, next) {
+}).patch(auth, (req, res, next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole()) {
@@ -406,20 +406,20 @@ app.route('/tickets/:id').get(auth, function (req, res, next) {
         update.end = req.body.end;
     if (req.body.state)
         update.state = req.body.state;
-    ticket.getModel().findOneAndUpdate({ _id: req.params.id }, { $set: update }).then(function (data) {
+    ticket.getModel().findOneAndUpdate({ _id: req.params.id }, { $set: update }).then((data) => {
         return res.status(200).json({ error: false, errormessage: "" });
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 });
-app.route('/tickets/:id/orders').get(auth, function (req, res, next) {
+app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
     //trovo e restituisco gli ordini del ticket richiesto
-    ticket.getModel().findById(req.params.id).then(function (data) {
+    ticket.getModel().findById(req.params.id).then((data) => {
         return res.status(200).json(data.orders);
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
-}).post(auth, function (req, res, next) {
+}).post(auth, (req, res, next) => {
     //autenticazioni
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
@@ -439,9 +439,9 @@ app.route('/tickets/:id/orders').get(auth, function (req, res, next) {
     newer.state = ticket.orderState[0];
     newer.state = ticket.orderState[0];
     //inserisco order nel DB
-    ticket.getModel().update({ _id: req.params.id }, { $push: { orders: newer } }).then(function () {
+    ticket.getModel().update({ _id: req.params.id }, { $push: { orders: newer } }).then(() => {
         //controllo il tipo di order inserito e mando un evento sulla stanza relativa
-        item.getModel().findOne({ name: newer.name_item }).then(function (i) {
+        item.getModel().findOne({ name: newer.name_item }).then((i) => {
             //console.log("AAAAAAA:\n" + i + "\n");
             if (i.type == item.type[0]) {
                 console.log("DISH");
@@ -452,20 +452,20 @@ app.route('/tickets/:id/orders').get(auth, function (req, res, next) {
                 emitEvent("ordered drink", req.params.id);
             }
             return res.status(200).json({ error: false, errormessage: "" });
-        })["catch"](function (err) {
+        }).catch((err) => {
             return res.status(500).json({ error: true, errormessage: err });
         });
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 });
-app.route('/tickets/:idTicket/orders/:idOrder').patch(auth, function (req, res, next) {
+app.route('/tickets/:idTicket/orders/:idOrder').patch(auth, (req, res, next) => {
     //controllo formato richiesta
     if (!req.body || (req.body.state && typeof (req.body.state) != 'string')) {
         return next({ statusCode: 400, error: true, errormessage: "Wrong format" });
     }
     //trovo il ticket usando l'id specificato nella richiesta
-    ticket.getModel().findById(req.params.idTicket).then(function (data) {
+    ticket.getModel().findById(req.params.idTicket).then((data) => {
         if (!data) {
             return next({ statusCode: 404, error: true, errormessage: "Ticket id not found" });
         }
@@ -483,11 +483,11 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch(auth, function (req, res, 
             emitEvent("dish in preparation", req.params.idTicket);
         }
         return res.status(200).json({ error: false, errormessage: "" });
-    })["catch"](function (reason) {
+    }).catch((reason) => {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 });
-app.get('/renew', auth, function (req, res, next) {
+app.get('/renew', auth, (req, res, next) => {
     var tokendata = req.user;
     delete tokendata.iat;
     delete tokendata.exp;
@@ -502,7 +502,7 @@ passport.use(new passportHTTP.BasicStrategy(function (username, password, done) 
     // Delegate function we provide to passport middleware
     // to verify user credentials 
     console.log("New login attempt from " /*.green*/ + username);
-    user.getModel().findOne({ username: username }, function (err, user) {
+    user.getModel().findOne({ username: username }, (err, user) => {
         if (err) {
             return done({ statusCode: 500, error: true, errormessage: err });
         }
@@ -517,11 +517,11 @@ passport.use(new passportHTTP.BasicStrategy(function (username, password, done) 
 }));
 // Login endpoint uses passport middleware to check
 // user credentials before generating a new JWT
-app.get("/login", passport.authenticate('basic', { session: false }), function (req, res, next) {
+app.get("/login", passport.authenticate('basic', { session: false }), (req, res, next) => {
     //genero il token
     var tokendata = {
         username: req.user.username,
-        role: req.user.role
+        role: req.user.role,
     };
     console.log("Login granted. Generating token");
     var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '1h' });
@@ -533,24 +533,24 @@ app.use(function (err, req, res, next) {
     console.log("Request error: " /*.red*/ + JSON.stringify(err));
     res.status(err.statusCode || 500).json(err);
 });
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
     res.status(404).json({ statusCode: 404, error: true, errormessage: "Invalid endpoint" });
 });
 mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnected() {
     console.log("Connected to MongoDB");
     //inizializzazione DB
-    user.getModel().deleteMany({}).then(function (data) {
+    user.getModel().deleteMany({}).then(data => {
         console.log("Database users pulito: " + data);
         var u = user.newUser({
-            username: "admin"
+            username: "admin",
         });
         u.setDesk();
         u.setPassword("admin");
         return u.save();
-    }).then(function () {
+    }).then(() => {
         console.log("Admin user created");
         return user.getModel().count({});
-    }).then(function (count) {
+    }).then((count) => {
         console.log(count);
         if (count != 0) {
             console.log("Adding some test data into the database");
@@ -581,14 +581,15 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
             Promise.all([pr1, pr2, pr3, pr4])
                 .then(function () {
                 console.log("Users saved");
-            })["catch"](function (reason) {
+            })
+                .catch(function (reason) {
                 console.log("Unable to save: " + reason);
             });
         }
-    })["catch"](function (err) {
+    }).catch(err => {
         console.log("Errore " + err);
     });
-    table.getModel().deleteMany({}).then(function (data) {
+    table.getModel().deleteMany({}).then(data => {
         console.log("Database tables pulito: " + data);
         var tableModel = table.getModel();
         var t1 = (new tableModel({ number: 1, max_people: 4 })).save();
@@ -596,13 +597,13 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
         var t3 = (new tableModel({ number: 3, max_people: 6 })).save();
         Promise.all([t1, t2, t3]).then(function () {
             console.log("Table saved");
-        })["catch"](function (reason) {
+        }).catch(function (reason) {
             console.log("Unable to save tables: " + reason);
         });
-    })["catch"](function (err) {
+    }).catch(err => {
         console.log("Errore nella pulizia del dataset tables: " + err);
     });
-    item.getModel().deleteMany({}).then(function (data) {
+    item.getModel().deleteMany({}).then(data => {
         console.log("Dataset items pulito: " + data);
         var itemModel = item.getModel();
         var i1 = (new itemModel({
@@ -647,11 +648,11 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
         })).save();
         Promise.all([i1, i2, i3, i4, i5]).then(function () {
             console.log("Items saved");
-        })["catch"](function (reason) {
+        }).catch(function (reason) {
             console.log("Unable to save items: " + reason);
         });
     });
-    ticket.getModel().deleteMany({}).then(function (data) {
+    ticket.getModel().deleteMany({}).then(data => {
         var ticketModel = ticket.getModel();
         var ti1 = new ticketModel({
             waiter: "waiter1",
@@ -723,17 +724,18 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
         //fine inizializzazione DB
         Promise.all([ti1, ti2, ti3]).then(function () {
             console.log("Tickets saved");
-        })["catch"](function (reason) {
+        }).catch(function (reason) {
             console.log("Unable to save tickets: " + reason);
         });
     });
-    var server = http.createServer(app);
+    let server = http.createServer(app);
     ios = io(server);
     ios.on('connection', function (client) {
         console.log("Socket.io client connected");
     });
-    server.listen(8080, function () { return console.log("HTTP Server started on port 8080"); });
+    server.listen(8080, () => console.log("HTTP Server started on port 8080"));
 }, function onrejected() {
     console.log("Unable to connect to MongoDB");
     process.exit(-2);
 });
+//# sourceMappingURL=restaurant-server.js.map
