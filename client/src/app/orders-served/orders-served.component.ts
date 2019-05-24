@@ -19,21 +19,27 @@ export class OrdersServedComponent implements OnInit {
   //socketObserver: Observable<any>;
   private dd;
 
-  constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService, private socketio: SocketioService) { 
-    const ticket_sup = this.tickets;
+  constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {
+    const ticketSup = this.tickets;
     this.dd = () => {
-      ticket.get_tickets({state: 'open', waiter: this.us.get_nick()}).subscribe( (dd) => {
-        ticket_sup.splice(0, ticket_sup.length);
+      let mm;
+      if (this.us.get_role() === 'desk') {
+        mm = ticket.get_tickets({state: 'open', waiter: this.us.get_nick()});
+      } else {
+        mm = ticket.get_tickets({state: 'open'});
+      }
+      mm.subscribe( (dd) => {
+        ticketSup.splice(0, ticketSup.length);
         console.log(dd);
         dd.forEach( (ss) => {
-          ticket_sup.push(ss);
+          ticketSup.push(ss);
           ss.orders.sort((a: TicketOrder, b: TicketOrder) => {
             return a.price - b.price;
           });
         });
-        console.log(ticket_sup);
+        console.log(ticketSup);
       });
-      console.log(ticket_sup);
+      console.log(ticketSup);
     };
   }
 
