@@ -33,8 +33,7 @@ var tableSchema = new mongoose.Schema( {
     },
     state: {
         type: mongoose.SchemaTypes.ObjectId,
-        required: false,
-        enum: ["free", "occupied"]
+        required: false
     }
 })
 
