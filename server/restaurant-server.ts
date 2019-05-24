@@ -577,7 +577,14 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
       toChange[0].state = req.body.state;
       data.save();
       
+      //controllo che tutti gli ordini dello stesso tipo e dello stesso ticket siano pronti
+      var ordersList;
+      ticket.getModel().findById(req.params.idTicket).then((data: ticket.Ticket) => {
+         ordersList = data.orders.filter()
+      });
+
       if (req.body.state == ticket.orderState[2]){
+
          emitEvent("ready item", req.params.idTicket);
       }
       else if(req.body.state == ticket.orderState[1]){
@@ -727,6 +734,8 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
    }).catch(err => {
       console.log("Errore nella pulizia del dataset tables: " + err);
    });
+
+   
    
 
    item.getModel().deleteMany({}).then(data => {
@@ -810,7 +819,11 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
          }],
          state: ticket.ticketState[0],
          total: 0
-      }).save();
+      }).save().then((data) => {
+         table.getModel().findOneAndUpdate({number: 1}, {state: data._id});
+      });
+
+      
 
       var ti3 = new ticketModel({
          waiter: "waiter1",
@@ -826,7 +839,9 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
          }],
          state: ticket.ticketState[0],
          total: 0
-      }).save();
+      }).save().then((data) => {
+         table.getModel().findOneAndUpdate({number: 3}, {state: data._id});
+      });
 
       var ti2 = new ticketModel({
          waiter: "waiter2",
@@ -857,7 +872,9 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
          }],
          state: ticket.ticketState[0],
          total: 0
-      }).save();
+      }).save().then((data) => {
+         table.getModel().findOneAndUpdate({number: 2}, {state: data._id});
+      });
 
       //fine inizializzazione DB
       Promise.all([ti1, ti2, ti3]).then(function () {
