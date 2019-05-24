@@ -820,7 +820,8 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
          state: ticket.ticketState[0],
          total: 0
       }).save().then((data) => {
-         table.getModel().findOneAndUpdate({number: 1}, {state: data._id});
+         console.log(data);
+         table.getModel().findOneAndUpdate({number: 1}, {$set: {state: data._id}}).then();
       });
 
       
@@ -840,7 +841,7 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
          state: ticket.ticketState[0],
          total: 0
       }).save().then((data) => {
-         table.getModel().findOneAndUpdate({number: 3}, {state: data._id});
+         table.getModel().findOneAndUpdate({number: 3}, {$set: {state: data._id}}).then();
       });
 
       var ti2 = new ticketModel({
@@ -873,7 +874,7 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
          state: ticket.ticketState[0],
          total: 0
       }).save().then((data) => {
-         table.getModel().findOneAndUpdate({number: 2}, {state: data._id});
+         table.getModel().findOneAndUpdate({number: 2},{$set: {state: data._id}}).then();
       });
 
       //fine inizializzazione DB
