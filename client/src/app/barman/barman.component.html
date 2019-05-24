@@ -11,8 +11,7 @@
     <div *ngFor="let order of ticket.orders">
       <p class="card-text">{{ order.name_item }}</p>
       <form class="form-inline">
-        <div *ngIf="order.state == 'ordered'" class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="setOrderinProgress(ticket._id, order._id)">In progress</button></div>
-        <div *ngIf="order.state == 'preparation'" class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="setOrderCompleted(ticket._id, order._id)">Completed</button></div>
+        <div *ngIf="order.state == 'ordered'" class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="setOrderCompleted(ticket._id, order._id)">Completed</button></div>
       </form>
     </div>
 

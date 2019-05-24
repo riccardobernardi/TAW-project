@@ -29,8 +29,8 @@ export class BarmanComponent implements OnInit {
         ticket_sup.splice(0, ticket_sup.length);
         dd.forEach( (ss) => {
           console.log(ss.orders);
-          var orders = ss.orders.filter((order : TicketOrder) => order.state != 'ready' && order.state != "delivered" && order.type_item != "dish");
-          if(orders.length != 0) {
+          let orders = ss.orders.filter((order: TicketOrder) => order.state != 'ready' && order.state != 'delivered' && order.state != 'preparation' && order.type_item != 'dish');
+          if (orders.length != 0) {
             ticket_sup.push(ss);
             orders.sort((a: TicketOrder, b: TicketOrder) => {
               return a.price - b.price;
@@ -59,18 +59,18 @@ export class BarmanComponent implements OnInit {
 
   setOrderinProgress(ticketid: string, orderid: string) {
     console.log(ticketid, orderid);
-    this.ticket.changeOrderState(ticketid, orderid, "preparation").toPromise().then(() => {
-      console.log("Changing state to preparation OK");
+    this.ticket.changeOrderState(ticketid, orderid, 'preparation').toPromise().then(() => {
+      console.log('Changing state to preparation OK');
     }).catch((err) => {
-      console.log("Changing state to prepation failed: " + err);
+      console.log('Changing state to prepation failed: ' + err);
     });
   }
 
   setOrderCompleted(ticketid: string, orderid: string) {
-    this.ticket.changeOrderState(ticketid, orderid, "ready").toPromise().then(() => {
-      console.log("Changing state to ready OK");
+    this.ticket.changeOrderState(ticketid, orderid, 'ready').toPromise().then(() => {
+      console.log('Changing state to ready OK');
     }).catch((err) => {
-      console.log("Changing state to ready failed: " + err);
+      console.log('Changing state to ready failed: ' + err);
     });
   }
 

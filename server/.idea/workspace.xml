@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../client/src/app/barman/barman.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/barman/barman.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/insert-orders/insert-orders.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/insert-orders/insert-orders.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/logout/logout.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/logout/logout.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/tables-view/tables-view.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/tables-view/tables-view.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/tables-view/tables-view.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/tables-view/tables-view.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/restaurant-server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/restaurant-server.js" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/restaurant-server.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js.map" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -24,8 +19,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1061">
-              <caret line="21" column="31" lean-forward="true" selection-start-line="21" selection-start-column="31" selection-end-line="21" selection-end-column="31" />
+            <state relative-caret-position="123">
+              <caret line="580" column="8" selection-start-line="580" selection-start-column="6" selection-end-line="583" selection-end-column="11" />
               <folding>
                 <element signature="e#168#194#0" expanded="true" />
                 <element signature="e#380#418#0" expanded="true" />
@@ -161,16 +156,15 @@
       <workItem from="1558545642819" duration="3291000" />
       <workItem from="1558601233992" duration="1241000" />
       <workItem from="1558606410823" duration="1336000" />
-      <workItem from="1558705302424" duration="351000" />
+      <workItem from="1558705302424" duration="602000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10683000" />
+    <option name="totallyTimeSpent" value="10934000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -221,8 +215,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1061">
-          <caret line="21" column="31" lean-forward="true" selection-start-line="21" selection-start-column="31" selection-end-line="21" selection-end-column="31" />
+        <state relative-caret-position="123">
+          <caret line="580" column="8" selection-start-line="580" selection-start-column="6" selection-end-line="583" selection-end-column="11" />
           <folding>
             <element signature="e#168#194#0" expanded="true" />
             <element signature="e#380#418#0" expanded="true" />
