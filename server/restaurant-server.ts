@@ -578,10 +578,10 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
       data.save();
       
       //controllo che tutti gli ordini dello stesso tipo e dello stesso ticket siano pronti
-      var ordersList;
+      /*var ordersList;
       ticket.getModel().findById(req.params.idTicket).then((data: ticket.Ticket) => {
          ordersList = data.orders.filter()
-      });
+      });*/
 
       if (req.body.state == ticket.orderState[2]){
 
