@@ -578,14 +578,17 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
       data.save();
       
       //controllo che tutti gli ordini dello stesso tipo e dello stesso ticket siano pronti
-      var ordersList: Array<ticket.Order>;
+      var ordersList: Array<ticket.Order[]> = [];
       ticket.getModel().findById(req.params.idTicket).then((data: ticket.Ticket) => {
-         ordersList = data.orders.filter((order: ticket.Order) => {
+         console.log(data);
+         ordersList.push(data.orders.filter((order: ticket.Order) => {
+            console.log(order);
             return (order.state != ticket.orderState[2] && order.type_item ==  toChange[0].type_item && order.state != ticket.orderState[3]);
-         });
+         }));
+         console.log("La porcamadonna di orderlist " + ordersList);
       });
 
-      if (req.body.state == ticket.orderState[2] && ordersList.length == 0)
+      if (req.body.state == ticket.orderState[2] && !ordersList[0])
          emitEvent("ready item", req.params.idTicket);      
          else if(req.body.state == ticket.orderState[1]){
          emitEvent("dish in preparation", req.params.idTicket);
