@@ -22,7 +22,7 @@ export class OrdersServedComponent implements OnInit {
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService, private socketio: SocketioService) { 
     const ticket_sup = this.tickets;
     this.dd = () => {
-      ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
+      ticket.get_tickets({state: 'open', waiter: this.us.get_nick()}).subscribe( (dd) => {
         ticket_sup.splice(0, ticket_sup.length);
         console.log(dd);
         dd.forEach( (ss) => {
@@ -53,7 +53,7 @@ export class OrdersServedComponent implements OnInit {
   deliver(ticketIndex: number, orderIndex: number, state: string) {
     const ticket = this.tickets[ticketIndex];
     this.ticket.changeOrderState(ticket._id, ticket.orders[orderIndex]._id, 'delivered').toPromise().then((data) => {
-      ticket.orders[orderIndex].state = "delivered";
+      ticket.orders[orderIndex].state = 'delivered';
     }).catch((err) => console.log(err));
   }
 
