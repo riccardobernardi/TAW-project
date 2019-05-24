@@ -104,6 +104,8 @@ export class PaydeskComponent implements OnInit {
   }
 
   allGain() {
-    return this.tickets.map( (x) => x.orders.map( (y) => y.price).reduce( (total, amount) => total + amount )).reduce( (total, amount) => total + amount);
+    return this.tickets.map( (x) => x.orders.map( (y) => y.price)
+      .reduce( (total, amount) => total + amount ))
+      .reduce( (total, amount) => total + amount);
   }
 }
