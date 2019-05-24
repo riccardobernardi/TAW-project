@@ -26,7 +26,7 @@
           <div class="form-group mx-sm-3 mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="sub()">Subtract</button></div>
         </form>
 
-        <button (click)="insertItem(selMenuEntry, counter)">Insert</button>
+        <button class="btn btn-lg btn-primary btn-block" (click)="insertItem(selMenuEntry, counter)">Insert</button>
       </div>
 
       <div *ngIf="selTicket">
@@ -34,12 +34,14 @@
         <ul>
           <li *ngFor="let item of itemsSelected; let i = index">
             {{item.name}}
-            <button (click)="deleteItemFromSelected(i)">Delete</button>
+            <button class="btn btn-lg btn-primary btn-block" (click)="deleteItemFromSelected(i)">Delete</button>
           </li>
         </ul>
       </div>
 
-      <button (click)="sendOrders(selTicket._id, this.us.get_nick(), itemsSelected)">Invia ordini</button>
+      <br>
+
+      <button class="btn btn-lg btn-primary btn-block" (click)="sendOrders(selTicket._id, this.us.get_nick(), itemsSelected)">Invia ordini</button>
     </div>
 
   </form>

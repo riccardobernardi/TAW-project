@@ -29,7 +29,7 @@ export class BarmanComponent implements OnInit {
         ticket_sup.splice(0, ticket_sup.length);
         dd.forEach( (ss) => {
           console.log(ss.orders);
-          var orders = ss.orders.filter((order : TicketOrder) => order.state != "ready" && order.state != "delivered" && order.type_item != "dish");
+          var orders = ss.orders.filter((order : TicketOrder) => order.state != 'ready' && order.state != "delivered" && order.type_item != "dish");
           if(orders.length != 0) {
             ticket_sup.push(ss);
             orders.sort((a: TicketOrder, b: TicketOrder) => {
@@ -49,7 +49,7 @@ export class BarmanComponent implements OnInit {
     }
 
     this.dd();
-    this.socketio.get().on('cooks', this.dd);
+    this.socketio.get().on('bartender', this.dd);
   }
 
   logout() {

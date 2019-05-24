@@ -47,7 +47,7 @@ var socketEvents = {
         destRooms: [rooms[1]],
     },
     "ordered drink": {
-        destRooms: [rooms[3]],
+        destRooms: [rooms[3], rooms[0]],
     },
     "dish in preparation": {
         destRooms: [rooms[1]],

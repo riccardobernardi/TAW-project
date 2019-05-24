@@ -18,7 +18,6 @@ export class TablesViewComponent implements OnInit {
   private tables: Table[] = [];
   private socketObserver: Observable<any>;
 
-
   constructor(private table: TableHttpService, private user: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService) { }
 
   ngOnInit() {

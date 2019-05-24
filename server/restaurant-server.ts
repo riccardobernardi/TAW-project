@@ -60,7 +60,7 @@ var socketEvents = {
       //senderRole: user.roles[0]
    },
    "ordered drink":{
-      destRooms: [rooms[3]],
+      destRooms: [rooms[3],rooms[0]],
       //senderRole: user.roles[0]
    },
    "dish in preparation": {
