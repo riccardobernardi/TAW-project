@@ -164,12 +164,4 @@ export class UserHttpService {
         console.log(JSON.stringify(data) );
       })).subscribe();
   }
-
-  get_tables() {
-    return [1, 2, 3, 4];
-  }
-
-  emitReceipt(seltable) {
-    return 'price is ' + seltable * 20 + '$';
-  }
 }

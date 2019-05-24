@@ -71,24 +71,40 @@
 
   <div class="btn btn-lg btn-primary btn-block" (click)="formEmitReceipt.hidden = !formEmitReceipt.hidden" >Emit Receipt</div>
 
-  <form #formEmitReceipt hidden="true" >
+  <form #formEmitReceipt hidden="true">
 
     <label for="tables">Seleziona un Tavolo</label>
     <select class="form-control" [(ngModel)]="selTable" name="tables">
-      <option *ngFor="let table of this.us.get_tables()" (click)="price.hidden=false" value="{{table}}">{{table}}</option>
+      <option *ngFor="let tt of this.tickets" value="{{tt.table}}">{{tt.table}}</option>
     </select>
 
     <p>price: </p>
 
-    <div [hidden]="false" #price>{{this.us.emitReceipt(selTable)}}</div>
+    <div [hidden]="false" #price>{{emitReceipt(selTable)}}</div>
 
     <p>orders: </p>
 
-    <div *ngFor="let ord of this.order.get(selTable)" class="card" style="margin: 5px" >
-      <div class="card-body">
-        <p class="card-text">{{ ord.selMenuEntry }}</p>
+    <div *ngFor="let ord of this.tickets">
+      <div *ngIf="ord.table==selTable" class="card" style="margin: 5px" >
+        <p class="card-text">{{ ord.table }}</p>
+        <div *ngFor="let ss of ord.orders" class="card" style="margin: 5px" >
+          <div class="card-body">
+            <p class="card-text">{{ ss.name_item }}</p>
+          </div>
+        </div>
       </div>
     </div>
+
+  </form>
+</div>
+<div class="card" style="margin: 5px" >
+
+  <div class="btn btn-lg btn-primary btn-block" (click)="formReports.hidden = !formReports.hidden" >Reports</div>
+
+  <form #formReports hidden="true" >
+
+    <p>Here reports</p>
+    <p>Total gain: {{allGain()}}</p>
 
   </form>
 </div>
