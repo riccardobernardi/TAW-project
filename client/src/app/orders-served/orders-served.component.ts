@@ -24,9 +24,9 @@ export class OrdersServedComponent implements OnInit {
     this.dd = () => {
       let mm;
       if (this.us.get_role() === 'desk') {
-        mm = ticket.get_tickets({state: 'open', waiter: this.us.get_nick()});
-      } else {
         mm = ticket.get_tickets({state: 'open'});
+      } else {
+        mm = ticket.get_tickets({state: 'open', waiter: this.us.get_nick()});
       }
       mm.subscribe( (dd) => {
         ticketSup.splice(0, ticketSup.length);
