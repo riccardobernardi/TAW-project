@@ -67,10 +67,15 @@ var socketEvents = {
       destRooms: [rooms[1]],
       //senderRole: user.roles[1]
    },
-   "ready item": {
-      destRooms: [rooms[0], rooms[1]],
+   "ready item - cooks": {
+      destRooms: [rooms[1]],
       //senderRole: user.roles[1]
-   }
+   },
+   "ready item - waiters": {
+      destRooms: [rooms[0]],
+      //senderRole: user.roles[1]
+   },
+
 };
 
 function emitEvent(eventType, data){
@@ -557,6 +562,8 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
 
 app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
    
+   var order_type;
+
    //controllo formato richiesta
    if ( !req.body || (req.body.state && typeof(req.body.state) != 'string')){
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
@@ -575,25 +582,36 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
       }
 
       toChange[0].state = req.body.state;
-      data.save();
       
-      //controllo che tutti gli ordini dello stesso tipo e dello stesso ticket siano pronti
-      var ordersList: Array<ticket.Order[]> = [];
-      ticket.getModel().findById(req.params.idTicket).then((data: ticket.Ticket) => {
-         console.log(data);
-         ordersList.push(data.orders.filter((order: ticket.Order) => {
-            console.log(order);
-            return (order.state != ticket.orderState[2] && order.type_item ==  toChange[0].type_item && order.state != ticket.orderState[3]);
-         }));
-         console.log("La porcamadonna di orderlist " + ordersList);
-      });
+      order_type = toChange[0].type_item;
+      return data.save();
+      
+   }).then((data) => {
+      console.log(req.body.state);
+      console.log(ticket.orderState[1])
 
-      if (req.body.state == ticket.orderState[2] && !ordersList[0])
-         emitEvent("ready item", req.params.idTicket);      
-         else if(req.body.state == ticket.orderState[1]){
+      if(req.body.state == ticket.orderState[1]) {
          emitEvent("dish in preparation", req.params.idTicket);
+         console.log("emit dish in prepare");
       }
+      if(req.body.state == ticket.orderState[2]) {
+         console.log("Emetto piatto pronto per cuochi");
+         emitEvent("ready item - cooks", req.params.idTicket);
+         //controllo che tutti gli ordini dello stesso tipo e dello stesso ticket siano pronti
+         var ordersList: Array<ticket.Order[]> = [];
+         console.log(data);
+         ordersList = data.orders.filter((order: ticket.Order) => {
+            console.log(order);
+            return (order.state != ticket.orderState[2] && order.type_item ==  order_type && order.state != ticket.orderState[3]);
+         });
+         console.log("La porcamadonna di orderlist " + ordersList + " " + !ordersList);
 
+         if (req.body.state == ticket.orderState[2] && ordersList.length == 0) 
+            console.log("Sto per emettere l'evento 'piatti pronti!'");
+
+         if (req.body.state == ticket.orderState[2] && ordersList.length == 0) 
+            emitEvent("ready item - waiters", req.params.idTicket);      
+      }
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
