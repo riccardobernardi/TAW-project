@@ -30,6 +30,7 @@ export class CookComponent implements OnInit {
         dd.forEach( (ss) => {
           console.log(ss.orders);
           var orders = ss.orders.filter((order : TicketOrder) => order.state != "ready" && order.state != "delivered" && order.type_item != "beverage");
+          console.log(orders);
           if(orders.length != 0) {
             ticket_sup.push(ss);
             orders.sort((a: TicketOrder, b: TicketOrder) => {
@@ -52,19 +53,6 @@ export class CookComponent implements OnInit {
     this.socketio.get().on('cooks', this.dd);
   }
 
-  /*dd() {
-    console.log(this.ticket);
-    this.ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
-      dd.forEach( (ss) => {
-        this.tickets = dd;
-        this.tickets.forEach((ticket: Ticket) => {
-          ticket.orders.sort((a: TicketOrder, b: TicketOrder) => {
-            return a.price - b.price;
-          });
-        });
-      });
-    });
-  }*/
 
   logout() {
     this.us.logout();
