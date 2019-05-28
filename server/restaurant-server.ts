@@ -74,6 +74,10 @@ var socketEvents = {
       destRooms: [rooms[1]],
       //senderRole: user.roles[1]
    },
+   "ready item - bartenders": {
+      destRooms: [rooms[3]],
+      //senderRole: user.roles[1]
+   },
    "ready item - waiters": {
       destRooms: [rooms[0]],
       //senderRole: user.roles[1]
@@ -591,24 +595,32 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
       return data.save();
       
    }).then((data) => {
-      console.log(req.body.state);
-      console.log(ticket.orderState[1])
+      //console.log(req.body.state);
+      //console.log(ticket.orderState[1]);
+      //console.log(data);
 
       if(req.body.state == ticket.orderState[1]) {
-         if(data.type_item == item.type[0]) {
-            emitEvent("dish in preparation", req.params.idTicket);
-            console.log("emit dish in prepare");
-         } else {
-            emitEvent("beverage in preparation", req.params.idTicket);
-            console.log("emit beverage in prepare");
-         }
+         //console.log(item.type[0]);
+         //var order = data.orders.filter((order) => order.id == req.params.idOrder)[0]
+         //if(order.type_item == item.type[0]) {
+         emitEvent("dish in preparation", req.params.idTicket);
+         console.log("emit dish in prepare");
+         //} else {
+         //   emitEvent("beverage in preparation", req.params.idTicket);
+         //   console.log("emit beverage in prepare");
+         //}
       }
       if(req.body.state == ticket.orderState[2]) {
-         console.log("Emetto piatto pronto per cuochi");
-         emitEvent("ready item - cooks", req.params.idTicket);
+         var order = data.orders.filter((order) => order.id == req.params.idOrder)[0];
+         if(order.type_item == item.type[0]) {
+            console.log("Emetto piatto pronto per cuochi");
+            emitEvent("ready item - cooks", req.params.idTicket);
+         } else {
+            console.log("Emetto piatto pronto per cuochi");
+            emitEvent("ready item - bartenders", req.params.idTicket);
+         }
          //controllo che tutti gli ordini dello stesso tipo e dello stesso ticket siano pronti
          var ordersList: Array<ticket.Order[]> = [];
-         console.log(data);
          ordersList = data.orders.filter((order: ticket.Order) => {
             console.log(order);
             return (order.state != ticket.orderState[2] && order.type_item ==  order_type && order.state != ticket.orderState[3]);

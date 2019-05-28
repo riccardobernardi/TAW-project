@@ -58,6 +58,9 @@ var socketEvents = {
     "ready item - cooks": {
         destRooms: [rooms[1]]
     },
+    "ready item - bartenders": {
+        destRooms: [rooms[3]]
+    },
     "ready item - waiters": {
         destRooms: [rooms[0]]
     }
@@ -486,24 +489,32 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch(auth, function (req, res, 
         order_type = toChange[0].type_item;
         return data.save();
     }).then(function (data) {
-        console.log(req.body.state);
-        console.log(ticket.orderState[1]);
+        //console.log(req.body.state);
+        //console.log(ticket.orderState[1]);
+        //console.log(data);
         if (req.body.state == ticket.orderState[1]) {
-            if (data.type_item == item.type[0]) {
-                emitEvent("dish in preparation", req.params.idTicket);
-                console.log("emit dish in prepare");
-            }
-            else {
-                emitEvent("beverage in preparation", req.params.idTicket);
-                console.log("emit beverage in prepare");
-            }
+            //console.log(item.type[0]);
+            //var order = data.orders.filter((order) => order.id == req.params.idOrder)[0]
+            //if(order.type_item == item.type[0]) {
+            emitEvent("dish in preparation", req.params.idTicket);
+            console.log("emit dish in prepare");
+            //} else {
+            //   emitEvent("beverage in preparation", req.params.idTicket);
+            //   console.log("emit beverage in prepare");
+            //}
         }
         if (req.body.state == ticket.orderState[2]) {
-            console.log("Emetto piatto pronto per cuochi");
-            emitEvent("ready item - cooks", req.params.idTicket);
+            var order = data.orders.filter(function (order) { return order.id == req.params.idOrder; })[0];
+            if (order.type_item == item.type[0]) {
+                console.log("Emetto piatto pronto per cuochi");
+                emitEvent("ready item - cooks", req.params.idTicket);
+            }
+            else {
+                console.log("Emetto piatto pronto per cuochi");
+                emitEvent("ready item - bartenders", req.params.idTicket);
+            }
             //controllo che tutti gli ordini dello stesso tipo e dello stesso ticket siano pronti
             var ordersList = [];
-            console.log(data);
             ordersList = data.orders.filter(function (order) {
                 console.log(order);
                 return (order.state != ticket.orderState[2] && order.type_item == order_type && order.state != ticket.orderState[3]);
