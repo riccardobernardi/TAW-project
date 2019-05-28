@@ -34,6 +34,7 @@ export class PaydeskComponent implements OnInit {
   private tables: Table[] = [];
 
   private dd;
+  private selTicket: any;
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService, private router: Router, private order: OrderHttpService  ) {
@@ -91,20 +92,16 @@ export class PaydeskComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  emitReceipt(selTable: number) {
-    return this.tickets.filter((dd) => {
-      if (dd.table == selTable) {
-        return true;
-      }
-    })[0].orders.map( (x) => {
+  emitReceipt() {
+    return this.selTicket.orders.map( (x) => {
       return x.price;
     }).reduce( (total, amount) => {
       return total + amount;
     });
   }
 
-  close_ticket(ticketId: string) {
-    this.ticket.close_ticket(ticketId).toPromise().then()
+  close_ticket() {
+    this.ticket.close_ticket(this.selTicket._id).toPromise().then()
     .catch((err) => console.log(err));
   }
 

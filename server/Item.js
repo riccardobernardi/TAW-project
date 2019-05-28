@@ -1,6 +1,6 @@
 "use strict";
-exports.__esModule = true;
-var mongoose = require("mongoose");
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose = require("mongoose");
 /*ARGID non c'è tra i campi nella post!*/
 function isItem(arg) {
     return (arg._id && arg.name && arg.type && arg.price && arg.required_time && typeof (arg.name) == 'string' && exports.type.includes(arg.type) && !isNaN(parseInt(arg.price)) && (!arg.description || typeof (arg.description) == 'string') && !isNaN(parseInt(arg.required_time)));
@@ -22,7 +22,7 @@ var itemSchema = new mongoose.Schema({
     type: {
         type: mongoose.SchemaTypes.String,
         required: true,
-        "enum": exports.type
+        enum: exports.type,
     },
     price: {
         type: mongoose.SchemaTypes.Number,
@@ -64,3 +64,4 @@ function getModel() {
     return itemModel;
 }
 exports.getModel = getModel;
+//# sourceMappingURL=Item.js.map
