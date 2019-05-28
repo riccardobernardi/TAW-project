@@ -12,7 +12,7 @@ export interface Report extends mongoose.Document {
 
 
 export function isReport(arg: any): arg is Report {
-    return (arg._id && arg.date && arg.total && arg.total_orders && arg.total_customers && arg.average_stay && arg.date.toString() != 'Invalid Date' && typeof(arg.total) == 'number' && typeof(arg.total_orders.dish) == 'number' && typeof(arg.total_orders.beverage) == 'number' && typeof(arg.total_customers) == 'number' && typeof(arg.average_stay) == 'number');
+    return (/*arg._id &&*/ arg.date && arg.total && arg.total_orders && arg.total_customers /*&& arg.average_stay*/ && arg.date.toString() != 'Invalid Date' && typeof(arg.total) == 'number' && typeof(arg.total_orders.dish) == 'number' && typeof(arg.total_orders.beverage) == 'number' && typeof(arg.total_customers) == 'number' && typeof(arg.average_stay) == 'number');
  };
 
 var countDecimals = function(value) {
@@ -27,8 +27,7 @@ var reportSchema = new mongoose.Schema( {
         required: true,
     },
     total: {
-        type: mongoose.SchemaTypes.String,
-        required : true,
+        type: mongoose.SchemaTypes.Number,
         validate: {
             validator: function(value){
                 return countDecimals(value) <= 2;

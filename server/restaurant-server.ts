@@ -413,6 +413,8 @@ app.route("/tickets").get(auth, (req, res, next) => {
    //ioss.emit("waiters");
    //ioss.emit("paydesks");
 
+   console.log("GET tickets: " + req.params);
+
    //trovo i tickets
    ticket.getModel().find(filter).then( (ticketslist : ticket.Ticket[]) => {
       //se specificato, filtro gli ordini utilizzando il loro stato
@@ -433,8 +435,15 @@ app.route("/tickets").get(auth, (req, res, next) => {
       //filtro per la data (solo la data, non l'ora)
       if(req.query.start){
          var dateFilter = new Date(req.query.start);
-         ticketslist = ticketslist.filter((t: ticket.Ticket) => { return t.start.getFullYear() == dateFilter.getFullYear() && t.start.getMonth() == dateFilter.getMonth() && t.start.getDate() == dateFilter.getDate() });
+         console.log(dateFilter);
+         console.log(ticketslist);
+         ticketslist = ticketslist.filter((t: ticket.Ticket) => { 
+            t.start = new Date(t.start);
+            console.log(t.start.getFullYear(), dateFilter.getFullYear(), t.start.getMonth(), dateFilter.getMonth(), t.start.getDay(), dateFilter.getDay());
+            return t.start.getFullYear() == dateFilter.getFullYear() && t.start.getMonth() == dateFilter.getMonth() /*&& t.start.getDay() == dateFilter.getDay() */
+         });
       }
+      console.log(ticketslist);
       return res.status(200).json( ticketslist );
    }).catch( (reason) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
@@ -954,7 +963,7 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
       var ti1 = new ticketModel({
          waiter: "waiter1",
          table: 1,
-         start: new Date("05/05/2019, 11:49:36 AM"),
+         start: new Date(),
          orders: [{
             //id_order: new ObjectID(),
             name_item: "Bistecca alla griglia",
@@ -983,7 +992,7 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
       var ti3 = new ticketModel({
          waiter: "waiter1",
          table: 3,
-         start: new Date("05/05/2019, 11:49:36 AM"),
+         start: new Date(),
          orders: [{
             //id_order: new ObjectID(),
             name_item: "Bistecca alla griglia",
@@ -1002,7 +1011,7 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
       var ti2 = new ticketModel({
          waiter: "waiter2",
          table: 2,
-         start: new Date("05/05/2019, 08:49:36 PM"),
+         start: new Date(),
          orders: [{
             //id_order: new ObjectID(),
             name_item: "Spaghetti al pomodoro",
