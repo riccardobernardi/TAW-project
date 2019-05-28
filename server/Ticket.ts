@@ -10,7 +10,8 @@ export interface Ticket extends mongoose.Document {
     end: Date,
     orders: Array<Order>,
     state: string,
-    total: number
+    total: number,
+    people_number: number
 }
 
 
@@ -67,6 +68,10 @@ var ticketSchema = new mongoose.Schema( {
     total: {
         type: mongoose.SchemaTypes.Number,
         required: false
+    },
+    people_number : {
+        type: mongoose.SchemaTypes.Number,
+        required: true
     }
 })
 
