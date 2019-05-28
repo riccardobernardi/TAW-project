@@ -1,3 +1,13 @@
 .tables {
-    display: inline-block  
+    margin: 5px;
+}
+
+.tables > button {
+    width: 60%;
+    margin: 5px; 
+}
+
+.tables > input {
+    width: 20%;
+    margin: 5px
 }
