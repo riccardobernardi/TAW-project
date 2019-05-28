@@ -12,6 +12,7 @@ import {SocketioService} from '../socketio.service';
 import {TicketOrder} from '../TicketOrder';
 import {Table} from '../Table';
 import {Ticket} from '../Ticket';
+import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
 
 @Component({
   selector: 'app-paydesk',
@@ -35,6 +36,10 @@ export class PaydeskComponent implements OnInit {
 
   private dd;
   private selTicket: any;
+  day: any;
+  month: any;
+  year: any;
+  model: any;
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService, private router: Router, private order: OrderHttpService  ) {
@@ -109,5 +114,21 @@ export class PaydeskComponent implements OnInit {
     return this.tickets.map( (x) => x.orders.map( (y) => y.price)
       .reduce( (total, amount) => total + amount ))
       .reduce( (total, amount) => total + amount);
+  }
+
+  allGainOfDay() {
+    return this.tickets.filter( (oneTicket) => {
+      if (this.day === undefined) {
+        return 0;
+      }
+      return (
+        new Date(oneTicket.start).getDay() === this.day
+        && new Date(oneTicket.start).getMonth() === this.month
+        && new Date(oneTicket.start).getFullYear() === this.year);
+    }).map( (oneTicket) => {
+      return oneTicket.orders.map( (oneOrder) => {
+        return oneOrder.price;
+      }).reduce( (total, onePrice) => total + onePrice);
+    }).reduce( (total, nPrices) => total + nPrices);
   }
 }

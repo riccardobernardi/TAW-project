@@ -6,6 +6,7 @@ import { Ticket } from 'src/app/Ticket';
 import {Table} from '../Table';
 import { Observable } from 'rxjs/Observable';
 import {SocketioService} from '../socketio.service';
+import {TicketOrder} from '../TicketOrder';
 
 
 @Component({

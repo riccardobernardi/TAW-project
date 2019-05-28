@@ -18,6 +18,7 @@ import { TicketHttpService } from '../ticket-http.service';
 import {PaydeskComponent} from '../paydesk/paydesk.component';
 import {LogoutComponent} from '../logout/logout.component';
 import {RouterModule} from '@angular/router';
+import {AppModule} from '../app.module';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {RouterModule} from '@angular/router';
     HttpClientModule,
     // Paydesk2RoutingModule,
     NgbModule,
-    RouterModule
+    RouterModule,
+    AppModule
   ],
   providers: [
     /*{provide: OrderHttpService, useClass: OrderHttpService},

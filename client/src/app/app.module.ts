@@ -24,7 +24,6 @@ import { WaiterDashboardComponent } from './waiter/waiterDashboard.component';
 import { Paydesk2DashboardComponent } from "./paydesk2/paydesk2Dashboard.component";
 import { PaydeskComponent } from './paydesk/paydesk.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +36,7 @@ import { PaydeskComponent } from './paydesk/paydesk.component';
     OrdersServedComponent,
     InsertOrdersComponent,
     TablesViewComponent,
-    LogoutComponent
+    LogoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,7 +44,7 @@ import { PaydeskComponent } from './paydesk/paydesk.component';
     HttpClientModule,
     AppRoutingModule,
     NgbModule.forRoot(),
-    //WaiterDashboardModule
+    // WaiterDashboardModule
   ],
   providers: [
     {provide: UserHttpService, useClass: UserHttpService },
@@ -55,6 +54,6 @@ import { PaydeskComponent } from './paydesk/paydesk.component';
     {provide: TableHttpService, useClass: TableHttpService},
     {provide: TicketHttpService, useClass: TicketHttpService}
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

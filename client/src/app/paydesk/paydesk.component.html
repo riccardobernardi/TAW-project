@@ -1,4 +1,3 @@
-
 <p>
   paydesk view
   you name is : {{ null || "Admin"}}
@@ -111,7 +110,25 @@
   <form #formReports hidden="true" >
 
     <p>Here reports</p>
+
     <p>Total gain: {{allGain()}}</p>
+
+    <p>Total gain of Day: {{allGainOfDay()}}</p>
+
+    <form class="form-inline">
+      <div class="form-group">
+        <div class="input-group">
+          <input class="form-control" placeholder="yyyy-mm-dd"
+                 name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <br>
+    model : {{model}}
 
   </form>
 </div>
