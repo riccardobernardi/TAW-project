@@ -13,6 +13,7 @@ import {TicketOrder} from '../TicketOrder';
 import {Table} from '../Table';
 import {Ticket} from '../Ticket';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
+import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-paydesk',
@@ -36,10 +37,10 @@ export class PaydeskComponent implements OnInit {
 
   private dd;
   private selTicket: any;
-  day: any;
-  month: any;
-  year: any;
-  model: any;
+  day: number;
+  month: number;
+  year: number;
+  gainofday = 0;
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService, private router: Router, private order: OrderHttpService  ) {
@@ -117,18 +118,39 @@ export class PaydeskComponent implements OnInit {
   }
 
   allGainOfDay() {
-    return this.tickets.filter( (oneTicket) => {
-      if (this.day === undefined) {
-        return 0;
-      }
-      return (
-        new Date(oneTicket.start).getDay() === this.day
-        && new Date(oneTicket.start).getMonth() === this.month
-        && new Date(oneTicket.start).getFullYear() === this.year);
-    }).map( (oneTicket) => {
+    /*console.log(this.day + '/' + this.month + '/' + this.year);
+    if (this.day === undefined) {
+      this.day = 5;
+      this.month = 5;
+      this.year = 2019;
+    }*/
+
+    /*this.tickets.forEach( (oneTicket) => {
+      console.log('ghe sboro' + oneTicket.start.getDay());
+    })*/
+
+    console.log('ghe sboro' + this.tickets[0].start.getDay());
+
+    /*const a = this.tickets.filter( (oneTicket) => {
+      console.log(oneTicket.start.getDay());
+      return oneTicket.start.getDay() == 5;
+    });
+
+    console.log(a);
+    /!*.map( (oneTicket) => {
       return oneTicket.orders.map( (oneOrder) => {
         return oneOrder.price;
       }).reduce( (total, onePrice) => total + onePrice);
-    }).reduce( (total, nPrices) => total + nPrices);
+    }).reduce( (total, nPrices) => total + nPrices);*!/
+
+    return a.map( (oneTicket) => {
+      return oneTicket.orders.map( (x) => x.price).reduce( (c, b) => c + b);
+    }).reduce( (c, d) => c + d );*/
+  }
+
+  onDateSelect($event: NgbDate) {
+    this.month = $event.month;
+    this.day = $event.day;
+    this.year = $event.year;
   }
 }
