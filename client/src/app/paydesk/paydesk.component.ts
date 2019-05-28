@@ -14,6 +14,7 @@ import {Table} from '../Table';
 import {Ticket} from '../Ticket';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
+import { TableHttpService } from '../table-http.service';
 
 @Component({
   selector: 'app-paydesk',
@@ -43,7 +44,7 @@ export class PaydeskComponent implements OnInit {
   gainofday = 0;
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
-              private socketio: SocketioService, private router: Router, private order: OrderHttpService  ) {
+              private socketio: SocketioService, private router: Router, private order: OrderHttpService, private table: TableHttpService  ) {
     const ticketSup = this.tickets;
     this.dd = () => {
       ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
