@@ -106,11 +106,6 @@ export class PaydeskComponent implements OnInit {
     });
   }
 
-  close_ticket() {
-    this.ticket.close_ticket(this.selTicket._id).toPromise().then()
-    .catch((err) => console.log(err));
-  }
-
   allGain() {
     return this.tickets.map( (x) => x.orders.map( (y) => y.price)
       .reduce( (total, amount) => total + amount ))
@@ -152,5 +147,20 @@ export class PaydeskComponent implements OnInit {
     this.month = $event.month;
     this.day = $event.day;
     this.year = $event.year;
+  }
+
+  close_ticket() {
+    this.ticket.close_ticket(this.selTicket._id).toPromise().then(() => {
+      return this.table.change_table({number: this.selTicket.table, state: null}).toPromise()
+    })
+    .then()
+    .catch((err) => console.log(err));
+  }
+
+  daily_report() {
+    var today = new Date();
+    this.ticket.create_report({start: today.getDay(), state: "closed"}).toPromise()
+    .then()
+    .catch((err) => console.log(err));
   }
 }

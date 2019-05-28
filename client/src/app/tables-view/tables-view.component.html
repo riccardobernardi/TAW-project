@@ -1,6 +1,9 @@
 <div>
-    <button *ngFor="let table of tables" [disabled] = "table.state" class="btn btn-lg btn-primary btn-block" (click) = "open_ticket(table)">
-        Number: {{table.number}},
-        Max_people:{{table.max_people}},
-    </button>
+    <div *ngFor="let table of tables">
+        <button class="tables" [disabled] = "table.state" class="btn btn-lg btn-primary" (click) = "open_ticket(table)">
+            Number: {{table.number}},
+            Max_people:{{table.max_people}}
+        </button>
+        <input class="tables" type="number" min="1" max={{table.max_people}} value={{table.max_people}}>
+    </div>
 </div>

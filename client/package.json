@@ -26,6 +26,7 @@
     "jquery": "^3.4.1",
     "jsonwebtoken": "latest",
     "jwt-decode": "^2.2.0",
+    "ng2-charts": "file:node_modules/ng2-charts",
     "popper": "^1.0.1",
     "rxjs": "~6.3.3",
     "rxjs-compat": "^6.5.1",

@@ -6,6 +6,8 @@ import { map } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { TicketOrder } from './TicketOrder';
 import { Item } from './Item';
+import { Report } from './Report';
+import { from } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -58,6 +60,33 @@ export class TicketHttpService {
   changeOrderState(ticketId, orderId, state) {
     console.log(ticketId, orderId);
     return this.http.patch(this.url + '/' + ticketId + '/' + 'orders' + '/' + orderId, {state}, this.create_options());
+  }
+
+  create_report(filters) {
+    let today = new Date();
+    return from(this.get_tickets(filters).toPromise().then((data: Ticket[]) => {
+      var report : Report;
+      report.date = today;
+
+      var ticket_count = 0;
+      report.total = 0
+      report.total_customers = 0;
+      report.total_orders = {dish: 0, beverage: 0};
+      report.average_stay = 0;
+
+      data.forEach((ticket) => {
+        report.total += ticket.total;
+        report.total_customers += ticket.people_number;
+        ticket.orders.forEach((order : TicketOrder) => {
+          report.total_orders[order.type_item] += 1;
+        });
+        ticket_count++;
+        report.average_stay += (ticket.end.getTime() - ticket.start.getTime())/60000
+      });
+
+      report.average_stay /= ticket_count;
+      return from(this.http.post<Report>(this.url + "/" + "reports", report)); 
+    }).catch((err) => err));
   }
 
 }

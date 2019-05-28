@@ -82,6 +82,10 @@ const routes: Routes = [
       {
         path: 'logout',
         component: LogoutComponent
+      },
+      {
+        path: "histogram",
+        component: HistogramComponent
       }
     ]
   },
