@@ -47,10 +47,13 @@ var socketEvents = {
         destRooms: [rooms[1]]
     },
     "ordered drink": {
-        destRooms: [rooms[3], rooms[0]]
+        destRooms: [rooms[3]]
     },
     "dish in preparation": {
         destRooms: [rooms[1]]
+    },
+    "beverage in preparation": {
+        destRooms: [rooms[3]]
     },
     "ready item - cooks": {
         destRooms: [rooms[1]]
@@ -427,7 +430,7 @@ app.route('/tickets/:id/orders').get(auth, function (req, res, next) {
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
-    //console.log(req.body);
+    console.log(req.body);
     //controllo formato richiesta
     if (!req.body || !req.body.name_item || !req.body.price || /*req.body.added ||*/ typeof (req.body.name_item) != 'string' || typeof (req.body.price) != 'number' /*|| Array.isArray(req.body.added)*/) {
         return next({ statusCode: 400, error: true, errormessage: "Wrong format" });
@@ -441,6 +444,7 @@ app.route('/tickets/:id/orders').get(auth, function (req, res, next) {
     newer.waiter = req.body.username_waiter;
     newer.state = ticket.orderState[0];
     newer.state = ticket.orderState[0];
+    newer.type_item = req.body.type_item;
     //inserisco order nel DB
     ticket.getModel().update({ _id: req.params.id }, { $push: { orders: newer } }).then(function () {
         //controllo il tipo di order inserito e mando un evento sulla stanza relativa
@@ -485,8 +489,14 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch(auth, function (req, res, 
         console.log(req.body.state);
         console.log(ticket.orderState[1]);
         if (req.body.state == ticket.orderState[1]) {
-            emitEvent("dish in preparation", req.params.idTicket);
-            console.log("emit dish in prepare");
+            if (data.type_item == item.type[0]) {
+                emitEvent("dish in preparation", req.params.idTicket);
+                console.log("emit dish in prepare");
+            }
+            else {
+                emitEvent("beverage in preparation", req.params.idTicket);
+                console.log("emit beverage in prepare");
+            }
         }
         if (req.body.state == ticket.orderState[2]) {
             console.log("Emetto piatto pronto per cuochi");

@@ -103,6 +103,11 @@ export class PaydeskComponent implements OnInit {
     });
   }
 
+  close_ticket(ticketId: string) {
+    this.ticket.close_ticket(ticketId).toPromise().then()
+    .catch((err) => console.log(err));
+  }
+
   allGain() {
     return this.tickets.map( (x) => x.orders.map( (y) => y.price)
       .reduce( (total, amount) => total + amount ))

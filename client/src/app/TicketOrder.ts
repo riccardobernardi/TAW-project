@@ -1,5 +1,5 @@
 export interface TicketOrder {
-  _id: string;
+  _id?: string;
   name_item: string;
   type_item: string
   username_waiter: string;

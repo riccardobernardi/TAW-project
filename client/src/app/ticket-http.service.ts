@@ -31,6 +31,10 @@ export class TicketHttpService {
     return this.http.post<Ticket>(this.url, {waiter, table, start: Date()}, this.create_options());
   }
 
+  close_ticket(ticketId: string) {
+    return this.http.patch<Ticket>(this.url + "/" + ticketId, {state: "closed", end: Date()}, this.create_options());
+  }
+
   get_tickets(filters) {
     return this.http.get<Ticket[]>(this.url, this.create_options(filters))/*.pipe(
       map((data: Ticket[]) => {
@@ -41,12 +45,13 @@ export class TicketHttpService {
     )*/;
   }
 
-  addOrders(ticketId, usernameWaiter, item) {
+  addOrders(ticketId, usernameWaiter, item, added, addedPrice) {
+    console.log(addedPrice);
     let order: TicketOrder;
     order = {
       name_item : item.name,
-      added: [],
-      price: item.price,
+      added: added,
+      price: item.price + parseInt(addedPrice),
       state: null,
       username_waiter: usernameWaiter,
       _id: null,

@@ -5,6 +5,7 @@ import {Item} from '../Item';
 import { TicketHttpService } from 'src/app/ticket-http.service';
 import {SocketioService} from '../socketio.service';
 import {Ticket} from '../Ticket';
+import { TicketOrder } from "../TicketOrder";
 
 
 @Component({
@@ -17,7 +18,7 @@ export class InsertOrdersComponent implements OnInit {
   private tickets = [];
   private items: Item[] = [];
   private selTicket: Ticket;
-  private itemsSelected: Item[] = [];
+  private ordersSelected = [];
   private counter = 0;
   private selMenuEntry: Item;
   private dd;
@@ -52,15 +53,19 @@ export class InsertOrdersComponent implements OnInit {
 
   insertItem(item: Item, quantity: number) {
     for (let i = 0; i < quantity; i++) {
-      this.itemsSelected.push(item);
+      this.ordersSelected.push({
+        item: item,
+        added: [],
+        addedPrice: 0
+      });
     }
   }
 
   deleteItemFromSelected(i: number) {
-    this.itemsSelected.splice(i, 1);
+    this.ordersSelected.splice(i, 1);
   }
 
-  sendOrders(ticketId, waiterUsername, items) {
+  /*sendOrders(ticketId, waiterUsername, items) {
     console.log(this.selTicket);
     console.log(ticketId, waiterUsername, items);
     const promises = [];
@@ -69,7 +74,22 @@ export class InsertOrdersComponent implements OnInit {
     });
     Promise.all(promises).then((data) => {
       console.log('Evasione riuscita!')
-      this.itemsSelected = [];
+      this.ordersSelected = [];
+    }).catch((err) => {
+      console.log(err);
+    });
+  }*/
+
+  sendOrders(ticketId, waiterUsername, orders) {
+    console.log(this.selTicket);
+    console.log(ticketId, waiterUsername, orders);
+    const promises = [];
+    orders.forEach((order) => {
+      promises.push(this.ticket.addOrders(ticketId, waiterUsername, order.item, order.added, order.addedPrice).toPromise());
+    });
+    Promise.all(promises).then((data) => {
+      console.log('Evasione riuscita!')
+      this.ordersSelected = [];
     }).catch((err) => {
       console.log(err);
     });
@@ -82,5 +102,17 @@ export class InsertOrdersComponent implements OnInit {
   sub() {
     this.counter--;
   }
+
+  attachAdded(i, text) {
+    this.ordersSelected[i].added = text.split(",");
+    console.log(this.ordersSelected[i].added);
+  }
+
+  addPrice(i, added) {
+    this.ordersSelected[i].addedPrice = added;
+    console.log(this.ordersSelected[i].addedPrice);
+  }
+
+
 }
 
