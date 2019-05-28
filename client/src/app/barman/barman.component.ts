@@ -30,7 +30,7 @@ export class BarmanComponent implements OnInit {
         console.log(dd);
         dd.forEach( (ss) => {
           console.log(ss.orders);
-          let orders = ss.orders.filter((order: TicketOrder) => order.state != 'ready' && order.state != 'delivered' /*&& order.state != 'preparation'*/ && order.type_item != 'dish');
+          let orders = ss.orders.filter((order: TicketOrder) => order.state != 'ready' && order.state != 'delivered' && order.state != 'preparation' && order.type_item != 'dish');
           if (orders.length != 0) {
             ticket_sup.push(ss);
             orders.sort((a: TicketOrder, b: TicketOrder) => {
