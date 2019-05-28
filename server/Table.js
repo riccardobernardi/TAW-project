@@ -1,6 +1,6 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose = require("mongoose");
+exports.__esModule = true;
+var mongoose = require("mongoose");
 //CODICE DOPPIO, VEDERE SE SI PUO' CENTRALIZZARE, c'è anche in menu.ts
 var countDecimals = function (value) {
     if (Math.floor(value) !== value)
@@ -39,4 +39,3 @@ function getModel() {
     return tableModel;
 }
 exports.getModel = getModel;
-//# sourceMappingURL=Table.js.map
