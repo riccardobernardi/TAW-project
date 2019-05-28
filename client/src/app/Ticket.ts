@@ -9,6 +9,7 @@ export interface Ticket {
   end: Date;
   state: string;
   total: number;
+  people_number: number;
 }
 
   // User defined type guard

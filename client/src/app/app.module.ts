@@ -23,6 +23,9 @@ import { TablesViewComponent } from "./tables-view/tables-view.component";
 import { WaiterDashboardComponent } from './waiter/waiterDashboard.component';
 import { Paydesk2DashboardComponent } from "./paydesk2/paydesk2Dashboard.component";
 import { PaydeskComponent } from './paydesk/paydesk.component';
+import { HistogramComponent } from './histogram/histogram.component';
+import { ChartsModule } from "ng2-charts";
+
 
 @NgModule({
   declarations: [
