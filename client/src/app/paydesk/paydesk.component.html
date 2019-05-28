@@ -99,7 +99,7 @@
       </div>
     </div>
 
-    <div class="btn btn-lg btn-primary btn-block" (click) = "close_ticket()">Close ticket</div>
+    <!--<div class="btn btn-lg btn-primary btn-block" (click) = "close_ticket()">Close ticket</div>-->
     <div *ngIf="selTicket" class="btn btn-lg btn-primary btn-block" (click)="close_ticket()" >Close</div>
   </form>
 </div>
@@ -109,7 +109,7 @@
 
   <form #formReports hidden="true" >
 
-    <p>Here reports</p>
+    <!--<p>Here reports</p>
 
     <p>Total gain: {{allGain()}}</p>
 
@@ -131,7 +131,8 @@
 
     <p>Total gain of Day: {{allGainOfDay()}}</p>
 
-    <button class="btn btn-lg btn-primary btn-block" (click)="this.allGainOfDay()" >gain</button>
+    <button class="btn btn-lg btn-primary btn-block" (click)="this.allGainOfDay()" >gain</button>-->
+    <button class="btn btn-lg btn-primary btn-block" (click)="this.create_daily_report()" >Insert daily report</button>
 
   </form>
 </div>

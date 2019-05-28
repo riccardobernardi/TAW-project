@@ -159,9 +159,9 @@ export class PaydeskComponent implements OnInit {
     .catch((err) => console.log(err));
   }
 
-  daily_report() {
+  create_daily_report() {
     var today = new Date();
-    this.ticket.create_report({start: today.getDay(), state: "closed"}).toPromise()
+    this.ticket.create_report({start: today, state: "closed"})
     .then()
     .catch((err) => console.log(err));
   }
