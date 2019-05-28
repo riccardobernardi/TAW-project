@@ -507,7 +507,7 @@ app.route('/tickets/:id').get(auth, (req, res, next) => {
    if ( !req.body || (req.body.end && enddate.toString() == 'Invalid Date') || (req.body.state && typeof(req.body.state) != 'string') || (req.body.total && typeof(req.body.total) != 'number')){
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
-   console.log("Patch per ticket/id: " + req.body.total);
+   //console.log("Patch per ticket/id: " + req.body.total);
    //creo oggeto utilizzato per modificare i campi del documento
    var update: any = {};
    if (req.body.end)
