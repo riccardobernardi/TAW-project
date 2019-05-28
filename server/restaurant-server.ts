@@ -20,7 +20,7 @@ import * as table from './Table';
 import * as user from './User';
 import * as ticket from './Ticket';
 import * as item from './Item';
-
+import * as report from './Report';
 
 var app = express();
 /*var http = require('http').Server(app);
@@ -154,7 +154,7 @@ app.route("/users").get(auth, (req,res,next) => {
    if( reason.code === 11000 )
       return next({statusCode:409, error:true, errormessage: "User already exists"} );
    return next({ statusCode:500, error: true, errormessage: "DB error: "+reason.errmsg });
-   })
+   });
 });
 
 
@@ -379,8 +379,6 @@ app.route("/tickets").get(auth, (req, res, next) => {
    
    //creo il filtro
    var filter: any = {}
-   if(req.query.start)
-      filter.start = req.query.start;
    if(req.query.state)
       filter.state = req.query.state;
    if(req.query.waiter)
@@ -391,6 +389,8 @@ app.route("/tickets").get(auth, (req, res, next) => {
    console.log(filter);
 
    //TODO migliorare il controllo del formato
+
+
    //controllo formato della query sullo stato degli ordini
    if(req.query.orders && !ticket.orderState.filter((val) => val === req.query.orders))
       return next({ statusCode:400, error: true, errormessage: "The state of orders accepted are ordered, preparation, ready, delivered and all"})
@@ -403,7 +403,7 @@ app.route("/tickets").get(auth, (req, res, next) => {
    ticket.getModel().find(filter).then( (ticketslist : ticket.Ticket[]) => {
       //se specificato, filtro gli ordini utilizzando il loro stato
       if(req.query.orders && (req.query.orders != ticket.orderState[4])){
-         var orders = []
+         var orders = [];
          ticketslist.forEach((ticket : ticket.Ticket) => {
             var ticket_orders = ticket.orders.filter((order => order.state == req.query.orders));
             if(ticket_orders.length != 0) {
@@ -413,12 +413,15 @@ app.route("/tickets").get(auth, (req, res, next) => {
                });
             }
          });
-         console.log("vado in if" + orders);
-         return res.status(200).json(orders);
-      } else {
-         console.log("vado in else" + ticketslist);
-         return res.status(200).json( ticketslist );
+         ticketslist = orders;
       }
+
+      //filtro per la data (solo la data, non l'ora)
+      if(req.query.start){
+         var dateFilter = new Date(req.query.start);
+         ticketslist = ticketslist.filter((t: ticket.Ticket) => { return t.start.getFullYear() == dateFilter.getFullYear() && t.start.getMonth() == dateFilter.getMonth() && t.start.getDate() == dateFilter.getDate() });
+      }
+      return res.status(200).json( ticketslist );
    }).catch( (reason) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
@@ -596,6 +599,108 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
 });
+
+app.route("/report").get( auth, (req,res,next) => {
+   //autenticazione
+   if(!user.newUser(req.user).hasDeskRole())
+      return next({ statusCode:401, error: false, errormessage: "Unauthorized: user is not a desk"} );
+   
+   //creo filtro per la query
+   var filter: any = {};
+   if(req.query.date)
+      filter.date = req.query.date;
+
+   //query
+   report.getModel().find(filter).then( (reportslist) => {
+      return res.status(200).json( reportslist ); 
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   })
+}).post( auth, (req,res,next) => {
+   //autenticazione
+   if(!user.newUser(req.user).hasDeskRole())
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
+   
+   //creo report da inserire
+   var r = new (report.getModel()) (req.body);
+   
+   //da togliere
+   console.log(r)
+
+   //controllo formato
+   if (!report.isReport(r))
+      return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
+   
+   //inserisco
+   r.save().then( (data) => {
+      return res.status(200).json({ error: false, errormessage: "", id: data._id });
+   }).catch( (reason) => {
+   if( reason.code === 11000 )
+      return next({statusCode:409, error:true, errormessage: "Report already exists"} );
+   return next({ statusCode:500, error: true, errormessage: "DB error: "+reason.errmsg });
+   });
+});
+
+app.route("/report/:id").get( auth, (req,res,next) => {
+   //autenticazione
+   var sender = user.newUser(req.user);
+   if(!sender.hasDeskRole())
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+
+   
+   //trovo e restituisco il ticket richiesto
+   report.getModel().findById(req.params.id).then( (data) => {
+      return res.status(200).json(data); 
+   }).catch( (reason) => {
+      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+   });
+}).delete( auth, (req,res,next) => {
+   //autenticazione
+   if(!user.newUser(req.user).hasDeskRole()){
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
+   }
+   
+   report.getModel().findOneAndDelete({_id:req.params.id}).then( ()=> {
+      return res.status(200).json( {error:false, errormessage:""} );
+   }).catch( (reason)=> {
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
+   })
+}).patch(auth, (req, res, next) => {
+   //autenticazione
+   if(!user.newUser(req.user).hasDeskRole()){
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+   }
+
+   var update: any = {};
+   if (req.body.date)
+      update.date = new Date(req.body.end);
+   
+   if (req.body.total)
+      update.total = req.body.total;
+   
+   if (req.body.total_orders)
+      update.total_orders = req.body.total_orders;
+
+   if (req.body.total_customers)
+      update.total_customers = req.body.total_customers;
+   
+   if (req.body.average_stay)
+      update.average_stay = req.body.average_stay;
+
+   
+   //controllo formato
+   if ( !req.body || (req.body.data && req.body.data.toString() == 'Invalid Date') || (req.body.total && typeof(req.body.total) != 'number') || (req.body.total_orders && (typeof(req.body.total_orders[item.type[0]]) != 'number' || typeof(req.body.total_orders[item.type[0]]) != 'number' )) || (req.body.total_customers && typeof(req.body.total_customers) != 'number') || (req.body.average_stay && typeof(req.body.average_stay) != 'number') ){
+      return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
+   }
+
+   
+   report.getModel().findOneAndUpdate( {_id: req.params.id}, { $set: update}, ).then( (data : report.Report) => {
+      return res.status(200).json( {error:false, errormessage:""} );
+   }).catch( (reason) => {
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
+   });
+});
+
 
 
 app.get('/renew', auth, (req,res,next) => {
