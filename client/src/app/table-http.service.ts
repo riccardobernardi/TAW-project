@@ -30,7 +30,7 @@ export class TableHttpService {
     return this.http.get<Table[]>(this.url + '/' + num, this.create_options());
   }
 
-  change_table(newTable: Table) {
+  change_table(newTable/*: Table*/) {
     return this.http.patch<Table>(this.url + '/' + newTable.number, newTable, this.create_options());
   }
 }

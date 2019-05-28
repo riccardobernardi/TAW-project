@@ -40,6 +40,7 @@ import { ChartsModule } from "ng2-charts";
     InsertOrdersComponent,
     TablesViewComponent,
     LogoutComponent,
+    HistogramComponent
   ],
   imports: [
     BrowserModule,
@@ -47,6 +48,7 @@ import { ChartsModule } from "ng2-charts";
     HttpClientModule,
     AppRoutingModule,
     NgbModule.forRoot(),
+    ChartsModule
     // WaiterDashboardModule
   ],
   providers: [

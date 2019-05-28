@@ -12,6 +12,7 @@ import { InsertOrdersComponent } from "./insert-orders/insert-orders.component";
 import { TablesViewComponent } from "./tables-view/tables-view.component";
 import { LogoutComponent } from "./logout/logout.component";
 import { Paydesk2DashboardComponent } from "./paydesk2/paydesk2Dashboard.component";
+import { HistogramComponent } from "./histogram/histogram.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -82,13 +83,14 @@ const routes: Routes = [
       {
         path: 'logout',
         component: LogoutComponent
-      },
-      {
-        path: "histogram",
-        component: HistogramComponent
       }
-    ]
+    ],
+    
   },
+  {
+    path: "histogram",
+    component: HistogramComponent
+  }
 /*  { path: 'barman', component:  BarmanComponent},
   { path: 'bartender', component:  BarmanComponent},
   { path: 'desk/insertOrders', component:  InsertOrdersComponent},
