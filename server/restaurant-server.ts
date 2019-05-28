@@ -266,13 +266,15 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
    //controllo formato
    if ( !req.body ||(req.body.max_people && isNaN(parseInt(req.body.max_people))) || (req.body.state && typeof(req.body.state) != 'string'))
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
-
+      console.log("Dentro tables API");
+      console.log(req.body);
    //creo oggetto per modificare il documento
    var update: any = {};
    if (req.body.max_people)
       update.max_people = req.body.max_people;
    if (req.body.state)
       update.state = req.body.state;
+   else update.state = undefined; //in order to reset the state of a table
 
    //perchè la patch con findOneAndUpdate ritora sempre un valore vecchio?
    table.getModel().findOneAndUpdate( {number: req.params.number}, { $set: update}, ).then( (data : table.Table) => {
@@ -460,6 +462,8 @@ app.route("/tickets").get(auth, (req, res, next) => {
    newer.waiter = req.body.waiter;
    newer.table = req.body.table;
    newer.start = startdate.toString();
+   newer.people_number = req.body.people_number;
+   newer.state = ticket.ticketState[0]
 
    var t = new (ticket.getModel()) (newer);
    
@@ -472,7 +476,7 @@ app.route("/tickets").get(auth, (req, res, next) => {
    }).catch( (reason) => {
    if( reason.code === 11000 )
       return next({statusCode:409, error:true, errormessage: "Ticket already exists"} );
-   return next({ statusCode:500, error: true, errormessage: "DB error: "+reason.errmsg });
+   return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
    })
 });
 
@@ -500,16 +504,18 @@ app.route('/tickets/:id').get(auth, (req, res, next) => {
    //console.log(enddate);
 
    //controllo formato
-   if ( !req.body || (req.body.end && enddate.toString() == 'Invalid Date') || (req.body.state && typeof(req.body.state) != 'string')){
+   if ( !req.body || (req.body.end && enddate.toString() == 'Invalid Date') || (req.body.state && typeof(req.body.state) != 'string') || (req.body.total && typeof(req.body.total) != 'number')){
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
-
+   console.log("Patch per ticket/id: " + req.body.total);
    //creo oggeto utilizzato per modificare i campi del documento
    var update: any = {};
    if (req.body.end)
       update.end = req.body.end;
    if (req.body.state)
       update.state = req.body.state;
+   if(req.body.total)
+      update.total = req.body.total;
 
    ticket.getModel().findOneAndUpdate( {_id: req.params.id}, { $set: update}, ).then( (data : ticket.Ticket) => {
       return res.status(200).json( {error:false, errormessage:""} );
@@ -871,7 +877,9 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
       var t1 = (new tableModel({number : 1, max_people: 4})).save();
       var t2 = (new tableModel({number : 2, max_people: 4})).save();
       var t3 = (new tableModel({number : 3, max_people: 6})).save();
-      Promise.all([t1, t2, t3]).then(function () {
+      var t4 = (new tableModel({number : 4, max_people: 6})).save();
+
+      Promise.all([t1, t2, t3, t4]).then(function () {
          console.log("Table saved");
       }).catch(function (reason) {
          console.log("Unable to save tables: " + reason);
@@ -963,7 +971,8 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
             type_item: item.type[1]
          }],
          state: ticket.ticketState[0],
-         total: 0
+         total: 0,
+         people_number: 2
       }).save().then((data) => {
          console.log(data);
          table.getModel().findOneAndUpdate({number: 1}, {$set: {state: data._id}}).then();
@@ -984,7 +993,8 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
             type_item: item.type[0]
          }],
          state: ticket.ticketState[0],
-         total: 0
+         total: 0,
+         people_number: 5
       }).save().then((data) => {
          table.getModel().findOneAndUpdate({number: 3}, {$set: {state: data._id}}).then();
       });
@@ -1017,7 +1027,8 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
             type_item: item.type[1]
          }],
          state: ticket.ticketState[0],
-         total: 0
+         total: 0,
+         people_number: 2
       }).save().then((data) => {
          table.getModel().findOneAndUpdate({number: 2},{$set: {state: data._id}}).then();
       });
