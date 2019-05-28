@@ -8,6 +8,7 @@ import { TicketOrder } from './TicketOrder';
 import { Item } from './Item';
 import { Report } from './Report';
 import { from } from 'rxjs';
+import { createOptional } from '@angular/compiler/src/core';
 
 @Injectable({
   providedIn: 'root'
@@ -65,15 +66,20 @@ export class TicketHttpService {
 
   create_report(filters) {
     let today = new Date();
-    return from(this.get_tickets(filters).toPromise().then((data: Ticket[]) => {
-      var report : Report;
-      report.date = today;
+    return this.get_tickets(filters).toPromise().then((data: Ticket[]) => {
+      console.log(data);
+      var report : Report = {
+        date : today,
+        total : 0,
+        total_customers : 0,
+        total_orders : {dish: 0, beverage: 0},
+        average_stay : 0
+      };
 
       var ticket_count = 0;
-      report.total = 0
-      report.total_customers = 0;
-      report.total_orders = {dish: 0, beverage: 0};
-      report.average_stay = 0;
+      
+      console.log(report);
+
 
       data.forEach((ticket) => {
         report.total += ticket.total;
@@ -82,12 +88,14 @@ export class TicketHttpService {
           report.total_orders[order.type_item] += 1;
         });
         ticket_count++;
-        report.average_stay += (ticket.end.getTime() - ticket.start.getTime())/60000
+        report.average_stay += Math.floor((new Date(ticket.end).getTime() - new Date(ticket.start).getTime())/60000)
+        console.log(report);
       });
 
-      report.average_stay /= ticket_count;
-      return from(this.http.post<Report>(this.url + "/" + "reports", report)); 
-    }).catch((err) => err));
+      report.average_stay = Math.floor(report.average_stay / ticket_count);
+      console.log(report);
+      return this.http.post<Report>("http://localhost:8080" + "/" + "report", report, this.create_options()).toPromise(); 
+    }).catch((err) => err);
   }
 
 }
