@@ -29,12 +29,13 @@ export class TicketHttpService {
     };
   }
 
-  open_ticket(waiter: string, table: number) {
-    return this.http.post<Ticket>(this.url, {waiter, table, start: Date()}, this.create_options());
+  open_ticket(waiter: string, table: number, people_number: number) {
+    return this.http.post<Ticket>(this.url, {waiter, table, start: Date(), people_number: people_number}, this.create_options());
   }
 
-  close_ticket(ticketId: string) {
-    return this.http.patch<Ticket>(this.url + '/' + ticketId, {state: 'closed', end: Date()}, this.create_options());
+  close_ticket(ticketId: string, total: number) {
+    console.log(total);
+    return this.http.patch<Ticket>(this.url + '/' + ticketId, {state: 'closed', end: Date(), total: total}, this.create_options());
   }
 
   get_tickets(filters) {

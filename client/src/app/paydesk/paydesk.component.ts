@@ -76,7 +76,7 @@ export class PaydeskComponent implements OnInit {
     }
     this.dd()
     this.socketio.get().on('waiters', this.dd);
-    this.socketio.get().on('paydesks', this.dd);
+    this.socketio.get().on('desks', this.dd);
   }
 
   send(name, password) {
@@ -151,8 +151,9 @@ export class PaydeskComponent implements OnInit {
   }
 
   close_ticket() {
-    this.ticket.close_ticket(this.selTicket._id).toPromise().then(() => {
-      return this.table.change_table({number: this.selTicket.table, state: null}).toPromise()
+    console.log("AAAAAAAAA" + this.emitReceipt());
+    this.ticket.close_ticket(this.selTicket._id, this.emitReceipt()).toPromise().then(() => {
+      return this.table.change_table({number: this.selTicket.table, state: undefined}).toPromise()
     })
     .then()
     .catch((err) => console.log(err));

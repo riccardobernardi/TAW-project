@@ -18,24 +18,36 @@ export class TablesViewComponent implements OnInit {
 
   private tables: Table[] = [];
   private socketObserver: Observable<any>;
+  private dd
 
-  constructor(private table: TableHttpService, private user: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService) { }
+  constructor(private table: TableHttpService, private user: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {
+    var supTables = this.tables;
+    this.dd = () => {
+      table.get_tables().subscribe( (dd) => {
+        supTables.splice(0, supTables.length);
+        dd.forEach( (ss) => {
+          supTables.push(ss);
+        });
+      });
+    }
+   }
 
   ngOnInit() {
     this.dd()
     this.socketio.get().on('waiters', this.dd);
   }
 
-  dd() {
+  /*dd() {
     this.table.get_tables().subscribe( (dd) => {
       dd.forEach( (ss) => {
         this.tables.push(ss);
       });
     });
-  }
+  }*/
 
-  open_ticket(tableToChange: Table) {
-    this.ticket.open_ticket(this.user.get_nick(), tableToChange.number).toPromise().then((data: Ticket) => {
+  open_ticket(tableToChange: Table, people_number: number) {
+    console.log(people_number);
+    this.ticket.open_ticket(this.user.get_nick(), tableToChange.number, people_number).toPromise().then((data: Ticket) => {
       console.log(data);
       // tableToChange.state = data._id;
       const table = Object.assign({}, tableToChange);
