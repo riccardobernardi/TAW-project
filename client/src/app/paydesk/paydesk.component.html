@@ -127,7 +127,7 @@
 
     {{day}} / {{month}} / {{year}}
 
-    <button class="btn btn-lg btn-primary btn-block" (click)="totalgain = this.allGainOfDay()" > result : {{totalgain | async}}</button>
+    <button class="btn btn-lg btn-primary btn-block" (click)="this.allGainOfDay()" > result : {{totalgain | async}}</button>
     <button class="btn btn-lg btn-primary btn-block" (click)="this.create_daily_report()" >Insert daily report</button>
 
   </form>
