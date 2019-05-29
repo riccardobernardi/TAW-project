@@ -98,4 +98,8 @@ export class TicketHttpService {
     }).catch((err) => err);
   }
 
+  get_reports(filter) {
+    return this.http.get<Report[]>("http://localhost:8080" + "/" + "report", this.create_options(filter));
+  }
+
 }

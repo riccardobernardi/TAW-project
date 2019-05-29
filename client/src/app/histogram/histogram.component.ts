@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { TicketHttpService } from '../ticket-http.service';
+import { Ticket } from "../Ticket";
+import { Report } from "../Report";
 
 @Component({
   selector: 'app-histogram',
@@ -7,23 +10,41 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HistogramComponent implements OnInit {
 
-  constructor() { }
-
-  public barChartOptions = {
+  private reports : Report[] = []
+  private getReports;
+  private barChartLabels;
+  private barChartType = "bar";
+  private barChartLegend = true;
+  private barChartOptions = {
     scaleShowVerticalLines: false,
     responsive: true
   };
+  private barChartData = []
 
-  public barChartLabels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
-  public barChartType = 'bar';
-  public barChartLegend = true;
+  constructor(ticket: TicketHttpService) { 
+    var reportsSup;
+    reportsSup = this.reports;
+    this.getReports = function(filters) {
+      return ticket.get_reports(filters);
+    }
+  }
 
-  public barChartData = [
-    {data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
-    {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'}
-  ];
+  createChart() {
+    this.barChartLabels = this.reports.map((report) => {
+      console.log(report);
+      let date = new Date(report.date);
+      return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear()
+    });
+    this.barChartData = [{data: this.reports.map((report) => report.total), label: "Incasso totale per data in euro"}];
+  }
 
   ngOnInit() {
+    this.getReports({}).toPromise().then((data : Report[]) => {
+      data.forEach((report) => this.reports.push(report));
+      this.reports.sort((r1, r2) => (new Date(r1.date) > new Date(r2.date)) ? 1 : -1)
+      console.log(this.reports);
+      this.createChart();
+    }).catch((err) => console.log(err));
   }
 
 }
