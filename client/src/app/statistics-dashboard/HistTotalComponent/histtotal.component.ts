@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { TicketHttpService } from '../ticket-http.service';
-import { Ticket } from "../Ticket";
-import { Report } from "../Report";
+import { TicketHttpService } from '../../ticket-http.service';
+import { Ticket } from "../../Ticket";
+import { Report } from "../../Report";
 
 @Component({
   selector: 'app-histogram',
-  templateUrl: './histogram.component.html',
-  styleUrls: ['./histogram.component.css']
+  templateUrl: './histtotal.component.html',
+  styleUrls: ['./histtotal.component.css']
 })
-export class HistogramComponent implements OnInit {
+export class HistTotalComponent implements OnInit {
 
   private reports : Report[] = []
   private getReports;
