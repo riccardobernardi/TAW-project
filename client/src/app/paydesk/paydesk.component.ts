@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {UserHttpService} from '../user-http.service';
 import {OrderService} from '../order.service';
@@ -14,9 +14,9 @@ import {Table} from '../Table';
 import {Ticket} from '../Ticket';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
-import { TableHttpService } from '../table-http.service';
-import { of, from } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {TableHttpService} from '../table-http.service';
+import {of, from} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 
 @Component({
@@ -30,7 +30,7 @@ export class PaydeskComponent implements OnInit {
   private newRoleSelected: string = undefined;
 
   private errmessage = undefined;
-  private user = { username: '', password: '', role: '' };
+  private user = {username: '', password: '', role: ''};
   private selDelUser: any;
   private selTable: any;
   private users = [];
@@ -45,17 +45,17 @@ export class PaydeskComponent implements OnInit {
   month: number;
   year: number;
   gainofday = 0;
-  totalgain: Promise<any>|null = null;
+  totalgain: Promise<any> | null = null;
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService, private router: Router, private order: OrderHttpService,
-              private table: TableHttpService  ) {
+              private table: TableHttpService) {
     const ticketSup = this.tickets;
     this.dd = () => {
-      ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
+      ticket.get_tickets({state: 'open'}).subscribe((dd) => {
         ticketSup.splice(0, ticketSup.length);
         console.log(dd);
-        dd.forEach( (ss) => {
+        dd.forEach((ss) => {
           ticketSup.push(ss);
           ss.orders.sort((a: TicketOrder, b: TicketOrder) => {
             return a.price - b.price;
@@ -68,7 +68,7 @@ export class PaydeskComponent implements OnInit {
 
     this.us.get_users().subscribe((data) => {
       const a: any = data;
-      a.forEach( (d) => this.users.push(d) );
+      a.forEach((d) => this.users.push(d));
     });
     console.log('ricarica');
   }
@@ -89,12 +89,12 @@ export class PaydeskComponent implements OnInit {
     this.user.password = password;
     this.user.role = this.newRoleSelected;
     console.log(this.user);
-    this.us.register( this.user ).subscribe( (d) => {
-      console.log('Registration ok: ' + JSON.stringify(d) );
+    this.us.register(this.user).subscribe((d) => {
+      console.log('Registration ok: ' + JSON.stringify(d));
       this.errmessage = undefined;
       // this.router.navigate(['/login']);
     }, (err) => {
-      console.log('Signup error: ' + JSON.stringify(err.error.errormessage) );
+      console.log('Signup error: ' + JSON.stringify(err.error.errormessage));
       this.errmessage = err.error.errormessage || err.error.message;
     });
   }
@@ -105,59 +105,48 @@ export class PaydeskComponent implements OnInit {
   }
 
   emitReceipt() {
-    return this.selTicket.orders.map( (x) => {
+    return this.selTicket.orders.map((x) => {
       return x.price;
-    }).reduce( (total, amount) => {
+    }).reduce((total, amount) => {
       return total + amount;
     });
   }
 
   allGain() {
-    return this.tickets.map( (x) => x.orders.map( (y) => y.price)
-      .reduce( (total, amount) => total + amount ))
-      .reduce( (total, amount) => total + amount);
+    return this.tickets.map((x) => x.orders.map((y) => y.price)
+      .reduce((total, amount) => total + amount))
+      .reduce((total, amount) => total + amount);
   }
 
   async allGainOfDay() {
-
-    //let amm;
 
     this.totalgain = this.ticket.get_tickets({}).pipe(
       map((dd) => {
         const ticketSup = [];
 
-      dd.forEach( (ss) => {
-        ticketSup.push(ss);
-      });
+        dd.forEach((ss) => {
+          ticketSup.push(ss);
+        });
 
-      /*if (this.day === undefined) {
-        return ticketSup.map( (oneTicket) => {
-          return oneTicket.orders.map( (oneOrder) => {
+        let a = ticketSup.filter((oneTicket) => {
+          return new Date(oneTicket.start).getDate() === this.day
+            && (new Date(oneTicket.start).getMonth() + 1) === this.month
+            && new Date(oneTicket.start).getFullYear() === this.year;
+        });
+
+        if (a.length === 0) {
+          return 0;
+        }
+
+        a = a.map((oneTicket) => {
+          return oneTicket.orders.map((oneOrder) => {
             return oneOrder.price;
-          }).reduce( (total, onePrice) => total + onePrice);
-        }).reduce( (total, nPrices) => total + nPrices);
-      }
-*/
-      const a =  ticketSup.filter( (oneTicket) => {
-        return new Date(oneTicket.start).getDate() === this.day
-          && new Date(oneTicket.start).getMonth() === this.month
-          && new Date(oneTicket.start).getFullYear() === this.year;
-      });
+          }).reduce((total, onePrice) => total + onePrice);
+        }).reduce((total, nPrices) => total + nPrices);
 
-      console.log(a);
-
-      /*.map( (oneTicket) => {
-        return oneTicket.orders.map( (oneOrder) => {
-          return oneOrder.price;
-        }).reduce( (total, onePrice) => total + onePrice);
-      }).reduce( (total, nPrices) => total + nPrices);*/
-
-      return 3;
-      //amm = a ;
+        return a;
       })
-    ).toPromise();
-
-    //return amm;
+    ).toPromise().then((x) => x);
   }
 
   onDateSelect($event: NgbDate) {
@@ -171,14 +160,14 @@ export class PaydeskComponent implements OnInit {
     this.ticket.close_ticket(this.selTicket._id, this.emitReceipt()).toPromise().then(() => {
       return this.table.change_table({number: this.selTicket.table, state: undefined}).toPromise();
     })
-    .then()
-    .catch((err) => console.log(err));
+      .then()
+      .catch((err) => console.log(err));
   }
 
   create_daily_report() {
     let today = new Date();
     this.ticket.create_report({start: today, state: 'closed'})
-    .then()
-    .catch((err) => console.log(err));
+      .then()
+      .catch((err) => console.log(err));
   }
 }
