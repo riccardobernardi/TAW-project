@@ -7,13 +7,14 @@ import { CookComponent} from './cook/cook.component';
 import { PaydeskComponent } from './paydesk/paydesk.component';
 import { BarmanComponent } from './barman/barman.component';
 import { WaiterDashboardComponent } from './waiter/waiterDashboard.component';
-import { OrdersServedComponent } from "./orders-served/orders-served.component";
-import { InsertOrdersComponent } from "./insert-orders/insert-orders.component";
-import { TablesViewComponent } from "./tables-view/tables-view.component";
-import { LogoutComponent } from "./logout/logout.component";
-import { Paydesk2DashboardComponent } from "./paydesk2/paydesk2Dashboard.component";
-import { HistTotalComponent } from "./statistics-dashboard/HistTotalComponent/histtotal.component";
-import { StatisticsDashboardComponent } from "./statistics-dashboard/statistics-dashboard.component";
+import { OrdersServedComponent } from './orders-served/orders-served.component';
+import { InsertOrdersComponent } from './insert-orders/insert-orders.component';
+import { TablesViewComponent } from './tables-view/tables-view.component';
+import { LogoutComponent } from './logout/logout.component';
+import { Paydesk2DashboardComponent } from './paydesk2/paydesk2Dashboard.component';
+import { HistTotalComponent } from './statistics-dashboard/HistTotalComponent/histtotal.component';
+import { StatisticsDashboardComponent } from './statistics-dashboard/statistics-dashboard.component';
+import {WaiterStatisticsComponent} from './statistics-dashboard/waiter-statistics/waiter-statistics.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -82,16 +83,20 @@ const routes: Routes = [
         component: PaydeskComponent
       },
       {
-        path: "statistics",
+        path: 'statistics',
         component: StatisticsDashboardComponent,
         children: [
           {
-            path: "total",
+            path: 'total',
             component: HistTotalComponent
           },
           {
-            path: "total customers",
+            path: 'total customers',
             component: HistTotalComponent
+          },
+          {
+            path: 'waiter-statistics',
+            component: WaiterStatisticsComponent
           }
         ]
       },
@@ -100,7 +105,6 @@ const routes: Routes = [
         component: LogoutComponent
       }
     ],
-    
   },
 /*  { path: 'barman', component:  BarmanComponent},
   { path: 'bartender', component:  BarmanComponent},
@@ -113,6 +117,7 @@ const routes: Routes = [
   { path: 'waiter/logout', component:  LogoutComponent},
   { path: 'waiter/viewOrders', component:  TablesViewComponent},
   { path: 'waiter/servedOrders', component:  OrdersServedComponent},*/
+
 ];
 
 @NgModule({

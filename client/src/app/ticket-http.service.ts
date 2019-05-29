@@ -52,6 +52,7 @@ export class TicketHttpService {
       price: item.price + parseInt(addedPrice),
       state: null,
       username_waiter: usernameWaiter,
+      username_cook: undefined,
       _id: null,
       type_item: item.type
     }
