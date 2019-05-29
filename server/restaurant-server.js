@@ -358,8 +358,8 @@ app.route("/tickets").get(auth, (req, res, next) => {
             console.log(ticketslist);
             ticketslist = ticketslist.filter((t) => {
                 t.start = new Date(t.start);
-                console.log(t.start.getFullYear(), dateFilter.getFullYear(), t.start.getMonth(), dateFilter.getMonth(), t.start.getDay(), dateFilter.getDay());
-                return t.start.getFullYear() == dateFilter.getFullYear() && t.start.getMonth() == dateFilter.getMonth(); /*&& t.start.getDay() == dateFilter.getDay() */
+                console.log(t.start.getFullYear(), dateFilter.getFullYear(), t.start.getMonth(), dateFilter.getMonth(), t.start.getDate(), dateFilter.getDate());
+                return t.start.getFullYear() == dateFilter.getFullYear() && t.start.getMonth() == dateFilter.getMonth() && t.start.getDate() == dateFilter.getDate();
             });
         }
         console.log(ticketslist);
@@ -552,8 +552,14 @@ app.route("/report").get(auth, (req, res, next) => {
         return next({ statusCode: 401, error: false, errormessage: "Unauthorized: user is not a desk" });
     //creo filtro per la query
     var filter = {};
-    if (req.query.date)
-        filter.date = req.query.date;
+    if (req.query.start || req.query.end) {
+        filter.date = {};
+        if (req.query.start)
+            filter.date["$gte"] = req.query.start;
+        if (req.query.end)
+            filter.date["$lt"] = req.query.end;
+    }
+    console.log(filter);
     //query
     report.getModel().find(filter).then((reportslist) => {
         return res.status(200).json(reportslist);

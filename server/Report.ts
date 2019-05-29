@@ -25,6 +25,7 @@ var reportSchema = new mongoose.Schema( {
     date: {
         type: mongoose.SchemaTypes.Date,
         required: true,
+        unique: true
     },
     total: {
         type: mongoose.SchemaTypes.Number,
