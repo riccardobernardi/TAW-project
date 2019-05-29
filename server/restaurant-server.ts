@@ -661,11 +661,17 @@ app.route("/report").get( auth, (req,res,next) => {
     //autenticazione
     if(!user.newUser(req.user).hasDeskRole())
        return next({ statusCode:401, error: false, errormessage: "Unauthorized: user is not a desk"} );
-    
+
     //creo filtro per la query
     var filter: any = {};
-    if(req.query.date)
-       filter.date = req.query.date;
+		if(req.query.start || req.query.end) {
+			filter.date = {}
+			if(req.query.start)
+       filter.date["$gte"] = req.query.start;
+			if(req.query.end)
+				filter.date["$lt"] = req.query.end
+		}
+		console.log(filter);
  
     //query
     report.getModel().find(filter).then( (reportslist) => {
