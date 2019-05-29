@@ -31,12 +31,12 @@ export class TicketHttpService {
   }
 
   open_ticket(waiter: string, table: number, people_number: number) {
-    return this.http.post<Ticket>(this.url, {waiter, table, start: Date(), people_number: people_number}, this.create_options());
+    return this.http.post<Ticket>(this.url, {waiter, table, start: Date(), people_number}, this.create_options());
   }
 
   close_ticket(ticketId: string, total: number) {
     console.log(total);
-    return this.http.patch<Ticket>(this.url + '/' + ticketId, {state: 'closed', end: Date(), total: total}, this.create_options());
+    return this.http.patch<Ticket>(this.url + '/' + ticketId, {state: 'closed', end: Date(), total}, this.create_options());
   }
 
   get_tickets(filters) {
@@ -55,21 +55,21 @@ export class TicketHttpService {
       username_cook: undefined,
       _id: null,
       type_item: item.type
-    }
+    };
     console.log(ticketId, order);
     return this.http.post(this.url + '/' + ticketId + '/' + 'orders', order, this.create_options());
   }
 
-  changeOrderState(ticketId, orderId, state) {
+  changeOrderState(ticketId, orderId, state, name) {
     console.log(ticketId, orderId);
-    return this.http.patch(this.url + '/' + ticketId + '/' + 'orders' + '/' + orderId, {state}, this.create_options());
+    return this.http.patch(this.url + '/' + ticketId + '/' + 'orders' + '/' + orderId, {state, username_cook: name}, this.create_options());
   }
 
   create_report(filters) {
-    let today = new Date();
+    const today = new Date();
     return this.get_tickets(filters).toPromise().then((data: Ticket[]) => {
       console.log(data);
-      var report : Report = {
+      const report: Report = {
         date : today,
         total : 0,
         total_customers : 0,
@@ -77,30 +77,30 @@ export class TicketHttpService {
         average_stay : 0
       };
 
-      var ticket_count = 0;
-      
+      let ticketCount = 0;
+
       console.log(report);
 
 
       data.forEach((ticket) => {
         report.total += ticket.total;
         report.total_customers += ticket.people_number;
-        ticket.orders.forEach((order : TicketOrder) => {
+        ticket.orders.forEach((order: TicketOrder) => {
           report.total_orders[order.type_item] += 1;
         });
-        ticket_count++;
-        report.average_stay += Math.floor((new Date(ticket.end).getTime() - new Date(ticket.start).getTime())/60000)
+        ticketCount++;
+        report.average_stay += Math.floor((new Date(ticket.end).getTime() - new Date(ticket.start).getTime()) / 60000);
         console.log(report);
       });
 
-      report.average_stay = Math.floor(report.average_stay / ticket_count);
+      report.average_stay = Math.floor(report.average_stay / ticketCount);
       console.log(report);
-      return this.http.post<Report>("http://localhost:8080" + "/" + "report", report, this.create_options()).toPromise(); 
+      return this.http.post<Report>('http://localhost:8080' + '/' + 'report', report, this.create_options()).toPromise();
     }).catch((err) => err);
   }
 
   get_reports(filter) {
-    return this.http.get<Report[]>("http://localhost:8080" + "/" + "report", this.create_options(filter));
+    return this.http.get<Report[]>('http://localhost:8080' + '/' + 'report', this.create_options(filter));
   }
 
 }

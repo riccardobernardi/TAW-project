@@ -60,7 +60,7 @@ export class BarmanComponent implements OnInit {
 
   setOrderinProgress(ticketid: string, orderid: string) {
     console.log(ticketid, orderid);
-    this.ticket.changeOrderState(ticketid, orderid, 'preparation').toPromise().then(() => {
+    this.ticket.changeOrderState(ticketid, orderid, 'preparation', this.us.get_nick()).toPromise().then(() => {
       console.log('Changing state to preparation OK');
     }).catch((err) => {
       console.log('Changing state to prepation failed: ' + err);
@@ -68,7 +68,7 @@ export class BarmanComponent implements OnInit {
   }
 
   setOrderCompleted(ticketid: string, orderid: string) {
-    this.ticket.changeOrderState(ticketid, orderid, 'ready').toPromise().then(() => {
+    this.ticket.changeOrderState(ticketid, orderid, 'ready', this.us.get_nick()).toPromise().then(() => {
       console.log('Changing state to ready OK');
     }).catch((err) => {
       console.log('Changing state to ready failed: ' + err);

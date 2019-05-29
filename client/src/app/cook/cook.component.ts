@@ -21,7 +21,8 @@ export class CookComponent implements OnInit {
   private tickets: Ticket[] = [];
   private dd;
 
-  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) {
+  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router,
+              private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) {
     // tslint:disable-next-line:variable-name
     const ticket_sup = this.tickets;
     this.dd = () => {
@@ -29,9 +30,10 @@ export class CookComponent implements OnInit {
         ticket_sup.splice(0, ticket_sup.length);
         dd.forEach( (ss) => {
           console.log(ss.orders);
-          var orders = ss.orders.filter((order : TicketOrder) => order.state != "ready" && order.state != "delivered" && order.type_item != "beverage");
+          const orders = ss.orders.filter((order: TicketOrder) =>
+            order.state !== 'ready' && order.state !== 'delivered' && order.type_item !== 'beverage');
           console.log(orders);
-          if(orders.length != 0) {
+          if (orders.length !== 0) {
             ticket_sup.push(ss);
             orders.sort((a: TicketOrder, b: TicketOrder) => {
               return a.price - b.price;
@@ -89,22 +91,23 @@ export class CookComponent implements OnInit {
 
   setOrderinProgress(ticketid: string, orderid: string) {
     /*console.log(this.url + '/tickets/' + ticketid + '/orders/' + orderid);
-    this.http.patch(this.url + '/tickets/' + ticketid + '/orders/' + orderid, {state: 'in_progress'}, this.create_options()).subscribe( (dd) => {
+    this.http.patch(this.url + '/tickets/' + ticketid + '/orders/' + orderid, {state: 'in_progress'},
+     this.create_options()).subscribe( (dd) => {
       console.log(dd);
     });*/
     console.log(ticketid, orderid);
-    this.ticket.changeOrderState(ticketid, orderid, "preparation").toPromise().then(() => {
-      console.log("Changing state to preparation OK");
+    this.ticket.changeOrderState(ticketid, orderid, 'preparation', this.us.get_nick()).toPromise().then(() => {
+      console.log('Changing state to preparation OK');
     }).catch((err) => {
-      console.log("Changing state to prepation failed: " + err);
+      console.log('Changing state to prepation failed: ' + err);
     });
   }
 
   setOrderCompleted(ticketid: string, orderid: string) {
-    this.ticket.changeOrderState(ticketid, orderid, "ready").toPromise().then(() => {
-      console.log("Changing state to ready OK");
+    this.ticket.changeOrderState(ticketid, orderid, 'ready', this.us.get_nick()).toPromise().then(() => {
+      console.log('Changing state to ready OK');
     }).catch((err) => {
-      console.log("Changing state to ready failed: " + err);
+      console.log('Changing state to ready failed: ' + err);
     });
   }
 }

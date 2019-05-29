@@ -58,7 +58,7 @@ export class OrdersServedComponent implements OnInit {
 
   deliver(ticketIndex: number, orderIndex: number, state: string) {
     const ticket = this.tickets[ticketIndex];
-    this.ticket.changeOrderState(ticket._id, ticket.orders[orderIndex]._id, 'delivered').toPromise().then((data) => {
+    this.ticket.changeOrderState(ticket._id, ticket.orders[orderIndex]._id, 'delivered', this.us.get_nick()).toPromise().then((data) => {
       ticket.orders[orderIndex].state = 'delivered';
     }).catch((err) => console.log(err));
   }
