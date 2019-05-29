@@ -42,9 +42,11 @@ export class PaydeskComponent implements OnInit {
   month: number;
   year: number;
   gainofday = 0;
+  totalgain: any;
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
-              private socketio: SocketioService, private router: Router, private order: OrderHttpService, private table: TableHttpService  ) {
+              private socketio: SocketioService, private router: Router, private order: OrderHttpService,
+              private table: TableHttpService  ) {
     const ticketSup = this.tickets;
     this.dd = () => {
       ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
@@ -74,7 +76,7 @@ export class PaydeskComponent implements OnInit {
     } else {
       console.log('your token is: [' + this.us.get_token() + ']');
     }
-    this.dd()
+    this.dd();
     this.socketio.get().on('waiters', this.dd);
     this.socketio.get().on('desks', this.dd);
   }
@@ -113,35 +115,43 @@ export class PaydeskComponent implements OnInit {
       .reduce( (total, amount) => total + amount);
   }
 
-  allGainOfDay() {
-    /*console.log(this.day + '/' + this.month + '/' + this.year);
-    if (this.day === undefined) {
-      this.day = 5;
-      this.month = 5;
-      this.year = 2019;
-    }*/
+  async allGainOfDay() {
 
-    /*this.tickets.forEach( (oneTicket) => {
-      console.log('ghe sboro' + oneTicket.start.getDay());
-    })*/
+    let amm;
 
-    console.log('ghe sboro' + this.tickets[0].start.getDay());
+    await this.ticket.get_tickets({}).subscribe( (dd) => {
+      const ticketSup = [];
 
-    /*const a = this.tickets.filter( (oneTicket) => {
-      console.log(oneTicket.start.getDay());
-      return oneTicket.start.getDay() == 5;
+      dd.forEach( (ss) => {
+        ticketSup.push(ss);
+      });
+
+      /*if (this.day === undefined) {
+        return ticketSup.map( (oneTicket) => {
+          return oneTicket.orders.map( (oneOrder) => {
+            return oneOrder.price;
+          }).reduce( (total, onePrice) => total + onePrice);
+        }).reduce( (total, nPrices) => total + nPrices);
+      }
+*/
+      const a =  ticketSup.filter( (oneTicket) => {
+        return new Date(oneTicket.start).getDate() === this.day
+          && new Date(oneTicket.start).getMonth() === this.month
+          && new Date(oneTicket.start).getFullYear() === this.year;
+      });
+
+      console.log(a);
+
+      /*.map( (oneTicket) => {
+        return oneTicket.orders.map( (oneOrder) => {
+          return oneOrder.price;
+        }).reduce( (total, onePrice) => total + onePrice);
+      }).reduce( (total, nPrices) => total + nPrices);*/
+
+      amm = a ;
     });
 
-    console.log(a);
-    /!*.map( (oneTicket) => {
-      return oneTicket.orders.map( (oneOrder) => {
-        return oneOrder.price;
-      }).reduce( (total, onePrice) => total + onePrice);
-    }).reduce( (total, nPrices) => total + nPrices);*!/
-
-    return a.map( (oneTicket) => {
-      return oneTicket.orders.map( (x) => x.price).reduce( (c, b) => c + b);
-    }).reduce( (c, d) => c + d );*/
+    return amm;
   }
 
   onDateSelect($event: NgbDate) {
@@ -151,17 +161,17 @@ export class PaydeskComponent implements OnInit {
   }
 
   close_ticket() {
-    console.log("AAAAAAAAA" + this.emitReceipt());
+    console.log('AAAAAAAAA' + this.emitReceipt());
     this.ticket.close_ticket(this.selTicket._id, this.emitReceipt()).toPromise().then(() => {
-      return this.table.change_table({number: this.selTicket.table, state: undefined}).toPromise()
+      return this.table.change_table({number: this.selTicket.table, state: undefined}).toPromise();
     })
     .then()
     .catch((err) => console.log(err));
   }
 
   create_daily_report() {
-    var today = new Date();
-    this.ticket.create_report({start: today, state: "closed"})
+    let today = new Date();
+    this.ticket.create_report({start: today, state: 'closed'})
     .then()
     .catch((err) => console.log(err));
   }

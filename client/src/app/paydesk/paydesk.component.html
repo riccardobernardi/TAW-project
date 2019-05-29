@@ -109,9 +109,7 @@
 
   <form #formReports hidden="true" >
 
-    <!--<p>Here reports</p>
-
-    <p>Total gain: {{allGain()}}</p>
+    <p>Here reports</p>
 
     <form class="form-inline">
       <div class="form-group">
@@ -129,9 +127,7 @@
 
     {{day}} / {{month}} / {{year}}
 
-    <p>Total gain of Day: {{allGainOfDay()}}</p>
-
-    <button class="btn btn-lg btn-primary btn-block" (click)="this.allGainOfDay()" >gain</button>-->
+    <button class="btn btn-lg btn-primary btn-block" (click)="totalgain = this.allGainOfDay()" > result : {{totalgain | async}}</button>
     <button class="btn btn-lg btn-primary btn-block" (click)="this.create_daily_report()" >Insert daily report</button>
 
   </form>
