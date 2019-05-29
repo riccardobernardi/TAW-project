@@ -52,7 +52,7 @@ export class TicketHttpService {
       price: item.price + parseInt(addedPrice),
       state: null,
       username_waiter: usernameWaiter,
-      username_cook: undefined,
+      username_executer: undefined,
       _id: null,
       type_item: item.type
     };
@@ -62,7 +62,7 @@ export class TicketHttpService {
 
   changeOrderState(ticketId, orderId, state, name) {
     console.log(ticketId, orderId);
-    return this.http.patch(this.url + '/' + ticketId + '/' + 'orders' + '/' + orderId, {state, username_cook: name}, this.create_options());
+    return this.http.patch(this.url + '/' + ticketId + '/' + 'orders' + '/' + orderId, {state, username_executer: name}, this.create_options());
   }
 
   create_report(filters) {

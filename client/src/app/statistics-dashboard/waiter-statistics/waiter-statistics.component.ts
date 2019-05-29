@@ -55,11 +55,15 @@ export class WaiterStatisticsComponent implements OnInit {
             waiters[z] += 1;
           });
         });
+
       })
+      
     ).subscribe();
 
     console.log(waiters);
     return waiters;
+
+    
   }
 
   async cookStatistics() {
@@ -80,7 +84,7 @@ export class WaiterStatisticsComponent implements OnInit {
           console.log(x);
           return x.orders.map( (y) => {
             console.log(y);
-            return y.username_cook;
+            return y.username_executer;
           }).forEach( (z) => {
             console.log(z);
             if ( !(z in waiters)) {

@@ -25,6 +25,7 @@ import { HistTotalComponent } from './statistics-dashboard/HistTotalComponent/hi
 import { ChartsModule } from "ng2-charts";
 import { StatisticsDashboardComponent } from './statistics-dashboard/statistics-dashboard.component';
 import { WaiterStatisticsComponent } from './statistics-dashboard/waiter-statistics/waiter-statistics.component';
+import { HistTotalCustomersComponent } from './statistics-dashboard/hist-total-customers/hist-total-customers.component';
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import { WaiterStatisticsComponent } from './statistics-dashboard/waiter-statist
     LogoutComponent,
     HistTotalComponent,
     StatisticsDashboardComponent,
-    WaiterStatisticsComponent
+    WaiterStatisticsComponent,
+    HistTotalCustomersComponent
   ],
   imports: [
     BrowserModule,
