@@ -165,7 +165,7 @@ export class PaydeskComponent implements OnInit {
   }
 
   create_daily_report() {
-    let today = new Date();
+    const today = new Date(this.day + '/' + this.month + '/' + this.year);
     this.ticket.create_report({start: today, state: 'closed'})
       .then()
       .catch((err) => console.log(err));

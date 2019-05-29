@@ -88,7 +88,7 @@ const routes: Routes = [
     
   },
   {
-    path: "histogram",
+    path: 'histogram',
     component: HistogramComponent
   }
 /*  { path: 'barman', component:  BarmanComponent},
