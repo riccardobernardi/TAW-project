@@ -96,7 +96,7 @@ export class CookComponent implements OnInit {
       console.log(dd);
     });*/
     console.log(ticketid, orderid);
-    this.ticket.changeOrderState(ticketid, orderid, 'preparation', this.us.get_nick()).toPromise().then(() => {
+    this.ticket.changeOrderState(ticketid, orderid, 'preparation', undefined).toPromise().then(() => {
       console.log('Changing state to preparation OK');
     }).catch((err) => {
       console.log('Changing state to prepation failed: ' + err);

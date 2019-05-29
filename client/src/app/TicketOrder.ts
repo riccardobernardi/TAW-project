@@ -3,7 +3,7 @@ export interface TicketOrder {
   name_item: string;
   type_item: string;
   username_waiter: string;
-  username_cook: string;
+  username_executer?: string;
   state: string;
   price: number;
   added: [];
