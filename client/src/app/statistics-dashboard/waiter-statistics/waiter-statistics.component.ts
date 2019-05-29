@@ -95,4 +95,38 @@ export class WaiterStatisticsComponent implements OnInit {
     console.log(waiters);
     return waiters;
   }
+
+/*  async cookStatistics() {
+
+    const waiters = {};
+
+    this.ticket.get_tickets({}).pipe(
+      tap((dd) => {
+        const ticketSup: Ticket[] = [];
+
+        dd.forEach((ss) => {
+          ticketSup.push(ss);
+        });
+
+        console.log(ticketSup);
+
+        ticketSup.map( (x) => {
+          console.log(x);
+          return x.orders.map( (y) => {
+            console.log(y);
+            return y.username_bartender;
+          }).forEach( (z) => {
+            console.log(z);
+            if ( !(z in waiters)) {
+              waiters[z] = 0;
+            }
+            waiters[z] += 1;
+          });
+        });
+      })
+    ).subscribe();
+
+    console.log(waiters);
+    return waiters;
+  }*/
 }
