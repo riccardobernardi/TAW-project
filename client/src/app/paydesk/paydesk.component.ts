@@ -15,6 +15,9 @@ import {Ticket} from '../Ticket';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import { TableHttpService } from '../table-http.service';
+import { of, from } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-paydesk',
@@ -42,7 +45,7 @@ export class PaydeskComponent implements OnInit {
   month: number;
   year: number;
   gainofday = 0;
-  totalgain: any;
+  totalgain: Promise<any>|null = null;
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService, private router: Router, private order: OrderHttpService,
@@ -117,10 +120,11 @@ export class PaydeskComponent implements OnInit {
 
   async allGainOfDay() {
 
-    let amm;
+    //let amm;
 
-    await this.ticket.get_tickets({}).subscribe( (dd) => {
-      const ticketSup = [];
+    this.totalgain = this.ticket.get_tickets({}).pipe(
+      map((dd) => {
+        const ticketSup = [];
 
       dd.forEach( (ss) => {
         ticketSup.push(ss);
@@ -148,10 +152,12 @@ export class PaydeskComponent implements OnInit {
         }).reduce( (total, onePrice) => total + onePrice);
       }).reduce( (total, nPrices) => total + nPrices);*/
 
-      amm = a ;
-    });
+      return 3;
+      //amm = a ;
+      })
+    ).toPromise();
 
-    return amm;
+    //return amm;
   }
 
   onDateSelect($event: NgbDate) {
