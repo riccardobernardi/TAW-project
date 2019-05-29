@@ -667,9 +667,9 @@ app.route("/report").get( auth, (req,res,next) => {
 		if(req.query.start || req.query.end) {
 			filter.date = {}
 			if(req.query.start)
-       filter.date["$gte"] = req.query.start;
+       filter.date["$gte"] = req.query.start.setHours(0,0,0,0);
 			if(req.query.end)
-				filter.date["$lt"] = req.query.end
+				filter.date["$lt"] = req.query.end.setHours(0,0,0,0);
 		}
 		console.log(filter);
  
@@ -693,12 +693,13 @@ app.route("/report").get( auth, (req,res,next) => {
     //controllo formato
     if (!report.isReport(r))
        return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
-    
+		
+		r.date.setHours(0,0,0,0); //in order to reset hour, minutes and seconds for searches
     //inserisco
-    r.save().then( (data) => {
+    r.save().then( (data) =>  {
        return res.status(200).json({ error: false, errormessage: "", id: data._id });
     }).catch( (reason) => {
-    if( reason.code === 11000 )
+    if( reason.code === 11000)
        return next({statusCode:409, error:true, errormessage: "Report already exists"} );
     return next({ statusCode:500, error: true, errormessage: "DB error: "+reason.errmsg });
     });
@@ -1053,8 +1054,39 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
          console.log("Tickets saved");
       }).catch(function (reason) {
          console.log("Unable to save tickets: " + reason);
-      });
+      });  
+       
    });
+
+   report.getModel().deleteMany({}).then(() => {
+      var reportModel = report.getModel();
+
+      var r1 = new reportModel({
+         date: "2019-05-28T00:00:00.000Z",
+         total: 175,
+         total_customers: 18,
+         total_orders: {
+             dish: 24,
+             beverage: 30
+         },
+         average_stay: 40
+      }).save();
+
+      var r2 = new reportModel({
+         date: "2019-05-27T00:00:00.000Z",
+         total: 320,
+         total_customers: 40,
+         total_orders: {
+               dish: 50,
+               beverage: 112
+         },
+         average_stay: 90
+      }).save();
+
+      Promise.all([r1,r2]).then().catch((err) => console.log("Save of report not completed: " + err));
+   })
+
+
 
    let server = http.createServer(app);
    ios = io(server);
