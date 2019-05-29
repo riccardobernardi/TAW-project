@@ -559,8 +559,8 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    newer.name_item = req.body.name_item;
    newer.price = req.body.price;
    newer.added = req.body.added;
-   newer.waiter = req.body.username_waiter;
-   newer.state = ticket.orderState[0];
+   newer.username_waiter = req.body.username_waiter;
+   newer.username_executer = req.body.username_executer;
    newer.state = ticket.orderState[0];
    newer.type_item = req.body.type_item;
    
@@ -607,6 +607,9 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
       }
 
       toChange[0].state = req.body.state;
+
+      if(req.body.username_executer)
+         toChange[0].username_executer = req.body.username_executer;
       
       order_type = toChange[0].type_item;
       return data.save();
