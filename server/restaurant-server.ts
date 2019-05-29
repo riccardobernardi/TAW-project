@@ -439,8 +439,8 @@ app.route("/tickets").get(auth, (req, res, next) => {
          console.log(ticketslist);
          ticketslist = ticketslist.filter((t: ticket.Ticket) => { 
             t.start = new Date(t.start);
-            console.log(t.start.getFullYear(), dateFilter.getFullYear(), t.start.getMonth(), dateFilter.getMonth(), t.start.getDay(), dateFilter.getDay());
-            return t.start.getFullYear() == dateFilter.getFullYear() && t.start.getMonth() == dateFilter.getMonth() /*&& t.start.getDay() == dateFilter.getDay() */
+            console.log(t.start.getFullYear(), dateFilter.getFullYear(), t.start.getMonth(), dateFilter.getMonth(), t.start.getDate(), dateFilter.getDate());
+            return t.start.getFullYear() == dateFilter.getFullYear() && t.start.getMonth() == dateFilter.getMonth() && t.start.getDate() == dateFilter.getDate(); 
          });
       }
       console.log(ticketslist);
