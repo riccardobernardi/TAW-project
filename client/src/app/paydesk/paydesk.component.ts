@@ -156,7 +156,6 @@ export class PaydeskComponent implements OnInit {
   }
 
   close_ticket() {
-    console.log('AAAAAAAAA' + this.emitReceipt());
     this.ticket.close_ticket(this.selTicket._id, this.emitReceipt()).toPromise().then(() => {
       return this.table.change_table({number: this.selTicket.table, state: undefined}).toPromise();
     })
@@ -165,7 +164,9 @@ export class PaydeskComponent implements OnInit {
   }
 
   create_daily_report() {
-    const today = new Date(this.day + '/' + this.month + '/' + this.year);
+    console.log(this.year + "-" + ((this.month > 9) ? this.month : "0" + this.month) + "-" + ((this.day > 9) ? this.day : "0" + this.day) + 'T' + "00:00:00");
+    const today = new Date(this.year, this.month - 1, this.day, 0, 0, 0, 0);
+    console.log(today);
     this.ticket.create_report({start: today, state: 'closed'})
       .then()
       .catch((err) => console.log(err));

@@ -6,11 +6,9 @@ import { AppComponent } from './app.component';
 import { UserLoginComponent } from './user-login/user-login.component';
 import { AppRoutingModule } from './app-routing.module';
 import { UserHttpService } from './user-http.service';
-//import { WaiterDashboardModule } from './waiter/waiterDashboard.module';
 import { CookComponent } from './cook/cook.component';
 import { BarmanComponent } from './barman/barman.component';
 import { SocketioService } from './socketio.service';
-//import {OrderService} from './order.service';
 import { OrderHttpService } from './order-http.service';
 import { ItemHttpService } from './item-http.service';
 import { TableHttpService } from './table-http.service';
@@ -23,8 +21,9 @@ import { TablesViewComponent } from "./tables-view/tables-view.component";
 import { WaiterDashboardComponent } from './waiter/waiterDashboard.component';
 import { Paydesk2DashboardComponent } from "./paydesk2/paydesk2Dashboard.component";
 import { PaydeskComponent } from './paydesk/paydesk.component';
-import { HistogramComponent } from './histogram/histogram.component';
+import { HistTotalComponent } from './statistics-dashboard/HistTotalComponent/histtotal.component';
 import { ChartsModule } from "ng2-charts";
+import { StatisticsDashboardComponent } from './statistics-dashboard/statistics-dashboard.component';
 
 
 @NgModule({
@@ -40,7 +39,8 @@ import { ChartsModule } from "ng2-charts";
     InsertOrdersComponent,
     TablesViewComponent,
     LogoutComponent,
-    HistogramComponent
+    HistTotalComponent,
+    StatisticsDashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +49,6 @@ import { ChartsModule } from "ng2-charts";
     AppRoutingModule,
     NgbModule.forRoot(),
     ChartsModule
-    // WaiterDashboardModule
   ],
   providers: [
     {provide: UserHttpService, useClass: UserHttpService },

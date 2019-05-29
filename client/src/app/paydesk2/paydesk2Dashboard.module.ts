@@ -19,6 +19,7 @@ import {PaydeskComponent} from '../paydesk/paydesk.component';
 import {LogoutComponent} from '../logout/logout.component';
 import {RouterModule} from '@angular/router';
 import {AppModule} from '../app.module';
+import { StatisticsDashboardComponent } from '../statistics-dashboard/statistics-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import {AppModule} from '../app.module';
     OrdersServedComponent,
     InsertOrdersComponent,
     PaydeskComponent,
+    StatisticsDashboardComponent
   ],
   imports: [
     CommonModule,
