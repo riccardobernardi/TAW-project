@@ -91,9 +91,11 @@ export class WaiterStatisticsComponent implements OnInit {
 
       // a.push(x);
 
-      Object.keys(x).forEach( (y) => {
+      /*Object.keys(x).forEach( (y) => {
         a.push({name: y, num: x[y]});
-      });
+      });*/
+
+      a.push(x);
 
       console.log(a);
 
