@@ -183,10 +183,19 @@ app.route("/tables").get(auth, (req, res, next) => {
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
+    //controllo formato
+    var toInsert = {};
+    toInsert.number = req.body.number;
+    toInsert.max_people = req.body.max_people;
+    if (!toInsert.number || typeof (toInsert.number != "number") || !toInsert.max_people || typeof (toInsert.max_people) != "number") {
+        return next({ statusCode: 400, error: true, errormessage: "Wrong format" });
+    }
+    //tavolo libero di default
+    toInsert.state = table.states[0];
     //creo tavolo da aggiungere
     var Table = table.getModel();
     //query al DB
-    (new Table(req.body)).save().then((data) => {
+    (new Table(toInsert)).save().then((data) => {
         return res.status(200).json({
             number: data.number,
             max_people: data.number
@@ -217,25 +226,67 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
         return next({ statusCode: 400, error: true, errormessage: "Wrong format" });
     console.log("Dentro tables API");
     console.log(req.body);
-    //creo oggetto per modificare il documento
-    var update = {};
-    if (req.body.max_people)
-        update.max_people = req.body.max_people;
-    if (req.body.state)
-        update.state = req.body.state;
-    else
-        update.state = undefined; //in order to reset the state of a table
-    //perchè la patch con findOneAndUpdate ritora sempre un valore vecchio?
-    table.getModel().findOneAndUpdate({ number: req.params.number }, { $set: update }).then((data) => {
-        //notifico sul socket
-        emitEvent("modified table", req.params.number);
-        return res.status(200).json({
-            number: data.number,
-            max_people: data.number,
-            state: data.state
-        });
+    table.getModel().findOne({ number: req.params.number }).then((data) => {
+        //creo oggetto per aggiornare il documento
+        var update = {};
+        if (req.body.max_people)
+            update.max_people = req.body.max_people;
+        if (req.body.associated_ticket)
+            update.associated_ticket = req.body.associated_ticket;
+        if (req.body.state)
+            update.state = req.body.state;
+        if (update.state == table.states[0]) {
+            //controllo che non ci sia un associated_ticket quando si cerca di liberare un tavolo
+            if (update.associated_ticket)
+                return next({ statusCode: 401, error: true, errormessage: "Wrong format, associated_ticket not required" });
+            data.update(update).then(() => {
+                //notifico sul socket
+                emitEvent("modified table", req.params.number);
+                return res.status(200).json({
+                    number: data.number,
+                    max_people: data.number,
+                    state: data.state
+                });
+            });
+        }
+        else if (update.state == table.states[1]) {
+            //controllo che sia definito il ticket da associare per occupare il tavolo
+            if (!update.associated_ticket)
+                return next({ statusCode: 401, error: true, errormessage: "Wrong format, associated_ticket required" });
+            //controllo che il tavolo sia libero
+            if (data.state == table.states[1])
+                return next({ statusCode: 409, error: true, errormessage: "Conflict, table already taken" });
+            //modifico tavolo
+            data.update(update).then(() => {
+                //notifico sul socket
+                emitEvent("modified table", req.params.number);
+                return res.status(200).json({
+                    number: data.number,
+                    max_people: data.number,
+                    state: data.state
+                });
+            });
+        }
+        else if (!update.state) {
+            if (update.associated_ticket) {
+                return next({ statusCode: 401, error: true, errormessage: "Wrong format, state required" });
+            }
+            //modifico tavolo
+            data.update(update).then(() => {
+                //notifico sul socket
+                emitEvent("modified table", req.params.number);
+                return res.status(200).json({
+                    number: data.number,
+                    max_people: data.number,
+                    state: data.state
+                });
+            });
+        }
+        else {
+            return next({ statusCode: 401, error: true, errormessage: "Wrong format" });
+        }
     }).catch((reason) => {
-        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
+        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
     });
 });
 app.route("/items").get(auth, (req, res, next) => {
@@ -540,8 +591,9 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch(auth, (req, res, next) => 
             console.log("La porcamadonna di orderlist " + ordersList + " " + !ordersList);
             if (req.body.state == ticket.orderState[2] && ordersList.length == 0)
                 console.log("Sto per emettere l'evento 'piatti pronti!'");
-            if (req.body.state == ticket.orderState[2] && ordersList.length == 0)
+            if (req.body.state == ticket.orderState[2] && ordersList.length == 0) {
                 emitEvent("ready item - waiters", req.params.idTicket);
+            }
         }
         return res.status(200).json({ error: false, errormessage: "" });
     }).catch((reason) => {

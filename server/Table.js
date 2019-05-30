@@ -7,6 +7,7 @@ var countDecimals = function (value) {
         return value.toString().split(".")[1].length || 0;
     return 0;
 };
+exports.states = ["free", "taken"];
 var tableSchema = new mongoose.Schema({
     number: {
         type: mongoose.SchemaTypes.Number,
@@ -24,6 +25,11 @@ var tableSchema = new mongoose.Schema({
         }
     },
     state: {
+        type: mongoose.SchemaTypes.String,
+        required: true,
+        enum: exports.states
+    },
+    associated_ticket: {
         type: mongoose.SchemaTypes.ObjectId,
         required: false
     }
