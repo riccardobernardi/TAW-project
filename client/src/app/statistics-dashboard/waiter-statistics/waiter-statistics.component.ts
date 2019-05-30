@@ -77,16 +77,25 @@ export class WaiterStatisticsComponent implements OnInit {
   }
 
   getStats() {
-    const a = [];
+    let a = [];
 
     this.waiterStatistics().then( (x) => {
-      console.log('aaaaa');
+      // console.log('aaaaa');
+      // console.log(x);
+
+      /*Object.keys(x).forEach( (mm) =>{
+        console.log(mm);
+      });*/
+
       console.log(x);
-      Object.keys(x).forEach( (y) => {
+
+      a.push(x);
+
+      /*.forEach( (y) => {
         a.push({name: y, num: x[y]});
         console.log('bbbbbbb');
         console.log({name: y, num: x[y]});
-      });
+      });*/
     });
 
     /*this.executerStatistics().then( (x) => {
@@ -96,7 +105,7 @@ export class WaiterStatisticsComponent implements OnInit {
     });*/
 
     if (a.length === 0) {
-      console.log('porco dio');
+      // console.log('porco dio');
     }
 
     return a;
