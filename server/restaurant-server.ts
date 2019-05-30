@@ -949,10 +949,10 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
       console.log("Database tables pulito: " + data);
 
       var tableModel = table.getModel();
-      var t1 = (new tableModel({number : 1, max_people: 4})).save();
-      var t2 = (new tableModel({number : 2, max_people: 4})).save();
-      var t3 = (new tableModel({number : 3, max_people: 6})).save();
-      var t4 = (new tableModel({number : 4, max_people: 6})).save();
+      var t1 = (new tableModel({number : 1, max_people: 4, state: table.states[0]})).save();
+      var t2 = (new tableModel({number : 2, max_people: 4, state: table.states[0]})).save();
+      var t3 = (new tableModel({number : 3, max_people: 6, state: table.states[0]})).save();
+      var t4 = (new tableModel({number : 4, max_people: 6, state: table.states[0]})).save();
 
       Promise.all([t1, t2, t3, t4]).then(function () {
          console.log("Table saved");
@@ -1050,7 +1050,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
          people_number: 2
       }).save().then((data) => {
          console.log(data);
-         table.getModel().findOneAndUpdate({number: 1}, {$set: {state: data._id}}).then();
+         table.getModel().findOneAndUpdate({number: 1}, {$set: {state: table.states[1]}}).then();
       });
 
       
@@ -1071,7 +1071,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
          total: 0,
          people_number: 5
       }).save().then((data) => {
-         table.getModel().findOneAndUpdate({number: 3}, {$set: {state: data._id}}).then();
+         table.getModel().findOneAndUpdate({number: 3}, {$set: {state: table.states[1]}}).then();
       });
 
       var ti2 = new ticketModel({
@@ -1105,7 +1105,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
          total: 0,
          people_number: 2
       }).save().then((data) => {
-         table.getModel().findOneAndUpdate({number: 2},{$set: {state: data._id}}).then();
+         table.getModel().findOneAndUpdate({number: 2},{$set: {state: table.states[1]}}).then();
       });
 
       //fine inizializzazione DB
