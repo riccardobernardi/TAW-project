@@ -7,10 +7,10 @@ import { Report } from "../../Report";
   templateUrl: './hist-total-customers.component.html',
   styleUrls: ['./hist-total-customers.component.css']
 })
+
 export class HistTotalCustomersComponent implements OnInit {
 
   private reports : Report[] = []
-  private getReports;
   private barChartLabels;
   private barChartType = "bar";
   private barChartLegend = true;
@@ -20,12 +20,10 @@ export class HistTotalCustomersComponent implements OnInit {
   };
   private barChartData = []
 
-  constructor(ticket: TicketHttpService) { 
-    var reportsSup;
-    reportsSup = this.reports;
-    this.getReports = function(filters) {
-      return ticket.get_reports(filters);
-    }
+  constructor(private ticket: TicketHttpService) {}
+
+  ngOnInit() {
+    this.getReports();
   }
 
   createChart() {
@@ -37,8 +35,8 @@ export class HistTotalCustomersComponent implements OnInit {
     this.barChartData = [{data: this.reports.map((report) => report.total_customers), label: "Numero clienti per data in euro"}];
   }
 
-  ngOnInit() {
-    this.getReports({}).toPromise().then((data : Report[]) => {
+  getReports() {
+    this.ticket.get_reports({}).toPromise().then((data : Report[]) => {
       data.forEach((report) => this.reports.push(report));
       this.reports.sort((r1, r2) => (new Date(r1.date) > new Date(r2.date)) ? 1 : -1)
       console.log(this.reports);
