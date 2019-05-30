@@ -53,10 +53,11 @@ export class WaiterStatisticsComponent implements OnInit {
     return waiters;
   }
 
-  async executerStatistics() {
-    const waiters = {};
-    this.ticket.get_tickets({}).pipe(
-      tap((dd) => {
+  executerStatistics() {
+    //const waiters = {};
+    return this.ticket.get_tickets({}).pipe(
+      map((dd) => {
+        const waiters = {}
         const ticketSup: Ticket[] = [];
         dd.forEach((ss) => {
           ticketSup.push(ss);
@@ -71,40 +72,34 @@ export class WaiterStatisticsComponent implements OnInit {
             waiters[z] += 1;
           });
         });
+        console.log(waiters);
+        return waiters;
       })
-    ).subscribe();
-    return waiters;
+    )/*.subscribe()*/;
+    //return waiters;
   }
 
   getStats() {
-    const a = [];
+    //const a = [];
 
-    this.waiterStatistics().then( (x) => {
-      // console.log('aaaaa');
-      // console.log(x);
+    return this.executerStatistics().pipe( 
+      map((x) => {
+        const a = []
+        console.log(x);
+        console.log(Object.keys(x));
 
-      /*Object.keys(x).forEach( (mm) =>{
-        console.log(mm);
-      });*/
+        Object.keys(x).forEach( (y) => {
+          console.log(y);
+          a.push({name: y, num: x[y]});
+        });
 
-      // console.log(x);
+        //a.push(x);
 
-      // a.push(x);
+        console.log(a);
+        return a;
 
-      /*Object.keys(x).forEach( (y) => {
-        a.push({name: y, num: x[y]});
-      });*/
-
-      a.push(x);
-
-      console.log(a);
-
-      /*.forEach( (y) => {
-        a.push({name: y, num: x[y]});
-        console.log('bbbbbbb');
-        console.log({name: y, num: x[y]});
-      });*/
-    });
+      })
+    );
 
     /*this.executerStatistics().then( (x) => {
       Object.keys(x).forEach( (y) => {
@@ -112,10 +107,10 @@ export class WaiterStatisticsComponent implements OnInit {
       });
     });*/
 
-    if (a.length === 0) {
+    /*if (a.length === 0) {
       // console.log('porco dio');
     }
 
-    return a;
+    return a;*/
   }
 }
