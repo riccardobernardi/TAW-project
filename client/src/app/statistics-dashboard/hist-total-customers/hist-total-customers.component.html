@@ -1,7 +1,7 @@
 <div>
   <div style="display: block">
     <canvas baseChart
-            [datasets]="barChartData"
+            [datasets]="barChartData | async"
             [labels]="barChartLabels"
             [options]="barChartOptions"
             [legend]="barChartLegend"
