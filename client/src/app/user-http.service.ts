@@ -19,7 +19,7 @@ export class UserHttpService {
 
   public token = '';
   public url = 'http://localhost:8080';
-  public users = []
+  public users = [];
 
   constructor( private http: HttpClient, private router: Router ) {
     console.log('User service instantiated');
@@ -94,8 +94,8 @@ export class UserHttpService {
   }
 
   get_token() {
-    this.token = localStorage.getItem("restaurant_token")
-    console.log(this.token);
+    this.token = localStorage.getItem('restaurant_token');
+    // console.log(this.token);
     return this.token;
   }
 
