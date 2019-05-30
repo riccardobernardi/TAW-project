@@ -80,9 +80,11 @@ export class WaiterStatisticsComponent implements OnInit {
     const a = [];
 
     this.waiterStatistics().then( (x) => {
+      console.log('aaaaa');
       console.log(x);
       Object.keys(x).forEach( (y) => {
         a.push({name: y, num: x[y]});
+        console.log('bbbbbbb');
         console.log({name: y, num: x[y]});
       });
     });
