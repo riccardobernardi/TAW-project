@@ -918,7 +918,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
         console.log("Socket.io client connected");
     });
     // server.listen( 8080, () => console.log("HTTP Server started on port 8080") );
-    server.listen(3000, () => console.log("HTTP Server started on port 8080"));
+    server.listen(process.env.PORT || 5000, () => console.log("HTTP Server started on port " + process.env.PORT || 5000));
 }, function onrejected() {
     console.log("Unable to connect to MongoDB");
     process.exit(-2);
