@@ -81,7 +81,7 @@ app.use(bodyparser.json());
 app.get("/", (req, res) => {
     res.status(200).json({
         api_version: "0.1.0",
-        endpoints: ["/login", "/users", "/tables", "/items", "/tickets", "/tickets/:id/orders", "/reports","/ghesboro"]
+        endpoints: ["/login", "/users", "/tables", "/items", "/tickets", "/tickets/:id/orders", "/reports"]
     }); // json method sends a JSON response (setting the correct Content-Type) to the client
 });
 /* da togliere
