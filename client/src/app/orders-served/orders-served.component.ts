@@ -16,7 +16,6 @@ import { TicketOrder } from '../TicketOrder';
 export class OrdersServedComponent implements OnInit {
 
   private tickets: Ticket[] = [];
-  //socketObserver: Observable<any>;
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {}
 
