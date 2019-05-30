@@ -2,6 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/restaurant-server.js" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/restaurant-server.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -18,8 +22,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-6551">
-              <caret line="611" column="68" lean-forward="true" selection-start-line="611" selection-start-column="68" selection-end-line="611" selection-end-column="68" />
+            <state relative-caret-position="500">
+              <caret line="1100" column="43" selection-start-line="1100" selection-start-column="43" selection-end-line="1100" selection-end-column="43" />
               <folding>
                 <element signature="e#168#194#0" expanded="true" />
                 <element signature="e#380#418#0" expanded="true" />
@@ -68,7 +72,7 @@
     </findStrings>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -153,14 +157,16 @@
       <workItem from="1559043597027" duration="666000" />
       <workItem from="1559144562514" duration="13000" />
       <workItem from="1559203484897" duration="631000" />
+      <workItem from="1559215530285" duration="24000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12531000" />
+    <option name="totallyTimeSpent" value="12555000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -209,6 +215,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="500">
+          <caret line="1100" column="43" selection-start-line="1100" selection-start-column="43" selection-end-line="1100" selection-end-column="43" />
+          <folding>
+            <element signature="e#168#194#0" expanded="true" />
+            <element signature="e#380#418#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Order.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/User.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1905">
@@ -223,20 +243,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="7" column="14" selection-start-line="7" selection-start-column="14" selection-end-line="7" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Order.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-6551">
-          <caret line="611" column="68" lean-forward="true" selection-start-line="611" selection-start-column="68" selection-end-line="611" selection-end-column="68" />
-          <folding>
-            <element signature="e#168#194#0" expanded="true" />
-            <element signature="e#380#418#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>

@@ -1098,6 +1098,7 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
    });
    // server.listen( 8080, () => console.log("HTTP Server started on port 8080") );
 
+   console.log("aaaaaaaaaaaaaaaaaaa 1234");
    server.listen( 3000, () => console.log("HTTP Server started on port 8080") );
 
 }, function onrejected() {
