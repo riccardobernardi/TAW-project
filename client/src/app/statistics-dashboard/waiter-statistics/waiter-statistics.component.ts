@@ -30,10 +30,10 @@ export class WaiterStatisticsComponent implements OnInit {
     console.log(this.getStats());
   }
 
-  async waiterStatistics() {
-    const waiters = {};
-    this.ticket.get_tickets({}).pipe(
-      tap((dd) => {
+  waiterStatistics() {
+    return this.ticket.get_tickets({}).pipe(
+      map((dd) => {
+        const waiters = {}
         const ticketSup: Ticket[] = [];
         dd.forEach((ss) => {
           ticketSup.push(ss);
@@ -48,13 +48,14 @@ export class WaiterStatisticsComponent implements OnInit {
             waiters[z] += 1;
           });
         });
+        console.log(waiters);
+        return waiters;
       })
-    ).subscribe();
-    return waiters;
+    );
   }
 
+
   executerStatistics() {
-    //const waiters = {};
     return this.ticket.get_tickets({}).pipe(
       map((dd) => {
         const waiters = {}
@@ -75,14 +76,14 @@ export class WaiterStatisticsComponent implements OnInit {
         console.log(waiters);
         return waiters;
       })
-    )/*.subscribe()*/;
-    //return waiters;
+    );
   }
 
   getStats() {
-    //const a = [];
 
-    return this.executerStatistics().pipe( 
+    const mm = [];
+
+    return this.executerStatistics().pipe(
       map((x) => {
         const a = []
         console.log(x);
@@ -93,13 +94,13 @@ export class WaiterStatisticsComponent implements OnInit {
           a.push({name: y, num: x[y]});
         });
 
-        //a.push(x);
-
         console.log(a);
         return a;
 
       })
     );
+
+
 
     /*this.executerStatistics().then( (x) => {
       Object.keys(x).forEach( (y) => {
@@ -109,8 +110,8 @@ export class WaiterStatisticsComponent implements OnInit {
 
     /*if (a.length === 0) {
       // console.log('porco dio');
-    }
+    }*/
 
-    return a;*/
+    return mm;
   }
 }
