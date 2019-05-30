@@ -29,7 +29,7 @@ export class WaiterStatisticsComponent implements OnInit {
     this.resultWaiter = this.waiterStatistics();
     console.log(this.getStats());
 
-    this.socketio.get().on('desks', () => {
+    this.socketio.get().on('waiters', () => {
       this.resultWaiter = this.waiterStatistics();
       this.resultCook = this.executerStatistics();
       this.allResults = this.getStats();

@@ -40,13 +40,13 @@ export class UserHttpService {
       tap( (data) => {
         console.log(JSON.stringify(data));
         this.token = data.token;
-        localStorage.setItem('restaurant_token', this.token );
+        sessionStorage.setItem('restaurant_token', this.token );
       }));
   }
 
   renew(): Observable<any> {
 
-    const tk = localStorage.getItem('restaurant_token');
+    const tk = sessionStorage.getItem('restaurant_token');
     if ( !tk || tk.length < 1 ) {
       return throwError({error: {errormessage: 'No token found in local storage'}});
     }
@@ -64,14 +64,14 @@ export class UserHttpService {
       tap( (data) => {
         console.log(JSON.stringify(data));
         this.token = data.token;
-        localStorage.setItem('restaurant_token', this.token );
+        sessionStorage.setItem('restaurant_token', this.token );
       }));
   }
 
   logout() {
     console.log('Logging out');
     this.token = '';
-    localStorage.removeItem('restaurant_token');
+    sessionStorage.removeItem('restaurant_token');
     this.router.navigate(['/']);
   }
 
@@ -94,7 +94,7 @@ export class UserHttpService {
   }
 
   get_token() {
-    this.token = localStorage.getItem('restaurant_token');
+    this.token = sessionStorage.getItem('restaurant_token');
     // console.log(this.token);
     return this.token;
   }
