@@ -8,7 +8,11 @@ Total waiters: {{this.resultWaiter | async | json }}
 
 Total cooks: {{this.resultCook | async | json }}
 
-<table class="table table-striped">
+<br>
+
+Total total: {{this.allResults | async | json }}
+
+<!--<table class="table table-striped">
   <thead>
     <tr>
       <th scope="col">Username</th>
@@ -21,4 +25,4 @@ Total cooks: {{this.resultCook | async | json }}
       <td>{{ww.num}}</td>
     </tr>
   </tbody>
-</table>
+</table>-->

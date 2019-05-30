@@ -76,45 +76,19 @@ export class WaiterStatisticsComponent implements OnInit {
     return waiters;
   }
 
-  getStats() {
+  async getStats() {
     const a = [];
 
-    this.waiterStatistics().then( (x) => {
-      // console.log('aaaaa');
-      // console.log(x);
+    await this.waiterStatistics().then( (x) => {
+      a.push(x);
+    });
 
-      /*Object.keys(x).forEach( (mm) =>{
-        console.log(mm);
-      });*/
-
-      // console.log(x);
-
-      // a.push(x);
-
+    await this.executerStatistics().then( (x) => {
       /*Object.keys(x).forEach( (y) => {
         a.push({name: y, num: x[y]});
       });*/
-
       a.push(x);
-
-      console.log(a);
-
-      /*.forEach( (y) => {
-        a.push({name: y, num: x[y]});
-        console.log('bbbbbbb');
-        console.log({name: y, num: x[y]});
-      });*/
     });
-
-    /*this.executerStatistics().then( (x) => {
-      Object.keys(x).forEach( (y) => {
-        a.push({name: y, num: x[y]});
-      });
-    });*/
-
-    if (a.length === 0) {
-      // console.log('porco dio');
-    }
 
     return a;
   }
