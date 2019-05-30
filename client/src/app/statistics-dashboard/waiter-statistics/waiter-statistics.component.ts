@@ -53,10 +53,11 @@ export class WaiterStatisticsComponent implements OnInit {
     return waiters;
   }
 
-  async executerStatistics() {
-    const waiters = {};
-    this.ticket.get_tickets({}).pipe(
-      tap((dd) => {
+  executerStatistics() {
+    //const waiters = {};
+    return this.ticket.get_tickets({}).pipe(
+      map((dd) => {
+        const waiters = {}
         const ticketSup: Ticket[] = [];
         dd.forEach((ss) => {
           ticketSup.push(ss);
@@ -71,25 +72,45 @@ export class WaiterStatisticsComponent implements OnInit {
             waiters[z] += 1;
           });
         });
+        console.log(waiters);
+        return waiters;
       })
-    ).subscribe();
-    return waiters;
+    )/*.subscribe()*/;
+    //return waiters;
   }
 
-  async getStats() {
-    const a = [];
+  getStats() {
+    //const a = [];
 
-    await this.waiterStatistics().then( (x) => {
-      a.push(x);
-    });
+    return this.executerStatistics().pipe( 
+      map((x) => {
+        const a = []
+        console.log(x);
+        console.log(Object.keys(x));
 
-    await this.executerStatistics().then( (x) => {
-      /*Object.keys(x).forEach( (y) => {
+        Object.keys(x).forEach( (y) => {
+          console.log(y);
+          a.push({name: y, num: x[y]});
+        });
+
+        //a.push(x);
+
+        console.log(a);
+        return a;
+
+      })
+    );
+
+    /*this.executerStatistics().then( (x) => {
+      Object.keys(x).forEach( (y) => {
         a.push({name: y, num: x[y]});
-      });*/
-      a.push(x);
-    });
+      });
+    });*/
 
-    return a;
+    /*if (a.length === 0) {
+      // console.log('porco dio');
+    }
+
+    return a;*/
   }
 }

@@ -20,7 +20,7 @@ Total total: {{this.allResults | async | json }}
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor = "let ww of allResults">
+    <tr *ngFor = "let ww of allResults | async">
       <td>{{ww.name}}</td>
       <td>{{ww.num}}</td>
     </tr>
