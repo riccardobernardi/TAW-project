@@ -10,7 +10,7 @@ Total cooks: {{this.resultCook | async | json }}
 
 <br>
 
-Total total: {{this.allResults | async | json }}
+Total total: {{this.allResults | json }}
 
 <table class="table table-striped">
   <thead>
@@ -20,7 +20,7 @@ Total total: {{this.allResults | async | json }}
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor = "let ww of allResults | async">
+    <tr *ngFor = "let ww of allResults">
       <td>{{ww.name}}</td>
       <td>{{ww.num}}</td>
     </tr>

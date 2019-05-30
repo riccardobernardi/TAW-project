@@ -28,6 +28,12 @@ export class WaiterStatisticsComponent implements OnInit {
   ngOnInit() {
     this.resultWaiter = this.waiterStatistics();
     console.log(this.getStats());
+
+    this.socketio.get().on('desks', () => {
+      this.resultWaiter = this.waiterStatistics();
+      this.resultCook = this.executerStatistics();
+      this.allResults = this.getStats();
+    });
   }
 
   waiterStatistics() {
@@ -83,9 +89,9 @@ export class WaiterStatisticsComponent implements OnInit {
 
     const mm = [];
 
-    return this.executerStatistics().pipe(
+    this.executerStatistics().pipe(
       map((x) => {
-        const a = []
+        const a = [];
         console.log(x);
         console.log(Object.keys(x));
 
@@ -98,7 +104,32 @@ export class WaiterStatisticsComponent implements OnInit {
         return a;
 
       })
-    );
+    ).subscribe( (x) => {
+      x.forEach( (y) => {
+        mm.push(y);
+      });
+    });
+
+    this.waiterStatistics().pipe(
+      map((x) => {
+        const a = [];
+        console.log(x);
+        console.log(Object.keys(x));
+
+        Object.keys(x).forEach( (y) => {
+          console.log(y);
+          a.push({name: y, num: x[y]});
+        });
+
+        console.log(a);
+        return a;
+
+      })
+    ).subscribe( (x) => {
+      x.forEach( (y) => {
+        mm.push(y);
+      });
+    });
 
 
 
