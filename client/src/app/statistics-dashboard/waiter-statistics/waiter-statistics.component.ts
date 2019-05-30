@@ -77,7 +77,7 @@ export class WaiterStatisticsComponent implements OnInit {
   }
 
   getStats() {
-    let a = [];
+    const a = [];
 
     this.waiterStatistics().then( (x) => {
       // console.log('aaaaa');
@@ -87,9 +87,15 @@ export class WaiterStatisticsComponent implements OnInit {
         console.log(mm);
       });*/
 
-      console.log(x);
+      // console.log(x);
 
-      a.push(x);
+      // a.push(x);
+
+      Object.keys(x).forEach( (y) => {
+        a.push({name: y, num: x[y]});
+      });
+
+      console.log(a);
 
       /*.forEach( (y) => {
         a.push({name: y, num: x[y]});
