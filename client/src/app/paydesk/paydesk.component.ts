@@ -10,7 +10,7 @@ import {ItemHttpService} from '../item-http.service';
 import {TicketHttpService} from '../ticket-http.service';
 import {SocketioService} from '../socketio.service';
 import {TicketOrder} from '../TicketOrder';
-import {Table} from '../Table';
+import {Table, states} from '../Table';
 import {Ticket} from '../Ticket';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
@@ -154,7 +154,7 @@ export class PaydeskComponent implements OnInit {
 
   close_ticket() {
     this.ticket.close_ticket(this.selTicket._id, this.emitReceipt()).toPromise().then(() => {
-      return this.table.change_table({number: this.selTicket.table, state: undefined}).toPromise();
+      return this.table.change_table({number: this.selTicket.table, state: states[0]}).toPromise();
     })
       .then()
       .catch((err) => console.log(err));

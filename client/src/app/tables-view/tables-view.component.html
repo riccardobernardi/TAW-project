@@ -1,6 +1,6 @@
 <div>
     <div class="tables" *ngFor="let table of tables">
-        <button [disabled] = "table.state" class="btn btn-lg btn-primary" (click) = "open_ticket(table, $event.target.nextElementSibling.value)">
+        <button [disabled] = "table.state === states[0]" class="btn btn-lg btn-primary" (click) = "open_ticket(table, $event.target.nextElementSibling.value)">
             Number: {{table.number}},
             Max_people:{{table.max_people}}
         </button>

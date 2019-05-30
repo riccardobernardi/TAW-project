@@ -15,32 +15,32 @@ import { createOptional } from '@angular/compiler/src/core';
 })
 export class TicketHttpService {
 
-  public url = 'http://localhost:8080' + '/tickets';
+  public endpoint = 'tickets';
 
   constructor(private us: UserHttpService, private http: HttpClient) { }
 
   private create_options( params = {} ) {
     return  {
-      headers: new HttpHeaders({
+      /*headers: new HttpHeaders({
         authorization: 'Bearer ' + this.us.get_token(),
         'cache-control': 'no-cache',
         'Content-Type':  'application/json',
-      }),
+      }),*/
       params : new HttpParams( {fromObject: params} )
     };
   }
 
   open_ticket(waiter: string, table: number, people_number: number) {
-    return this.http.post<Ticket>(this.url, {waiter, table, start: Date(), people_number}, this.create_options());
+    return this.http.post<Ticket>(/*this.url*/ this.endpoint, {waiter, table, start: Date(), people_number}, this.create_options());
   }
 
   close_ticket(ticketId: string, total: number) {
     console.log(total);
-    return this.http.patch<Ticket>(this.url + '/' + ticketId, {state: 'closed', end: Date(), total}, this.create_options());
+    return this.http.patch<Ticket>(/*this.url + */this.endpoint + '/' + ticketId, {state: 'closed', end: Date(), total}, this.create_options());
   }
 
   get_tickets(filters) {
-    return this.http.get<Ticket[]>(this.url, this.create_options(filters));
+    return this.http.get<Ticket[]>(/*this.url*/this.endpoint, this.create_options(filters));
   }
 
   addOrders(ticketId, usernameWaiter, item, added, addedPrice) {
@@ -57,12 +57,12 @@ export class TicketHttpService {
       type_item: item.type
     };
     console.log(ticketId, order);
-    return this.http.post(this.url + '/' + ticketId + '/' + 'orders', order, this.create_options());
+    return this.http.post(/*this.url +*/ this.endpoint + "/" + ticketId + '/' + 'orders', order, this.create_options());
   }
 
   changeOrderState(ticketId, orderId, state, name) {
     console.log(ticketId, orderId);
-    return this.http.patch(this.url + '/' + ticketId + '/' + 'orders' + '/' + orderId, {state, username_executer: name}, this.create_options());
+    return this.http.patch(/*this.url + */this.endpoint + '/' + ticketId + '/' + 'orders' + '/' + orderId, {state, username_executer: name}, this.create_options());
   }
 
   create_report(filters) {
@@ -95,12 +95,12 @@ export class TicketHttpService {
 
       report.average_stay = Math.floor(report.average_stay / ticketCount);
       console.log(report);
-      return this.http.post<Report>('http://localhost:8080' + '/' + 'report', report, this.create_options()).toPromise();
+      return this.http.post<Report>(/*'http://localhost:8080' +*/ "reports", report, this.create_options()).toPromise();
     }).catch((err) => err);
   }
 
   get_reports(filter) {
-    return this.http.get<Report[]>('http://localhost:8080' + '/' + 'report', this.create_options(filter));
+    return this.http.get<Report[]>(/*'http://localhost:8080' + */"reports", this.create_options(filter));
   }
 
 }

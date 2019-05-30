@@ -26,6 +26,8 @@ import { ChartsModule } from "ng2-charts";
 import { StatisticsDashboardComponent } from './statistics-dashboard/statistics-dashboard.component';
 import { WaiterStatisticsComponent } from './statistics-dashboard/waiter-statistics/waiter-statistics.component';
 import { HistTotalCustomersComponent } from './statistics-dashboard/hist-total-customers/hist-total-customers.component';
+import { HttpInterceptorService } from './http-interceptor.service';
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
 
 
 @NgModule({
@@ -60,7 +62,8 @@ import { HistTotalCustomersComponent } from './statistics-dashboard/hist-total-c
     {provide: OrderHttpService, useClass: OrderHttpService},
     {provide: ItemHttpService, useClass: ItemHttpService},
     {provide: TableHttpService, useClass: TableHttpService},
-    {provide: TicketHttpService, useClass: TicketHttpService}
+    {provide: TicketHttpService, useClass: TicketHttpService},
+    {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true}
   ],
   bootstrap: [AppComponent],
 })
