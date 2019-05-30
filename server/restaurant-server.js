@@ -917,7 +917,9 @@ mongoose.connect('mongodb://localhost:27017/restaurant').then(function onconnect
     ios.on('connection', function (client) {
         console.log("Socket.io client connected");
     });
-    server.listen(8080, () => console.log("HTTP Server started on port 8080"));
+    // server.listen( 8080, () => console.log("HTTP Server started on port 8080") );
+    console.log("aaaaaaaaaaaaaaaaaaa 1234");
+    server.listen(3000, () => console.log("HTTP Server started on port 8080"));
 }, function onrejected() {
     console.log("Unable to connect to MongoDB");
     process.exit(-2);
