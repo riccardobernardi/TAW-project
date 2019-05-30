@@ -1,6 +1,6 @@
 "use strict";
-exports.__esModule = true;
-var mongoose = require("mongoose");
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose = require("mongoose");
 function isReport(arg) {
     return ( /*arg._id &&*/arg.date && arg.total && arg.total_orders && arg.total_customers && arg.average_stay != null && arg.average_stay != undefined && arg.date.toString() != 'Invalid Date' && typeof (arg.total) == 'number' && typeof (arg.total_orders.dish) == 'number' && typeof (arg.total_orders.beverage) == 'number' && typeof (arg.total_customers) == 'number' && typeof (arg.average_stay) == 'number');
 }
@@ -28,7 +28,7 @@ var reportSchema = new mongoose.Schema({
     },
     total_orders: {
         type: { dish: mongoose.SchemaTypes.Number, beverage: mongoose.SchemaTypes.Number },
-        required: true
+        required: true,
     },
     total_customers: {
         type: mongoose.SchemaTypes.Number,
@@ -50,3 +50,4 @@ function getModel() {
     return reportModel;
 }
 exports.getModel = getModel;
+//# sourceMappingURL=Report.js.map

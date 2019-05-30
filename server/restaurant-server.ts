@@ -660,7 +660,7 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
 });
 
 
-app.route("/report").get( auth, (req,res,next) => {
+app.route("/reports").get( auth, (req,res,next) => {
     //autenticazione
     if(!user.newUser(req.user).hasDeskRole())
        return next({ statusCode:401, error: false, errormessage: "Unauthorized: user is not a desk"} );
@@ -708,7 +708,7 @@ app.route("/report").get( auth, (req,res,next) => {
     });
  });
  
- app.route("/report/:id").get( auth, (req,res,next) => {
+ app.route("/reports/:id").get( auth, (req,res,next) => {
     //autenticazione
     var sender = user.newUser(req.user);
     if(!sender.hasDeskRole())
@@ -756,7 +756,7 @@ app.route("/report").get( auth, (req,res,next) => {
  
     
     //controllo formato
-    if ( !req.body || (req.body.data && req.body.data.toString() == 'Invalid Date') || (req.body.total && typeof(req.body.total) != 'number') || (req.body.total_orders && (typeof(req.body.total_orders[item.type[0]]) != 'number' || typeof(req.body.total_orders[item.type[0]]) != 'number' )) || (req.body.total_customers && typeof(req.body.total_customers) != 'number') || (req.body.average_stay && typeof(req.body.average_stay) != 'number') ){
+    if ( !req.body || (req.body.data && req.body.data.toString() == 'Invalid Date') || (req.body.total && typeof(req.body.total) != 'number') || (req.body.total_orders && (typeof(req.body.total_orders[item.type[0]]) != 'number' || typeof(req.body.total_orders[item.type[1]]) != 'number' )) || (req.body.total_customers && typeof(req.body.total_customers) != 'number') || (req.body.average_stay && typeof(req.body.average_stay) != 'number') ){
        return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
     }
  
