@@ -29,7 +29,7 @@ export class CookComponent implements OnInit {
       dd.forEach( (ss) => {
         console.log(ss.orders);
         const orders = ss.orders.filter((order: TicketOrder) =>
-          order.state !== 'ready' && order.state !== 'delivered' && (order.state == "preparation" && order.username_executer == this.us.get_nick()) && order.type_item !== 'beverage');
+          order.state !== 'ready' && order.state !== 'delivered' && ((order.state == "preparation") ? order.username_executer === this.us.get_nick() : true ) && order.type_item !== 'beverage');
         console.log(orders);
         if (orders.length !== 0) {
           this.tickets.push(ss);

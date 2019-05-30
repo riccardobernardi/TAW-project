@@ -18,7 +18,7 @@ import {Router} from '@angular/router';
 export class UserHttpService {
 
   public token = '';
-  public url = 'http://localhost:8080';
+  public endpoint = 'users';
   public users = [];
 
   constructor( private http: HttpClient, private router: Router ) {
@@ -31,12 +31,12 @@ export class UserHttpService {
     const options = {
       headers: new HttpHeaders({
         authorization: 'Basic ' + btoa( nick + ':' + password),
-        'cache-control': 'no-cache',
-        'Content-Type':  'application/x-www-form-urlencoded',
+        /*'cache-control': 'no-cache',
+        'Content-Type':  'application/x-www-form-urlencoded',*/
       })
     };
 
-    return this.http.get( this.url + '/login',  options, ).pipe(
+    return this.http.get( /*this.url + */'login',  options ).pipe(
       tap( (data) => {
         console.log(JSON.stringify(data));
         this.token = data.token;
@@ -51,16 +51,16 @@ export class UserHttpService {
       return throwError({error: {errormessage: 'No token found in local storage'}});
     }
 
-    const options = {
+    /*const options = {
       headers: new HttpHeaders({
         Authorization: 'Bearer ' + tk,
         'cache-control': 'no-cache',
         'Content-Type':  'application/json',
       })
-    };
+    };*/
 
     console.log('Renewing token');
-    return this.http.get( this.url + '/renew',  options, ).pipe(
+    return this.http.get( /*this.url + '/*/'renew'/*,  options,*/ ).pipe(
       tap( (data) => {
         console.log(JSON.stringify(data));
         this.token = data.token;
@@ -76,16 +76,16 @@ export class UserHttpService {
   }
 
   register( user ): Observable<any> {
-    const options = {
+    /*const options = {
       headers: new HttpHeaders({
         'cache-control': 'no-cache',
         'Content-Type':  'application/json',
       }).append('Authorization', 'Bearer ' + this.get_token())
     };
 
-    console.log(options);
+    console.log(options);*/
 
-    return this.http.post( this.url + '/users', user, options ).pipe(
+    return this.http.post( /*this.url + '/*/this.endpoint, user/*, options */).pipe(
       tap( (data) => {
         console.log(JSON.stringify(data) );
       })
@@ -116,28 +116,28 @@ export class UserHttpService {
   get_users() {
     // return [{username : 'paolo', role: 'WAITER'}, {username : 'gianni', role: 'WAITER'}];
 
-    const options = {
+    /*const options = {
       headers: new HttpHeaders({
         'cache-control': 'no-cache',
         'Content-Type':  'application/json',
       }).append('Authorization', 'Bearer ' + this.get_token())
-    };
+    };*/
 
-    return this.http.get( this.url + '/users', options );
+    return this.http.get( /*this.url + '/*/this.endpoint/*, options*/ );
   }
 
   deleteUser(selDelUser) {
     console.log('deleted:' + selDelUser);
 
-    const options = {
+    /*const options = {
       headers: new HttpHeaders({
         'cache-control': 'no-cache',
         'Content-Type':  'application/json',
         username: selDelUser,
       }).append('Authorization', 'Bearer ' + this.get_token())
-    };
+    };*/
 
-    return this.http.delete( this.url + '/users/' + selDelUser, options ).pipe(
+    return this.http.delete( /*this.url + */this.endpoint + "/" + selDelUser/*, options */).pipe(
       tap( (data) => {
         console.log(JSON.stringify(data) );
       })
@@ -150,18 +150,18 @@ export class UserHttpService {
     const user = { username: selUser, password: newPwd, role: '' };
     user.role = this.users.filter((u) => u.username == selUser)[0].role;
 
-    const options = {
+    /*const options = {
       headers: new HttpHeaders({
         'cache-control': 'no-cache',
         'Content-Type':  'application/json',
       }).append('Authorization', 'Bearer ' + this.get_token())
-    };
+    };*/
 
-    console.log(this.url + '/users/' + selUser );
+    console.log(/*this.url + '/*/this.endpoint + '/' + selUser );
 
-    return this.http.put( this.url + '/users/' + selUser, user, options ).pipe(
+    return this.http.put( /*this.url + '/*/this.endpoint + '/' + selUser, user/*, options*/ ).pipe(
       tap( (data) => {
-        console.log(options);
+        //console.log(options);
         console.log(JSON.stringify(data) );
       })).subscribe();
   }

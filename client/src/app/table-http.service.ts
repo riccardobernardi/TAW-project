@@ -8,11 +8,11 @@ import { Table } from './Table';
 })
 export class TableHttpService {
 
-  public url = 'http://localhost:8080' + '/tables';
+  public endpoint = 'tables';
 
   constructor(private us: UserHttpService, private http: HttpClient) {}
 
-  private create_options( params = {} ) {
+  /*private create_options( params = {} ) {
     return  {
       headers: new HttpHeaders({
         authorization: 'Bearer ' + this.us.get_token(),
@@ -20,17 +20,17 @@ export class TableHttpService {
         'Content-Type':  'application/json',
       }),
     };
-  }
+  }*/
 
   get_tables() {
-    return this.http.get<Table[]>(this.url, this.create_options());
+    return this.http.get<Table[]>(/*this.url,*/this.endpoint/*, this.create_options()*/);
   }
 
   get_table(num: number) {
-    return this.http.get<Table[]>(this.url + '/' + num, this.create_options());
+    return this.http.get<Table[]>(/*this.url + */this.endpoint + '/' + num/*, this.create_options()*/);
   }
 
   change_table(newTable/*: Table*/) {
-    return this.http.patch<Table>(this.url + '/' + newTable.number, newTable, this.create_options());
+    return this.http.patch<Table>(/*this.url +*/ this.endpoint + '/' + newTable.number, newTable/*, this.create_options()*/);
   }
 }
