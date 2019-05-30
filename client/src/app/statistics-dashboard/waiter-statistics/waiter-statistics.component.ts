@@ -18,7 +18,8 @@ import {Ticket} from '../../Ticket';
 export class WaiterStatisticsComponent implements OnInit {
   private totalgain: Promise<number | any[] | never>;
   private resultWaiter = this.waiterStatistics();
-  private resultCook = this.cookStatistics();
+  private resultCook = this.executerStatistics();
+  private allResults = this.getStats();
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService, private router: Router, private order: OrderHttpService,
@@ -26,67 +27,44 @@ export class WaiterStatisticsComponent implements OnInit {
 
   ngOnInit() {
     this.resultWaiter = this.waiterStatistics();
+    console.log(this.getStats());
   }
 
   async waiterStatistics() {
-
     const waiters = {};
-
     this.ticket.get_tickets({}).pipe(
       tap((dd) => {
         const ticketSup: Ticket[] = [];
-
         dd.forEach((ss) => {
           ticketSup.push(ss);
         });
-
-        console.log(ticketSup);
-
         ticketSup.map( (x) => {
-          console.log(x);
           return x.orders.map( (y) => {
-            console.log(y);
             return y.username_waiter;
           }).forEach( (z) => {
-            console.log(z);
             if ( !(z in waiters)) {
               waiters[z] = 0;
             }
             waiters[z] += 1;
           });
         });
-
       })
-      
     ).subscribe();
-
-    console.log(waiters);
     return waiters;
-
-    
   }
 
-  async cookStatistics() {
-
+  async executerStatistics() {
     const waiters = {};
-
     this.ticket.get_tickets({}).pipe(
       tap((dd) => {
         const ticketSup: Ticket[] = [];
-
         dd.forEach((ss) => {
           ticketSup.push(ss);
         });
-
-        console.log(ticketSup);
-
         ticketSup.map( (x) => {
-          console.log(x);
           return x.orders.map( (y) => {
-            console.log(y);
             return y.username_executer;
           }).forEach( (z) => {
-            console.log(z);
             if ( !(z in waiters)) {
               waiters[z] = 0;
             }
@@ -95,42 +73,30 @@ export class WaiterStatisticsComponent implements OnInit {
         });
       })
     ).subscribe();
-
-    console.log(waiters);
     return waiters;
   }
 
-/*  async cookStatistics() {
+  getStats() {
+    const a = [];
 
-    const waiters = {};
+    this.waiterStatistics().then( (x) => {
+      console.log(x);
+      Object.keys(x).forEach( (y) => {
+        a.push({name: y, num: x[y]});
+        console.log({name: y, num: x[y]});
+      });
+    });
 
-    this.ticket.get_tickets({}).pipe(
-      tap((dd) => {
-        const ticketSup: Ticket[] = [];
+    /*this.executerStatistics().then( (x) => {
+      Object.keys(x).forEach( (y) => {
+        a.push({name: y, num: x[y]});
+      });
+    });*/
 
-        dd.forEach((ss) => {
-          ticketSup.push(ss);
-        });
+    if (a.length === 0) {
+      console.log('porco dio');
+    }
 
-        console.log(ticketSup);
-
-        ticketSup.map( (x) => {
-          console.log(x);
-          return x.orders.map( (y) => {
-            console.log(y);
-            return y.username_bartender;
-          }).forEach( (z) => {
-            console.log(z);
-            if ( !(z in waiters)) {
-              waiters[z] = 0;
-            }
-            waiters[z] += 1;
-          });
-        });
-      })
-    ).subscribe();
-
-    console.log(waiters);
-    return waiters;
-  }*/
+    return a;
+  }
 }

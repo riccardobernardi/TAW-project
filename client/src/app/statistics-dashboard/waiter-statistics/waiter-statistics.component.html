@@ -16,9 +16,9 @@ Total cooks: {{this.resultCook | async | json }}
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor = "let waiter of resultWaiter | async">
-      <td>{{waiter}}</td>
-      <td>{{resultWaiter[waiter]}}</td>
+    <tr *ngFor = "let ww of allResults">
+      <td>{{ww.name}}</td>
+      <td>{{ww.num}}</td>
     </tr>
   </tbody>
 </table>
