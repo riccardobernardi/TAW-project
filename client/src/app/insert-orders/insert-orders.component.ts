@@ -21,34 +21,36 @@ export class InsertOrdersComponent implements OnInit {
   private ordersSelected = [];
   private counter = 0;
   private selMenuEntry: Item;
-  private dd;
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
-              private socketio: SocketioService) {
-    const ticketsSup = this.tickets;
-    const itemsSup = this.items;
-    this.dd = () => {
-      itemsSup.splice(0, itemsSup.length);
-      console.log('received an emit');
-      console.log(itemsSup);
-      item.get_Items().subscribe( (dd) => {
-        dd.forEach( (ss) => {
-          itemsSup.push(ss);
-        });
-      });
+              private socketio: SocketioService) {}
 
-      ticketsSup.splice(0, itemsSup.length);
-      ticket.get_tickets({waiter: us.get_nick(), state: 'open'}).subscribe((dd) => {
+  get_items() {
+    this.items.splice(0, this.items.length);
+    console.log(this.items);
+    this.item.get_Items().subscribe( (dd) => {
+      dd.forEach( (ss) => {
+        this.items.push(ss);
+      });
+    });
+  }
+
+  get_tickets() {
+    this.tickets.splice(0, this.tickets.length);
+      this.ticket.get_tickets({waiter: this.us.get_nick(), state: 'open'}).subscribe((dd) => {
         dd.forEach( (ss) => {
-          ticketsSup.push(ss);
+          this.tickets.push(ss);
         });
       });
-    };
   }
 
   ngOnInit() {
-    this.dd();
-    this.socketio.get().on('waiters', this.dd);
+    this.get_tickets();
+    this.get_items();
+    this.socketio.get().on('waiters', () => {
+      this.get_items();
+      this.get_tickets();
+    });
   }
 
   insertItem(item: Item, quantity: number) {
@@ -64,21 +66,6 @@ export class InsertOrdersComponent implements OnInit {
   deleteItemFromSelected(i: number) {
     this.ordersSelected.splice(i, 1);
   }
-
-  /*sendOrders(ticketId, waiterUsername, items) {
-    console.log(this.selTicket);
-    console.log(ticketId, waiterUsername, items);
-    const promises = [];
-    items.forEach((item: Item) => {
-      promises.push(this.ticket.addOrders(ticketId, waiterUsername, item).toPromise());
-    });
-    Promise.all(promises).then((data) => {
-      console.log('Evasione riuscita!')
-      this.ordersSelected = [];
-    }).catch((err) => {
-      console.log(err);
-    });
-  }*/
 
   sendOrders(ticketId, waiterUsername, orders) {
     console.log(this.selTicket);

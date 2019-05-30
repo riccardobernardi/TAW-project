@@ -19,31 +19,28 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 })
 export class CookComponent implements OnInit {
   private tickets: Ticket[] = [];
-  private dd;
 
   constructor(private sio: SocketioService, private us: UserHttpService, private router: Router,
-              private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) {
-    // tslint:disable-next-line:variable-name
-    const ticket_sup = this.tickets;
-    this.dd = () => {
-      ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
-        ticket_sup.splice(0, ticket_sup.length);
-        dd.forEach( (ss) => {
-          console.log(ss.orders);
-          const orders = ss.orders.filter((order: TicketOrder) =>
-            order.state !== 'ready' && order.state !== 'delivered' && order.type_item !== 'beverage');
-          console.log(orders);
-          if (orders.length !== 0) {
-            ticket_sup.push(ss);
-            orders.sort((a: TicketOrder, b: TicketOrder) => {
-              return a.price - b.price;
-            });
-            ss.orders = orders;
-          }
-        });
-        console.log(ticket_sup);
+              private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) {}
+
+  get_tickets() {
+    this.ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
+      this.tickets.splice(0, this.tickets.length);
+      dd.forEach( (ss) => {
+        console.log(ss.orders);
+        const orders = ss.orders.filter((order: TicketOrder) =>
+          order.state !== 'ready' && order.state !== 'delivered' && (order.state == "preparation" && order.username_executer == this.us.get_nick()) && order.type_item !== 'beverage');
+        console.log(orders);
+        if (orders.length !== 0) {
+          this.tickets.push(ss);
+          orders.sort((a: TicketOrder, b: TicketOrder) => {
+            return a.price - b.price;
+          });
+          ss.orders = orders;
+        }
       });
-    };
+      console.log(this.tickets);
+    });
   }
 
   ngOnInit() {
@@ -51,8 +48,8 @@ export class CookComponent implements OnInit {
       this.us.logout();
     }
 
-    this.dd();
-    this.socketio.get().on('cooks', this.dd);
+    this.get_tickets();
+    this.socketio.get().on('cooks', () => {this.get_tickets();});
   }
 
 
@@ -61,40 +58,7 @@ export class CookComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  get_orders() {
-    console.log('received an emit');
-    /*this.orders = this.order.get();*/
-    /*console.log(this.orders)*/
-    console.log('event received');
-
-    /*this.order.get().subscribe(
-      ( messages ) => {
-        this.orders = messages;
-
-      } , (err) => {
-
-        // Try to renew the token
-        this.us.renew().subscribe( () => {
-          // Succeeded
-          this.get_orders();
-        }, (err2) => {
-          // Error again, we really need to logout
-          this.logout();
-        } );
-      }
-    );*/
-  }
-
-  /*open_ticket(waiter: string, table: number) {
-    return this.http.post<Ticket>(this.url, {waiter, table, start: Date()}, this.create_options());
-  }*/
-
   setOrderinProgress(ticketid: string, orderid: string) {
-    /*console.log(this.url + '/tickets/' + ticketid + '/orders/' + orderid);
-    this.http.patch(this.url + '/tickets/' + ticketid + '/orders/' + orderid, {state: 'in_progress'},
-     this.create_options()).subscribe( (dd) => {
-      console.log(dd);
-    });*/
     console.log(ticketid, orderid);
     this.ticket.changeOrderState(ticketid, orderid, 'preparation', this.us.get_nick()).toPromise().then(() => {
       console.log('Changing state to preparation OK');
@@ -104,7 +68,7 @@ export class CookComponent implements OnInit {
   }
 
   setOrderCompleted(ticketid: string, orderid: string) {
-    this.ticket.changeOrderState(ticketid, orderid, 'ready', this.us.get_nick()).toPromise().then(() => {
+    this.ticket.changeOrderState(ticketid, orderid, 'ready', undefined).toPromise().then(() => {
       console.log('Changing state to ready OK');
     }).catch((err) => {
       console.log('Changing state to ready failed: ' + err);

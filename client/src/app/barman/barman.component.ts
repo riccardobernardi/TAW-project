@@ -21,27 +21,25 @@ export class BarmanComponent implements OnInit {
   private tickets: Ticket[] = [];
   private dd;
 
-  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) {
-    // tslint:disable-next-line:variable-name
-    const ticket_sup = this.tickets;
-    this.dd = () => {
-      ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
-        ticket_sup.splice(0, ticket_sup.length);
-        console.log(dd);
-        dd.forEach( (ss) => {
-          console.log(ss.orders);
-          let orders = ss.orders.filter((order: TicketOrder) => order.state != 'ready' && order.state != 'delivered' && order.state != 'preparation' && order.type_item != 'dish');
-          if (orders.length != 0) {
-            ticket_sup.push(ss);
-            orders.sort((a: TicketOrder, b: TicketOrder) => {
-              return a.price - b.price;
-            });
-            ss.orders = orders;
-          }
-        });
-        console.log(ticket_sup);
+  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) {}
+
+  get_tickets() {
+    this.ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
+      this.tickets.splice(0, this.tickets.length);
+      console.log(dd);
+      dd.forEach( (ss) => {
+        console.log(ss.orders);
+        let orders = ss.orders.filter((order: TicketOrder) => order.state != 'ready' && order.state != 'delivered' && (order.state == "preparation" && order.username_executer == this.us.get_nick()) && order.state != 'preparation' && order.type_item != 'dish');
+        if (orders.length != 0) {
+          this.tickets.push(ss);
+          orders.sort((a: TicketOrder, b: TicketOrder) => {
+            return a.price - b.price;
+          });
+          ss.orders = orders;
+        }
       });
-    };
+      console.log(this.tickets);
+    });
   }
 
   ngOnInit() {
@@ -49,8 +47,8 @@ export class BarmanComponent implements OnInit {
       this.us.logout();
     }
 
-    this.dd();
-    this.socketio.get().on('bartenders', this.dd);
+    this.get_tickets();
+    this.socketio.get().on('bartenders', () => { this.get_tickets() });
   }
 
   logout() {
@@ -60,7 +58,7 @@ export class BarmanComponent implements OnInit {
 
   setOrderinProgress(ticketid: string, orderid: string) {
     console.log(ticketid, orderid);
-    this.ticket.changeOrderState(ticketid, orderid, 'preparation', this.us.get_nick()).toPromise().then(() => {
+    this.ticket.changeOrderState(ticketid, orderid, 'preparation', undefined).toPromise().then(() => {
       console.log('Changing state to preparation OK');
     }).catch((err) => {
       console.log('Changing state to prepation failed: ' + err);

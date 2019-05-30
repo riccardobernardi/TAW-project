@@ -3,10 +3,9 @@ import { TableHttpService } from 'src/app/table-http.service';
 import { UserHttpService } from 'src/app/user-http.service';
 import { TicketHttpService } from '../ticket-http.service';
 import { Ticket } from 'src/app/Ticket';
-import {Table} from '../Table';
+import { Table } from '../Table';
 import { Observable } from 'rxjs/Observable';
-import {SocketioService} from '../socketio.service';
-import {TicketOrder} from '../TicketOrder';
+import { SocketioService } from '../socketio.service';
 
 
 @Component({
@@ -18,32 +17,22 @@ export class TablesViewComponent implements OnInit {
 
   private tables: Table[] = [];
   private socketObserver: Observable<any>;
-  private dd
 
-  constructor(private table: TableHttpService, private user: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {
-    var supTables = this.tables;
-    this.dd = () => {
-      table.get_tables().subscribe( (dd) => {
-        supTables.splice(0, supTables.length);
-        dd.forEach( (ss) => {
-          supTables.push(ss);
-        });
-      });
-    }
-   }
+  constructor(private table: TableHttpService, private user: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {}
 
   ngOnInit() {
-    this.dd()
-    this.socketio.get().on('waiters', this.dd);
+    this.get_tables()
+    this.socketio.get().on('waiters', ()=>{ this.get_tables() } );
   }
 
-  /*dd() {
-    this.table.get_tables().subscribe( (dd) => {
-      dd.forEach( (ss) => {
-        this.tables.push(ss);
+  public get_tables() {
+    this.table.get_tables().subscribe( (tables: Table[]) => {
+      this.tables.splice(0, this.tables.length);
+      tables.forEach( (table : Table) => {
+        this.tables.push(table);
       });
     });
-  }*/
+  }
 
   open_ticket(tableToChange: Table, people_number: number) {
     console.log(people_number);

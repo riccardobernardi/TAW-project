@@ -7,3 +7,22 @@ Total waiters: {{this.resultWaiter | async | json }}
 <br>
 
 Total cooks: {{this.resultCook | async | json }}
+
+<br>
+
+Total total: {{this.allResults | json }}
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Username</th>
+      <th scope="col">Items served</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor = "let ww of allResults">
+      <td>{{ww.name}}</td>
+      <td>{{ww.num}}</td>
+    </tr>
+  </tbody>
+</table>

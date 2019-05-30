@@ -16,36 +16,33 @@ import { TicketOrder } from '../TicketOrder';
 export class OrdersServedComponent implements OnInit {
 
   private tickets: Ticket[] = [];
-  //socketObserver: Observable<any>;
-  private dd;
 
-  constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {
-    const ticketSup = this.tickets;
-    this.dd = () => {
-      let mm;
-      if (this.us.get_role() === 'desk') {
-        mm = ticket.get_tickets({state: 'open'});
-      } else {
-        mm = ticket.get_tickets({state: 'open', waiter: this.us.get_nick()});
-      }
-      mm.subscribe( (dd) => {
-        ticketSup.splice(0, ticketSup.length);
-        console.log(dd);
-        dd.forEach( (ss) => {
-          ticketSup.push(ss);
-          ss.orders.sort((a: TicketOrder, b: TicketOrder) => {
-            return a.price - b.price;
-          });
+  constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {}
+
+  get_tickets() {
+    let mm;
+    if (this.us.get_role() === 'desk') {
+      mm = this.ticket.get_tickets({state: 'open'});
+    } else {
+      mm = this.ticket.get_tickets({state: 'open', waiter: this.us.get_nick()});
+    }
+    mm.subscribe( (dd) => {
+      this.tickets.splice(0, this.tickets.length);
+      console.log(dd);
+      dd.forEach( (ss) => {
+        this.tickets.push(ss);
+        ss.orders.sort((a: TicketOrder, b: TicketOrder) => {
+          return a.price - b.price;
         });
-        console.log(ticketSup);
       });
-      console.log(ticketSup);
-    };
+      console.log(this.tickets);
+    });
+    console.log(this.tickets);
   }
 
   ngOnInit() {
-    this.dd()
-    this.socketio.get().on('waiters', this.dd);
+    this.get_tickets();
+    this.socketio.get().on('waiters', () => {this.get_tickets()});
   }
 
   /*dd() {

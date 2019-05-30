@@ -39,7 +39,6 @@ export class PaydeskComponent implements OnInit {
   private tickets: Ticket[] = [];
   private tables: Table[] = [];
 
-  private dd;
   private selTicket: any;
   day: number;
   month: number;
@@ -49,28 +48,21 @@ export class PaydeskComponent implements OnInit {
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService, private router: Router, private order: OrderHttpService,
-              private table: TableHttpService) {
-    const ticketSup = this.tickets;
-    this.dd = () => {
-      ticket.get_tickets({state: 'open'}).subscribe((dd) => {
-        ticketSup.splice(0, ticketSup.length);
-        console.log(dd);
-        dd.forEach((ss) => {
-          ticketSup.push(ss);
-          ss.orders.sort((a: TicketOrder, b: TicketOrder) => {
-            return a.price - b.price;
-          });
-        });
-        console.log(ticketSup);
-      });
-      console.log(ticketSup);
-    };
+              private table: TableHttpService) {}
 
-    this.us.get_users().subscribe((data) => {
-      const a: any = data;
-      a.forEach((d) => this.users.push(d));
+  get_tickets() {
+    this.ticket.get_tickets({state: 'open'}).subscribe((dd) => {
+      this.tickets.splice(0, this.tickets.length);
+      console.log(dd);
+      dd.forEach((ss) => {
+        this.tickets.push(ss);
+        ss.orders.sort((a: TicketOrder, b: TicketOrder) => {
+          return a.price - b.price;
+        });
+      });
+      console.log(this.tickets);
     });
-    console.log('ricarica');
+    console.log(this.tickets);
   }
 
   ngOnInit() {
@@ -79,9 +71,14 @@ export class PaydeskComponent implements OnInit {
     } else {
       console.log('your token is: [' + this.us.get_token() + ']');
     }
-    this.dd();
-    this.socketio.get().on('waiters', this.dd);
-    this.socketio.get().on('desks', this.dd);
+    this.get_tickets();
+    this.socketio.get().on('waiters', () => {this.get_tickets()});
+    this.socketio.get().on('desks', () => {this.get_tickets()});
+
+    this.us.get_users().subscribe((data) => {
+      const a: any = data;
+      a.forEach((d) => this.users.push(d));
+    });
   }
 
   send(name, password) {

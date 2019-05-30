@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { TicketHttpService } from '../../ticket-http.service';
-import { Ticket } from "../../Ticket";
+import { TicketHttpService } from "../../ticket-http.service";
 import { Report } from "../../Report";
 
 @Component({
-  selector: 'app-histogram',
-  templateUrl: './histtotal.component.html',
-  styleUrls: ['./histtotal.component.css']
+  selector: 'app-hist-total-customers',
+  templateUrl: './hist-total-customers.component.html',
+  styleUrls: ['./hist-total-customers.component.css']
 })
-export class HistTotalComponent implements OnInit {
+
+export class HistTotalCustomersComponent implements OnInit {
 
   private reports : Report[] = []
   private barChartLabels;
@@ -22,7 +22,6 @@ export class HistTotalComponent implements OnInit {
 
   constructor(private ticket: TicketHttpService) {}
 
-
   ngOnInit() {
     this.getReports();
   }
@@ -33,7 +32,7 @@ export class HistTotalComponent implements OnInit {
       let date = new Date(report.date);
       return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear()
     });
-    this.barChartData = [{data: this.reports.map((report) => report.total), label: "Incasso totale per data in euro"}];
+    this.barChartData = [{data: this.reports.map((report) => report.total_customers), label: "Numero clienti per data in euro"}];
   }
 
   getReports() {

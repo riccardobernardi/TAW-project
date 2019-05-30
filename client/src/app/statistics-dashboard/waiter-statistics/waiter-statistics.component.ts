@@ -18,7 +18,8 @@ import {Ticket} from '../../Ticket';
 export class WaiterStatisticsComponent implements OnInit {
   private totalgain: Promise<number | any[] | never>;
   private resultWaiter = this.waiterStatistics();
-  private resultCook = this.cookStatistics();
+  private resultCook = this.executerStatistics();
+  private allResults = this.getStats();
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService, private router: Router, private order: OrderHttpService,
@@ -26,107 +27,122 @@ export class WaiterStatisticsComponent implements OnInit {
 
   ngOnInit() {
     this.resultWaiter = this.waiterStatistics();
+    console.log(this.getStats());
+
+    this.socketio.get().on('waiters', () => {
+      this.resultWaiter = this.waiterStatistics();
+      this.resultCook = this.executerStatistics();
+      this.allResults = this.getStats();
+    });
   }
 
-  async waiterStatistics() {
-
-    const waiters = {};
-
-    this.ticket.get_tickets({}).pipe(
-      tap((dd) => {
+  waiterStatistics() {
+    return this.ticket.get_tickets({}).pipe(
+      map((dd) => {
+        const waiters = {}
         const ticketSup: Ticket[] = [];
-
         dd.forEach((ss) => {
           ticketSup.push(ss);
         });
-
-        console.log(ticketSup);
-
         ticketSup.map( (x) => {
-          console.log(x);
           return x.orders.map( (y) => {
-            console.log(y);
             return y.username_waiter;
           }).forEach( (z) => {
-            console.log(z);
             if ( !(z in waiters)) {
               waiters[z] = 0;
             }
             waiters[z] += 1;
           });
         });
+        console.log(waiters);
+        return waiters;
       })
-    ).subscribe();
-
-    console.log(waiters);
-    return waiters;
+    );
   }
 
-  async cookStatistics() {
 
-    const waiters = {};
-
-    this.ticket.get_tickets({}).pipe(
-      tap((dd) => {
+  executerStatistics() {
+    return this.ticket.get_tickets({}).pipe(
+      map((dd) => {
+        const waiters = {}
         const ticketSup: Ticket[] = [];
-
         dd.forEach((ss) => {
           ticketSup.push(ss);
         });
-
-        console.log(ticketSup);
-
         ticketSup.map( (x) => {
-          console.log(x);
           return x.orders.map( (y) => {
-            console.log(y);
-            return y.username_cook;
+            return y.username_executer;
           }).forEach( (z) => {
-            console.log(z);
             if ( !(z in waiters)) {
               waiters[z] = 0;
             }
             waiters[z] += 1;
           });
         });
+        console.log(waiters);
+        return waiters;
       })
-    ).subscribe();
-
-    console.log(waiters);
-    return waiters;
+    );
   }
 
-/*  async cookStatistics() {
+  getStats() {
 
-    const waiters = {};
+    const mm = [];
 
-    this.ticket.get_tickets({}).pipe(
-      tap((dd) => {
-        const ticketSup: Ticket[] = [];
+    this.executerStatistics().pipe(
+      map((x) => {
+        const a = [];
+        console.log(x);
+        console.log(Object.keys(x));
 
-        dd.forEach((ss) => {
-          ticketSup.push(ss);
+        Object.keys(x).forEach( (y) => {
+          console.log(y);
+          a.push({name: y, num: x[y]});
         });
 
-        console.log(ticketSup);
+        console.log(a);
+        return a;
 
-        ticketSup.map( (x) => {
-          console.log(x);
-          return x.orders.map( (y) => {
-            console.log(y);
-            return y.username_bartender;
-          }).forEach( (z) => {
-            console.log(z);
-            if ( !(z in waiters)) {
-              waiters[z] = 0;
-            }
-            waiters[z] += 1;
-          });
-        });
       })
-    ).subscribe();
+    ).subscribe( (x) => {
+      x.forEach( (y) => {
+        mm.push(y);
+      });
+    });
 
-    console.log(waiters);
-    return waiters;
-  }*/
+    this.waiterStatistics().pipe(
+      map((x) => {
+        const a = [];
+        console.log(x);
+        console.log(Object.keys(x));
+
+        Object.keys(x).forEach( (y) => {
+          console.log(y);
+          a.push({name: y, num: x[y]});
+        });
+
+        console.log(a);
+        return a;
+
+      })
+    ).subscribe( (x) => {
+      x.forEach( (y) => {
+        mm.push(y);
+      });
+    });
+
+
+
+    /*this.executerStatistics().then( (x) => {
+      Object.keys(x).forEach( (y) => {
+        a.push({name: y, num: x[y]});
+      });
+    });*/
+
+    /*if (a.length === 0) {
+      // console.log('porco dio');
+    }*/
+
+    return mm;
+  }
 }
