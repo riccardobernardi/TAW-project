@@ -39,7 +39,7 @@ export class WaiterStatisticsComponent implements OnInit {
   waiterStatistics() {
     return this.ticket.get_tickets({}).pipe(
       map((dd) => {
-        const waiters = {}
+        const waiters = {};
         const ticketSup: Ticket[] = [];
         dd.forEach((ss) => {
           ticketSup.push(ss);
@@ -64,7 +64,7 @@ export class WaiterStatisticsComponent implements OnInit {
   executerStatistics() {
     return this.ticket.get_tickets({}).pipe(
       map((dd) => {
-        const waiters = {}
+        const waiters = {};
         const ticketSup: Ticket[] = [];
         dd.forEach((ss) => {
           ticketSup.push(ss);
@@ -97,7 +97,7 @@ export class WaiterStatisticsComponent implements OnInit {
 
         Object.keys(x).forEach( (y) => {
           console.log(y);
-          a.push({name: y, num: x[y]});
+          a.push({name: y, num: x[y], role: 'executer'});
         });
 
         console.log(a);
@@ -117,8 +117,7 @@ export class WaiterStatisticsComponent implements OnInit {
         console.log(Object.keys(x));
 
         Object.keys(x).forEach( (y) => {
-          console.log(y);
-          a.push({name: y, num: x[y]});
+          a.push({name: y, num: x[y], role: 'waiter'});
         });
 
         console.log(a);
