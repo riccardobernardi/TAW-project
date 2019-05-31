@@ -7,6 +7,7 @@ export interface TicketOrder {
   state: string;
   price: number;
   added: [];
+  required_time: number
 }
 
 // User defined type guard

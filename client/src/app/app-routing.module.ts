@@ -15,7 +15,7 @@ import { Paydesk2DashboardComponent } from './paydesk2/paydesk2Dashboard.compone
 import { HistTotalComponent } from './statistics-dashboard/HistTotalComponent/histtotal.component';
 import { StatisticsDashboardComponent } from './statistics-dashboard/statistics-dashboard.component';
 import {WaiterStatisticsComponent} from './statistics-dashboard/waiter-statistics/waiter-statistics.component';
-import { HistTotalCustomersComponent} from "./statistics-dashboard/hist-total-customers/hist-total-customers.component";
+import { StatsChartsComponent } from "./statistics-dashboard/stats-charts/stats-charts.component"
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -88,12 +88,8 @@ const routes: Routes = [
         component: StatisticsDashboardComponent,
         children: [
           {
-            path: 'total',
-            component: HistTotalComponent
-          },
-          {
-            path: 'total customers',
-            component: HistTotalCustomersComponent
+            path: 'total charts',
+            component: StatsChartsComponent
           },
           {
             path: 'waiter-statistics',

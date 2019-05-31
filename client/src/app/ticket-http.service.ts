@@ -54,7 +54,8 @@ export class TicketHttpService {
       username_waiter: usernameWaiter,
       username_executer: undefined,
       _id: null,
-      type_item: item.type
+      type_item: item.type,
+      required_time: item.required_time
     };
     console.log(ticketId, order);
     return this.http.post(/*this.url +*/ this.endpoint + "/" + ticketId + '/' + 'orders', order, this.create_options());

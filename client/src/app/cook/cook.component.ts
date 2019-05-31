@@ -34,7 +34,7 @@ export class CookComponent implements OnInit {
         if (orders.length !== 0) {
           this.tickets.push(ss);
           orders.sort((a: TicketOrder, b: TicketOrder) => {
-            return a.price - b.price;
+            return a.required_time - b.required_time;
           });
           ss.orders = orders;
         }
