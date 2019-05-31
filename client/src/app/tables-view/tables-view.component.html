@@ -4,6 +4,6 @@
             Number: {{table.number}},
             Max_people:{{table.max_people}}
         </button>
-        <input *ngIf="table.state == 'free'" type="number" min="1" max={{table.max_people}} value={{table.max_people}}>
+        <input *ngIf="table.state == states[0]" type="number" min="1" max={{table.max_people}} value={{table.max_people}}>
     </div>
 </div>

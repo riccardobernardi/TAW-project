@@ -34,6 +34,7 @@ export class TablesViewComponent implements OnInit {
       tables.forEach( (table : Table) => {
         this.tables.push(table);
       });
+      console.log(this.tables);
     });
   }
 
@@ -44,8 +45,8 @@ export class TablesViewComponent implements OnInit {
       // tableToChange.state = data._id;
       const table = Object.assign({}, tableToChange);
       table.state = states[1];
-      console.log(tableToChange.state);
-      return this.table.change_table(table).toPromise();
+      console.log(table.state);
+      return this.table.change_table(table, data._id).toPromise();
       // update del tavolo da rimuovere perchè si deve usare il websocket
     }).then().catch(err => {
       console.log(err);
