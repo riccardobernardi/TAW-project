@@ -68,35 +68,40 @@ export class TicketHttpService {
   create_report(filters) {
     const today = new Date();
     return this.get_tickets(filters).toPromise().then((data: Ticket[]) => {
+      if(data.length != 0) {
       console.log(data);
-      const report: Report = {
-        date : today,
-        total : 0,
-        total_customers : 0,
-        total_orders : {dish: 0, beverage: 0},
-        average_stay : 0
-      };
+        const report: Report = {
+          date : today,
+          total : 0,
+          total_customers : 0,
+          total_orders : {dish: 0, beverage: 0},
+          average_stay : 0
+        };
 
-      let ticketCount = 0;
+        let ticketCount = 0;
 
-      console.log(report);
-
-
-      data.forEach((ticket) => {
-        report.total += ticket.total;
-        report.total_customers += ticket.people_number;
-        ticket.orders.forEach((order: TicketOrder) => {
-          report.total_orders[order.type_item] += 1;
-        });
-        ticketCount++;
-        report.average_stay += Math.floor((new Date(ticket.end).getTime() - new Date(ticket.start).getTime()) / 60000);
         console.log(report);
-      });
 
-      report.average_stay = Math.floor(report.average_stay / ticketCount);
-      console.log(report);
-      return this.http.post<Report>(/*'http://localhost:8080' +*/ "reports", report, this.create_options()).toPromise();
-    }).catch((err) => err);
+
+        data.forEach((ticket) => {
+          report.total += ticket.total;
+          report.total_customers += ticket.people_number;
+          ticket.orders.forEach((order: TicketOrder) => {
+            report.total_orders[order.type_item] += 1;
+          });
+          ticketCount++;
+          report.average_stay += Math.floor((new Date(ticket.end).getTime() - new Date(ticket.start).getTime()) / 60000);
+          console.log(report);
+        });
+
+        report.average_stay = Math.floor(report.average_stay / ticketCount);
+        console.log(report);
+        return this.http.post(/*'http://localhost:8080' +*/ "reports", report, this.create_options()).toPromise();
+      } else {
+        console.log("Generate reports error");
+        throw new Error("Generate reports error");
+      };
+    })
   }
 
   get_reports(filter) {
