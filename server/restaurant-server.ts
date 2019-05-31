@@ -604,7 +604,7 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    console.log(req.body);
 
    //controllo formato richiesta
-   if (!req.body || !req.body.name_item  || !req.body.price || /*req.body.added ||*/ typeof(req.body.name_item) != 'string' || typeof(req.body.price) != 'number'/*|| Array.isArray(req.body.added)*/){
+   if (!req.body || !req.body.name_item  || !req.body.price || !req.body.required_time || /*req.body.added ||*/ typeof(req.body.name_item) != 'string' || typeof(req.body.price) != 'number' || typeof(req.body.required_time) != 'number'/*|| Array.isArray(req.body.added)*/){
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
 
@@ -618,6 +618,7 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    newer.username_executer = req.body.username_executer;
    newer.state = ticket.orderState[0];
    newer.type_item = req.body.type_item;
+   newer.required_time = req.body.required_time;
    
    //inserisco order nel DB
    ticket.getModel().update( { _id: req.params.id}, { $push: { orders: newer } }).then( () => {
@@ -1043,14 +1044,16 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
             username_waiter: "waiter1",
             state: ticket.orderState[0],
             price: 9,
-            type_item: item.type[0]
+            type_item: item.type[0],
+            required_time: 10
          },
          {
             name_item: "Coca cola",
             username_waiter: "waiter1",
             state: ticket.orderState[0],
             price: 2.5,
-            type_item: item.type[1]
+            type_item: item.type[1],
+            required_time: 1
          }],
          state: ticket.ticketState[0],
          total: 0,
@@ -1072,7 +1075,8 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
             username_waiter: "waiter1",
             state: ticket.orderState[0],
             price: 9,
-            type_item: item.type[0]
+            type_item: item.type[0],
+            required_time: 10
          }],
          state: ticket.ticketState[0],
          total: 0,
@@ -1092,21 +1096,24 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
             state: ticket.orderState[0],
             price: 6,
             added: ["Mozzarella"],
-            type_item: item.type[0]
+            type_item: item.type[0],
+            required_time: 12
          }, {
             //id_order: new ObjectID(),
             name_item: "Bistecca alla griglia",
             username_waiter: "waiter1",
             state: ticket.orderState[0],
             price: 9,
-            type_item: item.type[0]
+            type_item: item.type[0],
+            required_time: 10
          },
          {
             name_item: "Chinotto",
             username_waiter: "waiter1",
             state: ticket.orderState[0],
             price: 2.5,
-            type_item: item.type[1]
+            type_item: item.type[1],
+            required_time: 1
          }],
          state: ticket.ticketState[0],
          total: 0,

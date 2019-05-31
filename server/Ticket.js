@@ -30,7 +30,8 @@ var ticketSchema = new mongoose.Schema({
                 state: String,
                 price: Number,
                 added: [String],
-                type_item: String
+                type_item: String,
+                required_time: Number
             }],
         required: false
     },
