@@ -28,6 +28,8 @@ import { WaiterStatisticsComponent } from './statistics-dashboard/waiter-statist
 import { HistTotalCustomersComponent } from './statistics-dashboard/hist-total-customers/hist-total-customers.component';
 import { HttpInterceptorService } from './http-interceptor.service';
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { HistogramWithDatesComponent } from './statistics-dashboard/histogram-with-dates/histogram-with-dates.component';
+import { StatsChartsComponent } from './statistics-dashboard/stats-charts/stats-charts.component';
 
 
 @NgModule({
@@ -46,7 +48,9 @@ import { HTTP_INTERCEPTORS } from "@angular/common/http";
     HistTotalComponent,
     StatisticsDashboardComponent,
     WaiterStatisticsComponent,
-    HistTotalCustomersComponent
+    HistTotalCustomersComponent,
+    HistogramWithDatesComponent,
+    StatsChartsComponent
   ],
   imports: [
     BrowserModule,
