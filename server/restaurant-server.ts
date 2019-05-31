@@ -651,15 +651,22 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
 
    //trovo il ticket usando l'id specificato nella richiesta
    ticket.getModel().findById( req.params.idTicket).then( (data : ticket.Ticket) => {
-      if (!data){
-         return next({ statusCode:404, error: true, errormessage: "Ticket id not found" });
-      }
+      
       //trovo l'order (interno al ticket) usando l'id specificato nella richiesta
       var toChange: Array<ticket.Order> = data.orders.filter(function(ord){return ord.id == req.params.idOrder});
 
       if (toChange.length < 1){
          return next({ statusCode:404, error: true, errormessage: "Order id not found" });
       }
+
+      //controllo che la modifica dello stato sia coerente (es: non può passare da ordinato a consegnato senza passare per gli stati intermedi)
+      let nextStateIndex = ticket.orderState.findIndex((st) =>{return st == req.body.state} );
+      if ( (toChange[0].state != ticket.orderState[nextStateIndex-1] && 
+         !(toChange[0].state == ticket.orderState[0] && req.body.state == ticket.orderState[2] && toChange[0].type_item == item.type[1])) ||
+         ( toChange[0].type_item == item.type[1] && req.body.state == ticket.orderState[1]) ){
+         return next({ statusCode:409, error: true, errormessage: "Conflict, orderd state change not coherent with the regular state changes flow" });
+      }
+
 
       toChange[0].state = req.body.state;
 
@@ -711,7 +718,7 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
       }
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason) => {
-      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:404, error: true, errormessage: "Ticket id not found" });
    });
 });
 
