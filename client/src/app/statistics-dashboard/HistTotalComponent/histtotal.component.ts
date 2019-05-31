@@ -11,14 +11,14 @@ import { Report } from "../../Report";
 export class HistTotalComponent implements OnInit {
 
   private reports : Report[] = []
-  private barChartLabels;
+  private barChartLabels = null;
   private barChartType = "bar";
   private barChartLegend = true;
   private barChartOptions = {
     scaleShowVerticalLines: false,
     responsive: true
   };
-  private barChartData = []
+  private barChartData = null
 
   constructor(private ticket: TicketHttpService) {}
 

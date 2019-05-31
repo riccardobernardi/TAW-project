@@ -1,7 +1,7 @@
 <div>
   <div style="display: block">
-    <canvas baseChart
-            [datasets]="barChartData | async"
+    <canvas *ngIf = "barChartData" baseChart
+            [datasets]="barChartData"
             [labels]="barChartLabels"
             [options]="barChartOptions"
             [legend]="barChartLegend"
