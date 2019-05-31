@@ -30,7 +30,8 @@ export class TableHttpService {
     return this.http.get<Table[]>(/*this.url + */this.endpoint + '/' + num/*, this.create_options()*/);
   }
 
-  change_table(newTable/*: Table*/) {
+  change_table(newTable/*: Table*/, associated_ticket: string) {
+    newTable.associated_ticket = associated_ticket
     return this.http.patch<Table>(/*this.url +*/ this.endpoint + '/' + newTable.number, newTable/*, this.create_options()*/);
   }
 }

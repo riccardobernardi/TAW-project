@@ -154,7 +154,7 @@ export class PaydeskComponent implements OnInit {
 
   close_ticket() {
     this.ticket.close_ticket(this.selTicket._id, this.emitReceipt()).toPromise().then(() => {
-      return this.table.change_table({number: this.selTicket.table, state: states[0]}).toPromise();
+      return this.table.change_table({number: this.selTicket.table, state: states[0]}, undefined).toPromise();
     })
       .then()
       .catch((err) => console.log(err));
