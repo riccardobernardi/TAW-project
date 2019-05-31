@@ -8,7 +8,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "electron:start": "ng build --watch -op=electron/app"
   },
   "private": true,
   "dependencies": {
@@ -45,6 +46,7 @@
     "@types/node": "^8.9.5",
     "@types/socket.io-client": "^1.4.32",
     "codelyzer": "~4.5.0",
+    "electron": "^5.0.2",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.0.0",

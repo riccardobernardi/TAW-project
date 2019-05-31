@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TicketHttpService } from "../../ticket-http.service";
 import { Report } from "../../Report";
+import { of } from "rxjs";
 
 @Component({
   selector: 'app-hist-total-customers',
@@ -11,14 +12,14 @@ import { Report } from "../../Report";
 export class HistTotalCustomersComponent implements OnInit {
 
   private reports : Report[] = []
-  private barChartLabels;
+  private barChartLabels = null;
   private barChartType = "bar";
   private barChartLegend = true;
   private barChartOptions = {
     scaleShowVerticalLines: false,
     responsive: true
   };
-  private barChartData = []
+  private barChartData = null;
 
   constructor(private ticket: TicketHttpService) {}
 

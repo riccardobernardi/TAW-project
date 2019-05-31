@@ -42,7 +42,9 @@ export class OrdersServedComponent implements OnInit {
 
   ngOnInit() {
     this.get_tickets();
-    this.socketio.get().on('waiters', () => {this.get_tickets()});
+    this.socketio.get().on('waiters', () => {
+      console.log("Orders served event received");
+      this.get_tickets()});
   }
 
   /*dd() {

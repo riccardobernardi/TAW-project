@@ -9,12 +9,12 @@ import {Item} from './Item';
 })
 export class ItemHttpService {
 
-  public url = 'http://localhost:8080';
+  public endpoint = 'items';
 
   constructor( private http: HttpClient, private us: UserHttpService ) {
   }
 
-  private create_options( ) {
+  /*private create_options( ) {
     return  {
       headers: new HttpHeaders({
         authorization: 'Bearer ' + this.us.get_token(),
@@ -22,12 +22,12 @@ export class ItemHttpService {
         'Content-Type':  'application/json',
       })
     };
-  }
+  }*/
 
 
   // lo userservice.getToken() si può cambiare con httpinterceptor e aggiungere in ogni richiesta l'header con il token
 
   get_Items() {
-    return this.http.get<Item[]>( this.url + '/items', this.create_options() );
+    return this.http.get<Item[]>( /*this.url + '/*/this.endpoint/*, this.create_options()*/ );
   }
 }

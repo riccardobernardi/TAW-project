@@ -4,6 +4,9 @@ export interface Table {
     state: string;
 }
 
+export var states: string[] = ["free", "taken"];
+
+
 // User defined type guard
 // Type checking cannot be performed during the execution (we don't have the Message interface anyway)
 // but we can create a function to check if the supplied parameter is compatible with a given type

@@ -37,11 +37,14 @@ export class InsertOrdersComponent implements OnInit {
 
   get_tickets() {
     this.tickets.splice(0, this.tickets.length);
-      this.ticket.get_tickets({waiter: this.us.get_nick(), state: 'open'}).subscribe((dd) => {
-        dd.forEach( (ss) => {
-          this.tickets.push(ss);
-        });
+    let filter = {state: "open"};
+    if(this.us.get_role() != "desk")
+      filter["waiter"] = this.us.get_nick();
+    this.ticket.get_tickets(filter).subscribe((dd) => {
+      dd.forEach( (ss) => {
+        this.tickets.push(ss);
       });
+    });
   }
 
   ngOnInit() {

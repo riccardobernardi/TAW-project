@@ -1,4 +1,4 @@
-<p>
+<!--<p>
   waiter-statistics works!
 </p>
 
@@ -10,18 +10,20 @@ Total cooks: {{this.resultCook | async | json }}
 
 <br>
 
-Total total: {{this.allResults | json }}
+Total total: {{this.allResults | json }}-->
 
 <table class="table table-striped">
   <thead>
     <tr>
       <th scope="col">Username</th>
+      <th scope="col">Role</th>
       <th scope="col">Items served</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor = "let ww of allResults">
       <td>{{ww.name}}</td>
+      <td>{{ww.role}}</td>
       <td>{{ww.num}}</td>
     </tr>
   </tbody>
