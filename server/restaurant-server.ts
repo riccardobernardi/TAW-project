@@ -732,11 +732,21 @@ app.route("/reports").get( auth, (req,res,next) => {
     //creo filtro per la query
     var filter: any = {};
 		if(req.query.start || req.query.end) {
-			filter.date = {}
-			if(req.query.start)
-       filter.date["$gte"] = req.query.start.setHours(0,0,0,0);
-			if(req.query.end)
-				filter.date["$lt"] = req.query.end.setHours(0,0,0,0);
+         filter.date = {}
+         console.log(filter);
+         console.log(req.query.start);
+         console.log(req.query.end);
+         if(req.query.start) {
+            filter.date["$gte"] = new Date(req.query.start);
+            filter.date["$gte"].setHours(0,0,0,0);
+         }
+         if(req.query.end) {
+            filter.date["$lte"] = new Date(req.query.end);
+            filter.date["$lte"].setHours(0,0,0,0);
+            filter.date["$lte"].setDate(filter.date["$lte"].getDate()+1);
+            //ALTRIMENTI NON FUNZIA
+         }
+         console.log(filter);
 		}
 		console.log(filter);
  
