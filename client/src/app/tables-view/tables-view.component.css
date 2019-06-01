@@ -5,9 +5,24 @@
 .tables > button {
     width: 60%;
     margin: 5px; 
+    display: inline-block
 }
 
 .tables > input {
     width: 20%;
-    margin: 5px
+    margin: 5px;
+    display: inline-block;
+    text-align: center;
+}
+
+.loading {
+    text-align: center;
+    border: 2px solid blue;
+    color: blue
+}
+
+.error {
+    text-align: center;
+    border: 2px solid red;
+    color: red
 }

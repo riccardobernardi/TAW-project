@@ -15,35 +15,47 @@ import { TicketOrder } from "../TicketOrder";
 })
 export class InsertOrdersComponent implements OnInit {
 
-  private tickets = [];
-  private items: Item[] = [];
+  private tickets = null;
+  private items: Item[] = null;
   private selTicket: Ticket;
   private ordersSelected = [];
   private counter = 0;
   private selMenuEntry: Item;
+  private error = false;
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService) {}
 
   get_items() {
-    this.items.splice(0, this.items.length);
+
+    //this.items.splice(0, this.items.length);
+    this.items = null;
     console.log(this.items);
-    this.item.get_Items().subscribe( (dd) => {
-      dd.forEach( (ss) => {
+    this.item.get_Items().toPromise().then( (dd) => {
+      /*dd.forEach( (ss) => {
         this.items.push(ss);
-      });
+      });*/
+      this.items = dd;
+    }).catch((err) => {
+      console.log(err);
+      this.error = true;
     });
   }
 
   get_tickets() {
-    this.tickets.splice(0, this.tickets.length);
+    //this.tickets.splice(0, this.tickets.length);
+    this.tickets = null;
     let filter = {state: "open"};
     if(this.us.get_role() != "desk")
       filter["waiter"] = this.us.get_nick();
-    this.ticket.get_tickets(filter).subscribe((dd) => {
-      dd.forEach( (ss) => {
+    this.ticket.get_tickets(filter).toPromise().then((dd) => {
+      /*dd.forEach( (ss) => {
         this.tickets.push(ss);
-      });
+      });*/
+      this.tickets = dd;
+    }).catch((err) => {
+      console.log(err);
+      this.error = true;
     });
   }
 
