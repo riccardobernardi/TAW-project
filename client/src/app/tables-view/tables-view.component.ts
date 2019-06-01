@@ -18,6 +18,7 @@ export class TablesViewComponent implements OnInit {
   private tables: Table[] = [];
   private socketObserver: Observable<any>;
   private states = states;
+  private error = false;
 
   constructor(private table: TableHttpService, private user: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {}
 
@@ -35,10 +36,11 @@ export class TablesViewComponent implements OnInit {
         this.tables.push(table);
       });
       console.log(this.tables);
+      this.error = false;
     });
   }
 
-  open_ticket(tableToChange: Table, people_number: number) {
+  public open_ticket(tableToChange: Table, people_number: number) {
     console.log(people_number);
     this.ticket.open_ticket(this.user.get_nick(), tableToChange.number, people_number).toPromise().then((data: Ticket) => {
       console.log(data);
@@ -50,6 +52,7 @@ export class TablesViewComponent implements OnInit {
       // update del tavolo da rimuovere perchè si deve usare il websocket
     }).then().catch(err => {
       console.log(err);
+      this.error = true;
     });
   }
 

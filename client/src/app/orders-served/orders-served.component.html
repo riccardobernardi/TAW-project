@@ -1,30 +1,38 @@
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-  <li *ngFor="let ticket of tickets" class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#tab{{ticket.table}}" role="tab" aria-selected="true">{{ticket.table}}</a>
-  </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-  <div *ngFor="let ticket of tickets; let j = index" class="tab-pane fade" id="tab{{ticket.table}}" role="tabpanel" >
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th scope="col">Item</th>
-          <th scope="col">Delivered</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let order of ticket.orders; let i = index">
-          <td>{{order.name_item}}</td>
-          <td> 
-            <div class="custom-control custom-switch">            
-              <input type="checkbox" class="custom-control-input" id="customSwitch{{order._id}}" [checked]="order.state == 'delivered'" [disabled]="order.state != 'ready'" (change)="deliver(j, i)">
-              <label *ngIf="order.state != 'ready' || order.state != 'delivered'" class="custom-control-label" for="customSwitch{{order._id}}"></label>
-              <label *ngIf="order.state == 'ready'" class="custom-control-label" for="customSwitch{{order._id}}">To be delivered</label>
-              <label *ngIf="order.state == 'delivered'" class="custom-control-label" for="customSwitch{{order._id}}">Delivered, good work!</label>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+<div *ngIf="(tickets && tickets.length != 0) else loading">
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li *ngFor="let ticket of tickets" class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#tab{{ticket.table}}" role="tab" aria-selected="true">{{ticket.table}}</a>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="myTabContent">
+    <div *ngFor="let ticket of tickets; let j = index" class="tab-pane fade" id="tab{{ticket.table}}" role="tabpanel" >
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Item</th>
+            <th scope="col">Delivered</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of ticket.orders; let i = index">
+            <td>{{order.name_item}}</td>
+            <td> 
+              <div class="custom-control custom-switch">            
+                <input type="checkbox" class="custom-control-input" id="customSwitch{{order._id}}" [checked]="order.state == 'delivered'" [disabled]="order.state != 'ready'" (change)="deliver(j, i)">
+                <label *ngIf="order.state != 'ready' || order.state != 'delivered'" class="custom-control-label" for="customSwitch{{order._id}}"></label>
+                <label *ngIf="order.state == 'ready'" class="custom-control-label" for="customSwitch{{order._id}}">To be delivered</label>
+                <label *ngIf="order.state == 'delivered'" class="custom-control-label" for="customSwitch{{order._id}}">Delivered, good work!</label>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
+
+<ng-template #loading>
+  <div *ngIf="!error" class="loading">Orders are loading...</div>
+  <div *ngIf="error" class="error">Error in loading tickets...</div>
+</ng-template>

@@ -1,9 +1,13 @@
-<div>
+<div *ngIf="(tables && tables.length != 0) else loading">
     <div class="tables" *ngFor="let table of tables">
-        <button [disabled] = "table.state === states[1]" class="btn btn-lg btn-primary" (click) = "open_ticket(table, $event.target.nextElementSibling.value)">
-            Number: {{table.number}},
-            Max_people:{{table.max_people}}
+        <button [disabled] = "table.state === states[1]" class="btn btn-primary" (click) = "open_ticket(table, $event.target.nextElementSibling.value)">
+            {{table.number}}
         </button>
-        <input *ngIf="table.state == states[0]" type="number" min="1" max={{table.max_people}} value={{table.max_people}}>
+        <input class="form-control" *ngIf="table.state == states[0]" type="number" min="1" max={{table.max_people}} value={{table.max_people}}>
     </div>
 </div>
+
+<ng-template #loading>
+    <div *ngIf="!error" class="loading">Tables are loading...</div>
+    <div *ngIf="error" class="error">Error in loading tables...</div>
+</ng-template>
