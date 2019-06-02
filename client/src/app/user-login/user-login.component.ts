@@ -14,14 +14,14 @@ export class UserLoginComponent implements OnInit {
   private role = undefined
 
   ngOnInit() {
-    this.us.renew().subscribe( (d) => {
+    /*this.us.renew().subscribe( (d) => {
       console.log('Renew succeded: ' + JSON.stringify(d) );
       // this.role = this.us.get_role();
       // console.log('going to: ' + '/' + this.role );
       // this.router.navigate(['/' + this.role]);
     }, (err) => {
       console.log('Renew error: ' + JSON.stringify(err.error.errormessage) );
-    });
+    });*/
   }
 
   login( mail: string, password: string ) {

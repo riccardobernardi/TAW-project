@@ -13,6 +13,7 @@ import * as jwt_decode from 'jwt-decode';
 /*import 'rxjs/observable/';*/
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
+import { LogoutComponent } from './logout/logout.component';
 
 @Injectable()
 export class UserHttpService {
@@ -20,6 +21,8 @@ export class UserHttpService {
   public token = '';
   public endpoint = 'users';
   public users = [];
+  private renew_clock;
+  private renew_clock_interval;
 
   constructor( private http: HttpClient, private router: Router ) {
     console.log('User service instantiated');
@@ -38,13 +41,21 @@ export class UserHttpService {
 
     return this.http.get( /*this.url + */'login',  options ).pipe(
       tap( (data) => {
-        console.log(JSON.stringify(data));
+        //console.log(JSON.stringify(data));
         this.token = data.token;
         sessionStorage.setItem('restaurant_token', this.token );
+        let decoded_token = jwt_decode(this.token)
+        let exp_date = decoded_token.iat*1000 + Math.floor((decoded_token.exp - decoded_token.iat)*1000*0.9);
+        let now = new Date().getTime();
+        if(exp_date - now > 0) {
+          this.renew_clock_interval = exp_date - now;
+          this.renew_clock = setInterval(() => {this.renew()}, this.renew_clock_interval);
+        }
+          else this.logout();
       }));
   }
 
-  renew(): Observable<any> {
+  private renew(): Observable<any> {
 
     const tk = sessionStorage.getItem('restaurant_token');
     if ( !tk || tk.length < 1 ) {
@@ -60,18 +71,25 @@ export class UserHttpService {
     };*/
 
     console.log('Renewing token');
-    return this.http.get( /*this.url + '/*/'renew'/*,  options,*/ ).pipe(
-      tap( (data) => {
+    //return this.http.get( /*this.url + '/*/'renew'/*,  options,*/ ).pipe(
+      //tap( (data) => {
+      //  console.log(data/*JSON.stringify(data)*/);
+      /*  this.token = data.token;
+        sessionStorage.setItem('restaurant_token', this.token );
+      }));*/
+      this.http.get( /*this.url + '/*/'renew'/*,  options,*/ ).subscribe((data) => {
         console.log(data/*JSON.stringify(data)*/);
         this.token = data.token;
         sessionStorage.setItem('restaurant_token', this.token );
-      }));
+      });
+
   }
 
   logout() {
     console.log('Logging out');
     this.token = '';
     sessionStorage.removeItem('restaurant_token');
+    clearInterval(this.renew_clock);
     this.router.navigate(['/']);
   }
 
