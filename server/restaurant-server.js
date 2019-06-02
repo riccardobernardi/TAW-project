@@ -709,7 +709,7 @@ app.get('/renew', auth, function (req, res, next) {
     delete tokendata.exp;
     //nuovo token
     console.log("Renewing token for user " + JSON.stringify(tokendata));
-    var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '1h' });
+    var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '30s' });
     return res.status(200).json({ error: false, errormessage: "", token: token_signed });
 });
 // Configure HTTP basic authentication strategy 
@@ -740,7 +740,7 @@ app.get("/login", passport.authenticate('basic', { session: false }), function (
         role: req.user.role
     };
     console.log("Login granted. Generating token");
-    var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '1h' });
+    var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '30s' });
     return res.status(200).json({ error: false, errormessage: "", token: token_signed });
 });
 // Add error handling middleware
