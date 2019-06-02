@@ -15,28 +15,36 @@ import { SocketioService } from '../socketio.service';
 })
 export class TablesViewComponent implements OnInit {
 
-  private tables: Table[] = [];
+  private tables: Table[];
   private socketObserver: Observable<any>;
   private states = states;
   private error = false;
 
-  constructor(private table: TableHttpService, private user: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {}
-
-  ngOnInit() {
+  constructor(private table: TableHttpService, private user: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {
     this.get_tables()
-    this.socketio.get().on('waiters', ()=>{ 
+    this.socketio.get().on('waiters', () => { 
       console.log("Waiters view evento ricevuto");
-      this.get_tables() } );
+      this.get_tables() ;
+    });
   }
+
+  ngOnInit() {}
 
   public get_tables() {
     this.table.get_tables().subscribe( (tables: Table[]) => {
-      this.tables.splice(0, this.tables.length);
+      /*this.tables.splice(0, this.tables.length);
       tables.forEach( (table : Table) => {
         this.tables.push(table);
+      });*/
+      this.tables = tables;
+      tables.sort((table1 : Table, table2 : Table) => {
+        return table1.number - table2.number;
       });
       console.log(this.tables);
       this.error = false;
+    }, (err) => {
+      this.error = true;
+      console.log(err);
     });
   }
 
@@ -44,7 +52,6 @@ export class TablesViewComponent implements OnInit {
     console.log(people_number);
     this.ticket.open_ticket(this.user.get_nick(), tableToChange.number, people_number).toPromise().then((data: Ticket) => {
       console.log(data);
-      // tableToChange.state = data._id;
       const table = Object.assign({}, tableToChange);
       table.state = states[1];
       console.log(table.state);

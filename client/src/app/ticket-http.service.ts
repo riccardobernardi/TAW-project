@@ -36,7 +36,7 @@ export class TicketHttpService {
 
   close_ticket(ticketId: string, total: number) {
     console.log(total);
-    return this.http.patch<Ticket>(/*this.url + */this.endpoint + '/' + ticketId, {state: 'closed', end: Date(), total}, this.create_options());
+    return this.http.patch<Ticket>(/*this.url + */this.endpoint + '/' + ticketId, {state: 'closed', end: Date(), total: total}, this.create_options());
   }
 
   get_tickets(filters) {
@@ -99,8 +99,7 @@ export class TicketHttpService {
         console.log(report);
         return this.http.post(/*'http://localhost:8080' +*/ "reports", report, this.create_options()).toPromise();
       } else {
-        console.log("Generate reports error");
-        throw new Error("Generate reports error");
+        throw new Error("Impossibile to generate the report: zero tickets");
       };
     })
   }

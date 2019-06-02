@@ -62,7 +62,7 @@ export class UserHttpService {
     console.log('Renewing token');
     return this.http.get( /*this.url + '/*/'renew'/*,  options,*/ ).pipe(
       tap( (data) => {
-        console.log(JSON.stringify(data));
+        console.log(data/*JSON.stringify(data)*/);
         this.token = data.token;
         sessionStorage.setItem('restaurant_token', this.token );
       }));

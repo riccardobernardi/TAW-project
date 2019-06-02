@@ -33,6 +33,7 @@
 </div>
 
 <ng-template #loading>
-  <div *ngIf="!error" class="loading">Orders are loading...</div>
-  <div *ngIf="error" class="error">Error in loading tickets...</div>
+  <div *ngIf="tickets && tickets.length == 0" class="loading">No orders</div>
+  <div *ngIf="!tickets" class="loading">Orders are loading...</div>
+  <div *ngIf="error" class="error">Error...</div>
 </ng-template>

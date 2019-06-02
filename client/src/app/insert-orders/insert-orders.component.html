@@ -3,15 +3,16 @@
     <form>
 
       <div class="form-group">
-        <p>Your nick is {{this.us.get_nick()}}</p>
-        <p for="button">Your role is {{this.us.get_role()}}</p>
+        <!--<p>Your nick is {{this.us.get_nick()}}</p>
+        <p for="button">Your role is {{this.us.get_role()}}</p>-->
 
         <label for="tables">Seleziona un tavolo</label>
-        <select class="form-control" [(ngModel)]="selTicket" name="tables" id="tables">
+        <select *ngIf="tickets.length != 0 " class="form-control" [(ngModel)]="selTicket" name="tables" id="tables">
           <option *ngFor="let tl of tickets" [ngValue]="tl">{{tl.table}}</option>
         </select>
+        <p *ngIf="tickets.length == 0">No tables</p>
 
-        <div>
+        <div *ngIf="items.length != 0">
         
           <label for="ordini">Seleziona un prodotto da aggiungere</label>
           <select class="form-control" [(ngModel)]="selMenuEntry" name="ordini" id="ordini">
@@ -20,15 +21,15 @@
 
           <br>
           
-          <!--<input type="number" #counter class="form-control" style="text-align:center;" >-->
-          <form class="form-inline">
-            <div class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="add()">Add</button></div>
-            <span> {{counter}} </span>
-            <div class="form-group mx-sm-3 mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="sub()">Subtract</button></div>
+          <form class="form-group row">
+            <div class="col-sm-2"><button type="submit" class="btn btn-primary" (click)="add()">Add</button></div>
+            <div class="col-sm-6"><input style="text-align: center" class="form-control" type="number" value="{{counter}}" readonly></div>
+            <div class="col-sm-2"><button type="submit" class="btn btn-primary" (click)="sub()">Subtract</button></div>
           </form>
 
           <button class="btn btn-lg btn-primary btn-block" (click)="insertItem(selMenuEntry, counter)">Insert</button>
         </div>
+        <p *ngIf="items.length == 0">No items</p>
 
         <div *ngIf="selTicket">
           <label>Elementi inseriti nell'ordine per il tavolo {{selTicket.table}}</label>
@@ -56,5 +57,5 @@
 
 <ng-template #loading>
   <div *ngIf="!error" class="loading">Tables and items are loading...</div>
-  <div *ngIf="error" class="error">Error in loading tables and items...</div>
+  <div *ngIf="error" class="error">Error...</div>
 </ng-template>

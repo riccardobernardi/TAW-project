@@ -8,6 +8,7 @@
 </div>
 
 <ng-template #loading>
-    <div *ngIf="!error" class="loading">Tables are loading...</div>
+    <div *ngIf="tables && tables.length != 0"></div>
+    <div *ngIf="!tables" class="loading">Tables are loading...</div>
     <div *ngIf="error" class="error">Error in loading tables...</div>
 </ng-template>

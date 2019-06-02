@@ -568,7 +568,7 @@ app.route('/tickets/:id').get(auth, (req, res, next) => {
    //console.log(enddate);
 
    //controllo formato
-   if ( !req.body || (req.body.end && enddate.toString() == 'Invalid Date') || (req.body.state && typeof(req.body.state) != 'string') || (req.body.total && typeof(req.body.total) != 'number')){
+   if ( !req.body || (req.body.end && enddate.toString() == 'Invalid Date') || (req.body.state && typeof(req.body.state) != 'string') || (req.body.total != null && req.body.total != undefined && typeof(req.body.total) != 'number')){
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
    //console.log("Patch per ticket/id: " + req.body.total);
@@ -578,7 +578,7 @@ app.route('/tickets/:id').get(auth, (req, res, next) => {
       update.end = req.body.end;
    if (req.body.state)
       update.state = req.body.state;
-   if(req.body.total)
+   if(req.body.total != null && req.body.total != undefined)
       update.total = req.body.total;
 
    ticket.getModel().findOneAndUpdate( {_id: req.params.id}, { $set: update}, ).then( (data : ticket.Ticket) => {
@@ -897,7 +897,7 @@ app.get("/login", passport.authenticate('basic', { session: false }), (req,res,n
 app.use( function(err,req,res,next) {
    //console.log("SONO QUI");
    console.log("Request error: "/*.red*/ + JSON.stringify(err) );
-   res.status( err.statusCode || 500 ).json( err );
+   res.status( err.statusCode || err.status || 500 ).json( err );
  
 });
 

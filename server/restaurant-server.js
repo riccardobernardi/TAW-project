@@ -470,7 +470,7 @@ app.route('/tickets/:id').get(auth, function (req, res, next) {
     var enddate = new Date(req.body.end);
     //console.log(enddate);
     //controllo formato
-    if (!req.body || (req.body.end && enddate.toString() == 'Invalid Date') || (req.body.state && typeof (req.body.state) != 'string') || (req.body.total && typeof (req.body.total) != 'number')) {
+    if (!req.body || (req.body.end && enddate.toString() == 'Invalid Date') || (req.body.state && typeof (req.body.state) != 'string') || (req.body.total != null && req.body.total != undefined && typeof (req.body.total) != 'number')) {
         return next({ statusCode: 400, error: true, errormessage: "Wrong format" });
     }
     //console.log("Patch per ticket/id: " + req.body.total);
@@ -480,7 +480,7 @@ app.route('/tickets/:id').get(auth, function (req, res, next) {
         update.end = req.body.end;
     if (req.body.state)
         update.state = req.body.state;
-    if (req.body.total)
+    if (req.body.total != null && req.body.total != undefined)
         update.total = req.body.total;
     ticket.getModel().findOneAndUpdate({ _id: req.params.id }, { $set: update }).then(function (data) {
         return res.status(200).json({ error: false, errormessage: "" });
@@ -624,6 +624,7 @@ app.route("/reports").get(auth, function (req, res, next) {
             filter.date["$lte"] = new Date(req.query.end);
             filter.date["$lte"].setHours(0, 0, 0, 0);
             filter.date["$lte"].setDate(filter.date["$lte"].getDate() + 1);
+            //ALTRIMENTI NON FUNZIA
         }
         console.log(filter);
     }
@@ -746,7 +747,7 @@ app.get("/login", passport.authenticate('basic', { session: false }), function (
 app.use(function (err, req, res, next) {
     //console.log("SONO QUI");
     console.log("Request error: " /*.red*/ + JSON.stringify(err));
-    res.status(err.statusCode || 500).json(err);
+    res.status(err.statusCode || err.status || 500).json(err);
 });
 app.use(function (req, res, next) {
     res.status(404).json({ statusCode: 404, error: true, errormessage: "Invalid endpoint" });
