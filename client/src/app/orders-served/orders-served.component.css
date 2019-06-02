@@ -9,3 +9,15 @@
     border: 2px solid red;
     color: red
 }
+
+.inline-controls {
+    display: inline;
+}
+
+.inline-controls > button {
+    width: 20%;
+}
+
+.inline-controls > input {
+    width: 60%
+}

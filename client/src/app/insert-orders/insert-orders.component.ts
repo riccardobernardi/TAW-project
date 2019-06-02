@@ -27,7 +27,6 @@ export class InsertOrdersComponent implements OnInit {
               private socketio: SocketioService) {}
 
   get_items() {
-
     //this.items.splice(0, this.items.length);
     this.items = null;
     console.log(this.items);
@@ -35,7 +34,9 @@ export class InsertOrdersComponent implements OnInit {
       /*dd.forEach( (ss) => {
         this.items.push(ss);
       });*/
+      dd.sort((item1: Item, item2: Item) => (item1.name < item2.name) ? -1 : 1);
       this.items = dd;
+      this.error = false;
     }).catch((err) => {
       console.log(err);
       this.error = true;
@@ -52,7 +53,9 @@ export class InsertOrdersComponent implements OnInit {
       /*dd.forEach( (ss) => {
         this.tickets.push(ss);
       });*/
+      dd.sort((ticket1: Ticket, ticket2 : Ticket) => (ticket1.table < ticket2.table) ? -1 : 1);
       this.tickets = dd;
+      this.error = false;
     }).catch((err) => {
       console.log(err);
       this.error = true;
@@ -92,8 +95,10 @@ export class InsertOrdersComponent implements OnInit {
     Promise.all(promises).then((data) => {
       console.log('Evasione riuscita!')
       this.ordersSelected = [];
+      this.error = false;
     }).catch((err) => {
       console.log(err);
+      this.error = true;
     });
   }
 

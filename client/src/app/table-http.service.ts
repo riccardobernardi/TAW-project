@@ -23,6 +23,7 @@ export class TableHttpService {
   }*/
 
   get_tables() {
+    //this.us.renew().subscribe();
     return this.http.get<Table[]>(/*this.url,*/this.endpoint/*, this.create_options()*/);
   }
 

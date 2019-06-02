@@ -57,7 +57,7 @@ export class PaydeskComponent implements OnInit {
       dd.forEach((ss) => {
         this.tickets.push(ss);
         ss.orders.sort((a: TicketOrder, b: TicketOrder) => {
-          return a.price - b.price;
+          return (a.name_item < b.name_item) ? -1 : 1;
         });
       });
       console.log(this.tickets);
@@ -102,11 +102,11 @@ export class PaydeskComponent implements OnInit {
   }
 
   emitReceipt() {
-    return this.selTicket.orders.map((x) => {
+    return (this.selTicket.orders.length != 0) ? this.selTicket.orders.map((x) => {
       return x.price;
     }).reduce((total, amount) => {
       return total + amount;
-    });
+    }) : 0;
   }
 
   allGain() {
@@ -136,9 +136,9 @@ export class PaydeskComponent implements OnInit {
         }
 
         a = a.map((oneTicket) => {
-          return oneTicket.orders.map((oneOrder) => {
+          return (oneTicket.orders.length != 0 ) ? oneTicket.orders.map((oneOrder) => {
             return oneOrder.price;
-          }).reduce((total, onePrice) => total + onePrice);
+          }).reduce((total, onePrice) => total + onePrice) : 0;
         }).reduce((total, nPrices) => total + nPrices);
 
         return a;
@@ -153,6 +153,7 @@ export class PaydeskComponent implements OnInit {
   }
 
   close_ticket() {
+    console.log(this.emitReceipt())
     this.ticket.close_ticket(this.selTicket._id, this.emitReceipt()).toPromise().then(() => {
       return this.table.change_table({number: this.selTicket.table, state: states[0]}, undefined).toPromise();
     })
