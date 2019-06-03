@@ -10,6 +10,7 @@ export interface TicketOrder {
   required_time: number
 }
 
+export var order_states = ["ordered", "preparation", "ready", "delivered"];
 // User defined type guard
 // Type checking cannot be performed during the execution (we don't have the Message interface anyway)
 // but we can create a function to check if the supplied parameter is compatible with a given type

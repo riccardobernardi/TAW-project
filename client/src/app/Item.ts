@@ -10,3 +10,6 @@ export interface Item {
 export function isOrder(arg: any): arg is Item {
   return arg;
 }
+
+export const types = ["dish", "beverage"]; 
+

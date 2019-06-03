@@ -1,12 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Ticket } from '../Ticket';
-import { Item } from '../Item';
+import { TicketOrder, order_states } from '../TicketOrder';
+
+import { Item, types } from '../Item';
 import {ItemHttpService} from '../item-http.service';
 import {UserHttpService} from '../user-http.service';
 import { TicketHttpService } from 'src/app/ticket-http.service';
-import { Observable } from 'rxjs/Observable';
 import {SocketioService} from '../socketio.service';
-import { TicketOrder } from '../TicketOrder';
 
 @Component({
   selector: 'app-orders-served',
@@ -17,8 +17,13 @@ export class OrdersServedComponent implements OnInit {
 
   private tickets: Ticket[];
   private error = false;
+  private role
+  private order_states = order_states;
 
-  constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {}
+
+  constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {
+    this.role = us.get_role();
+  }
 
   get_tickets() {
     let mm;
@@ -31,9 +36,21 @@ export class OrdersServedComponent implements OnInit {
       //this.tickets.splice(0, this.tickets.length);
       console.log(dd);
       this.tickets = dd;
+      dd.sort((ticket1: Ticket, ticket2: Ticket) => {
+        return ticket1.table - ticket2.table;
+      });
       dd.forEach( (ss) => {
+        var n_ready = 0;
         ss.orders.sort((a: TicketOrder, b: TicketOrder) => {
-          return (a.name_item < b.name_item) ? -1 : 1;
+          if((a.type_item == types[1] && b.type_item == types[1]) || (a.type_item != types[1] && b.type_item != types[1])) {
+            if((a.state == order_states[2] && b.state == order_states[2]) || (a.state != order_states[2] && b.state != order_states[2]))
+              return (a.name_item < b.name_item) ? -1 : 1;
+            else if(a.state == order_states[2] && b.state != order_states[2])
+              return -1;
+            else return 1;
+          } else if (a.type_item == types[1] && b.type_item == types[0])
+            return -1
+          else 1;
         });
       });
       console.log(this.tickets);

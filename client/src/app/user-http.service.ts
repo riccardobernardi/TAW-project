@@ -30,7 +30,7 @@ export class UserHttpService implements OnDestroy{
     this.token = token;
     sessionStorage.setItem('restaurant_token', this.token );
     let decoded_token = jwt_decode(this.token)
-    let exp_date = decoded_token.iat*1000 + Math.floor((decoded_token.exp - decoded_token.iat)*1000*0.9);
+    let exp_date = decoded_token.iat*1000 + Math.floor((decoded_token.exp - decoded_token.iat)*1000*0.6);
     let now = new Date().getTime();
     if(exp_date - now > 0) {
       this.renew_clock_interval = exp_date - now;

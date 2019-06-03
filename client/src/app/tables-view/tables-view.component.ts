@@ -6,6 +6,7 @@ import { Ticket } from 'src/app/Ticket';
 import { Table, states } from '../Table';
 import { Observable } from 'rxjs/Observable';
 import { SocketioService } from '../socketio.service';
+import { componentNeedsResolution } from '@angular/core/src/metadata/resource_loading';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class TablesViewComponent implements OnInit {
   private socketObserver: Observable<any>;
   private states = states;
   private error = false;
+  private role
 
   constructor(private table: TableHttpService, private user: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {
     this.get_tables()
@@ -26,23 +28,29 @@ export class TablesViewComponent implements OnInit {
       console.log("Waiters view evento ricevuto");
       this.get_tables() ;
     });
+    this.role = this.user.get_role();
+    console.log(this.role);
+    
   }
 
   ngOnInit() {}
 
   public get_tables() {
-    this.table.get_tables().subscribe( (tables: Table[]) => {
-      /*this.tables.splice(0, this.tables.length);
-      tables.forEach( (table : Table) => {
-        this.tables.push(table);
-      });*/
+    this.table.get_tables().toPromise().then((tables: Table[]) => {
       this.tables = tables;
       tables.sort((table1 : Table, table2 : Table) => {
         return table1.number - table2.number;
       });
-      console.log(this.tables);
-      this.error = false;
-    }, (err) => {
+      var component = this;
+      tables.forEach((table: Table) => {
+        if(table.associated_ticket)
+          component.ticket.get_ticket(table.associated_ticket).subscribe((ticket : Ticket) => {
+            table.actual_people = ticket.people_number;
+          }, (err) => {
+            this.error = true;
+          });
+      });
+    }).catch((err) => {
       this.error = true;
       console.log(err);
     });
