@@ -5,3 +5,4 @@
 /client/node_modules
 /node_modules
 /electron
+/heroku-client-deploy
