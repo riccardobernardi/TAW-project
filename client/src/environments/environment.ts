@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  base_url: /*'https://restaurant-server-taw.herokuapp.com/'*/ "http://localhost:8080/"
+  base_url: 'https://restaurant-server-taw.herokuapp.com/' /*"http://localhost:8080/"*/
 };
 
 /*
