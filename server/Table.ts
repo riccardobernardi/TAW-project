@@ -4,7 +4,8 @@ import mongoose = require('mongoose');
 export interface Table extends mongoose.Document {
     number: number,
     max_people: number,
-    state: string
+    state: string,
+    associated_ticket: string
 }
 
 //CODICE DOPPIO, VEDERE SE SI PUO' CENTRALIZZARE, c'è anche in menu.ts
