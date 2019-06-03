@@ -1,22 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { tap, catchError } from 'rxjs/operators';
 
-import { throwError } from 'rxjs';
+import { throwError, of } from 'rxjs';
 
 import * as jwt_decode from 'jwt-decode';
-
-// import { Observable } from 'rxjs/Observable';
-// import jwt_decode = require('jwt-decode');
-// import { ErrorObservable } from 'rxjs/observable';
-
-/*import 'rxjs/observable/';*/
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
-import { LogoutComponent } from './logout/logout.component';
 
 @Injectable()
-export class UserHttpService {
+export class UserHttpService implements OnDestroy{
 
   public token = '';
   public endpoint = 'users';
@@ -26,6 +19,33 @@ export class UserHttpService {
 
   constructor( private http: HttpClient, private router: Router ) {
     console.log('User service instantiated');
+    console.log(sessionStorage.getItem("restaurant_token"));
+    console.log(this.token = sessionStorage.getItem("restaurant_token"));
+    setTimeout(() => {
+      this.refreshAll()
+    }, 50)
+  }
+
+  private set_token(token) {
+    this.token = token;
+    sessionStorage.setItem('restaurant_token', this.token );
+    let decoded_token = jwt_decode(this.token)
+    let exp_date = decoded_token.iat*1000 + Math.floor((decoded_token.exp - decoded_token.iat)*1000*0.9);
+    let now = new Date().getTime();
+    if(exp_date - now > 0) {
+      this.renew_clock_interval = exp_date - now;
+      this.renew_clock = setInterval(() => {this.renew().subscribe((data) => {
+        this.token = data.token;
+        sessionStorage.setItem("restaurant_token", data.token);
+      })}, this.renew_clock_interval);
+    } else this.logout();
+  }
+
+  private refreshAll() {
+    this.renew().subscribe((data) => {
+      console.log("Renew in refreshAll")
+      this.set_token(data.token)
+    }, () => this.logout());
   }
 
   login( nick: string, password: string ): Observable<any> {
@@ -42,46 +62,21 @@ export class UserHttpService {
     return this.http.get( /*this.url + */'login',  options ).pipe(
       tap( (data) => {
         //console.log(JSON.stringify(data));
-        this.token = data.token;
-        sessionStorage.setItem('restaurant_token', this.token );
-        let decoded_token = jwt_decode(this.token)
-        let exp_date = decoded_token.iat*1000 + Math.floor((decoded_token.exp - decoded_token.iat)*1000*0.9);
-        let now = new Date().getTime();
-        if(exp_date - now > 0) {
-          this.renew_clock_interval = exp_date - now;
-          this.renew_clock = setInterval(() => {this.renew()}, this.renew_clock_interval);
-        }
-          else this.logout();
-      }));
+        this.set_token(data.token);
+      })
+    );
   }
 
-  private renew(): Observable<any> {
+  public renew(): Observable<any> {
 
     const tk = sessionStorage.getItem('restaurant_token');
     if ( !tk || tk.length < 1 ) {
       return throwError({error: {errormessage: 'No token found in local storage'}});
     }
 
-    /*const options = {
-      headers: new HttpHeaders({
-        Authorization: 'Bearer ' + tk,
-        'cache-control': 'no-cache',
-        'Content-Type':  'application/json',
-      })
-    };*/
-
-    console.log('Renewing token');
-    //return this.http.get( /*this.url + '/*/'renew'/*,  options,*/ ).pipe(
-      //tap( (data) => {
-      //  console.log(data/*JSON.stringify(data)*/);
-      /*  this.token = data.token;
-        sessionStorage.setItem('restaurant_token', this.token );
-      }));*/
-      /*this.http.get( /!*this.url + '/!*!/'renew'/!*,  options,*!/ ).subscribe((data) => {
-        console.log(data/!*JSON.stringify(data)*!/);
-        this.token = data.token;
-        sessionStorage.setItem('restaurant_token', this.token );
-      });*/
+    console.log("Renewing token");
+    //return of([1,2,3,4]);
+    return this.http.get( /*this.url + '*/'renew'/*,  options,*/ )
 
   }
 
@@ -91,6 +86,10 @@ export class UserHttpService {
     sessionStorage.removeItem('restaurant_token');
     clearInterval(this.renew_clock);
     this.router.navigate(['/']);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.renew_clock);
   }
 
   register( user ): Observable<any> {
@@ -113,7 +112,7 @@ export class UserHttpService {
 
   get_token() {
     this.token = sessionStorage.getItem('restaurant_token');
-    // console.log(this.token);
+    console.log(this.token);
     return this.token;
   }
 
