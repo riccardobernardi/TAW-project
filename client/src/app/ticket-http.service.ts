@@ -43,6 +43,10 @@ export class TicketHttpService {
     return this.http.get<Ticket[]>(/*this.url*/this.endpoint, this.create_options(filters));
   }
 
+  get_ticket(ticket_id) {
+    return this.http.get<Ticket>(/*this.url*/this.endpoint + "/" + ticket_id);
+  }
+
   addOrders(ticketId, usernameWaiter, item, added, addedPrice) {
     console.log(addedPrice);
     let order: TicketOrder;
@@ -106,6 +110,10 @@ export class TicketHttpService {
 
   get_reports(filter) {
     return this.http.get<Report[]>(/*'http://localhost:8080' + */"reports", this.create_options(filter));
+  }
+
+  delete_report(report_id : string) {
+    return this.http.delete<Report>(/*'http://localhost:8080' + */"reports" + "/" + report_id);
   }
 
 }

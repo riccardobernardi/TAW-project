@@ -9,6 +9,7 @@ import {OrderHttpService} from '../../order-http.service';
 import {TableHttpService} from '../../table-http.service';
 import {Order} from '../../Order';
 import {Ticket} from '../../Ticket';
+import {roles} from "../../User";
 
 @Component({
   selector: 'app-waiter-statistics',
@@ -20,6 +21,8 @@ export class WaiterStatisticsComponent implements OnInit {
   private resultWaiter = this.waiterStatistics();
   private resultCook = this.executerStatistics();
   private allResults = this.getStats();
+  private roles = roles;
+  private selRole;
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService, private router: Router, private order: OrderHttpService,
@@ -130,18 +133,12 @@ export class WaiterStatisticsComponent implements OnInit {
       });
     });
 
-
-
-    /*this.executerStatistics().then( (x) => {
-      Object.keys(x).forEach( (y) => {
-        a.push({name: y, num: x[y]});
-      });
-    });*/
-
-    /*if (a.length === 0) {
-      // console.log('porco dio');
-    }*/
-
     return mm;
+  }
+
+  filterRoles() {
+    if(this.selRole) {
+
+    }
   }
 }

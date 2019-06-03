@@ -1,0 +1,7 @@
+.horizontal-dates, .update-button {
+    display: inline-table;
+}
+
+.update-button {
+    margin: 10px
+}

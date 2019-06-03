@@ -17,6 +17,7 @@ import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import {TableHttpService} from '../table-http.service';
 import {of, from} from 'rxjs';
 import {map} from 'rxjs/operators';
+import { Report } from '../Report';
 
 
 @Component({
@@ -40,11 +41,15 @@ export class PaydeskComponent implements OnInit {
   private tables: Table[] = [];
 
   private selTicket: any;
-  day: number;
-  month: number;
-  year: number;
+  private day_insert: number;
+  private month_insert: number;
+  private year_insert: number;
+  private day_delete: number;
+  private month_delete: number;
+  private year_delete: number;
   gainofday = 0;
   totalgain: Promise<any> | null = null;
+  private reportSelected : Report;
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService, private router: Router, private order: OrderHttpService,
@@ -126,9 +131,9 @@ export class PaydeskComponent implements OnInit {
         });
 
         let a = ticketSup.filter((oneTicket) => {
-          return new Date(oneTicket.start).getDate() === this.day
-            && (new Date(oneTicket.start).getMonth() + 1) === this.month
-            && new Date(oneTicket.start).getFullYear() === this.year;
+          return new Date(oneTicket.start).getDate() === this.day_insert
+            && (new Date(oneTicket.start).getMonth() + 1) === this.month_insert
+            && new Date(oneTicket.start).getFullYear() === this.year_insert;
         });
 
         if (a.length === 0) {
@@ -146,10 +151,17 @@ export class PaydeskComponent implements OnInit {
     ).toPromise().then((x) => x);
   }
 
-  onDateSelect($event: NgbDate) {
-    this.month = $event.month;
-    this.day = $event.day;
-    this.year = $event.year;
+  onDateInsertSelect($event: NgbDate) {
+    this.month_insert = $event.month;
+    this.day_insert = $event.day;
+    this.year_insert = $event.year;
+  }
+
+  onDateDeleteSelect($event: NgbDate) {
+    this.month_delete = $event.month;
+    this.day_delete = $event.day;
+    this.year_delete = $event.year;
+    this.getReport();
   }
 
   close_ticket() {
@@ -162,11 +174,29 @@ export class PaydeskComponent implements OnInit {
   }
 
   create_daily_report() {
-    console.log(this.year + "-" + ((this.month > 9) ? this.month : "0" + this.month) + "-" + ((this.day > 9) ? this.day : "0" + this.day) + 'T' + "00:00:00");
-    const date = new Date(this.year, this.month - 1, this.day, 0, 0, 0, 0);
+    console.log(this.year_insert + "-" + ((this.month_insert > 9) ? this.month_insert : "0" + this.month_insert) + "-" + ((this.day_insert > 9) ? this.day_insert : "0" + this.day_insert) + 'T' + "00:00:00");
+    const date = new Date(this.year_insert, this.month_insert - 1, this.day_insert, 0, 0, 0, 0);
     console.log(date);
     this.ticket.create_report({start: date, state: 'closed'})
       .then()
+      .catch((err) => console.log(err));
+  }
+
+  getReport() {
+    const date = new Date(this.year_delete, this.month_delete - 1, this.day_delete, 0, 0, 0, 0);
+    this.ticket.get_reports({start: date, end: date}).toPromise().then((data) => {
+      this.reportSelected = data[0];
+    }).catch((err) => {
+      console.log(err);
+      //this.error = true;
+    })
+  }
+
+  delete_daily_report() {
+    const date = new Date(this.year_delete, this.month_delete - 1, this.day_delete, 0, 0, 0, 0);
+    if(this.reportSelected)
+      this.ticket.delete_report(this.reportSelected._id).toPromise()
+      .then(() => this.reportSelected = null)
       .catch((err) => console.log(err));
   }
 }

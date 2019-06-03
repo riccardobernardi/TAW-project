@@ -1,16 +1,33 @@
-<!--<p>
-  waiter-statistics works!
-</p>
+<form class="form-inline horizontal-dates">
+  <div class="form-group">
+    <div class="input-group">
+      <input class="form-control" placeholder="yyyy-mm-dd"
+              name="dp_delete" (dateSelect)="onDateDeleteSelect($event)" ngbDatepicker #d_delete="ngbDatepicker">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary calendar" (click)="d_delete.toggle()" type="button"></button>
+      </div>
+    </div>
+  </div>
+</form>
 
-Total waiters: {{this.resultWaiter | async | json }}
+<button class="update-button" (click)="update()">Aggiorna</button>
 
-<br>
+<form class="form-inline horizontal-dates">
+  <div class="form-group">
+    <div class="input-group">
+      <input class="form-control" placeholder="yyyy-mm-dd"
+              name="dp_delete" (dateSelect)="onDateDeleteSelect($event)" ngbDatepicker #d_delete="ngbDatepicker">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary calendar" (click)="d_delete.toggle()" type="button"></button>
+      </div>
+    </div>
+  </div>
+</form>
 
-Total cooks: {{this.resultCook | async | json }}
-
-<br>
-
-Total total: {{this.allResults | json }}-->
+<label for="selRoles">Seleziona un ruolo per filtrare</label>
+<select (change)="filterRoles()" class="form-control" [(ngModel)]="selRole" name="selRoles" id="selRoles">
+  <option *ngFor="let role of roles" [ngValue]="role">{{role}}</option>
+</select>
 
 <table class="table table-striped">
   <thead>
