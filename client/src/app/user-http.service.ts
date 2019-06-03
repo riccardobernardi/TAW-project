@@ -77,11 +77,11 @@ export class UserHttpService {
       /*  this.token = data.token;
         sessionStorage.setItem('restaurant_token', this.token );
       }));*/
-      this.http.get( /*this.url + '/*/'renew'/*,  options,*/ ).subscribe((data) => {
-        console.log(data/*JSON.stringify(data)*/);
+      /*this.http.get( /!*this.url + '/!*!/'renew'/!*,  options,*!/ ).subscribe((data) => {
+        console.log(data/!*JSON.stringify(data)*!/);
         this.token = data.token;
         sessionStorage.setItem('restaurant_token', this.token );
-      });
+      });*/
 
   }
 
