@@ -51,6 +51,10 @@ var ios = undefined;
 var rooms = ["waiters", "cooks", "desks", "bartenders"];
 
 var socketEvents = {
+   "modified user - desks": {
+      destRooms: [rooms[2]],
+      //senderRole: user.roles[0]
+   },
    "modified table": {
       destRooms: [rooms[0], rooms[2]],
       //senderRole: user.roles[0]
@@ -161,6 +165,7 @@ app.route("/users").get(auth, (req,res,next) => {
 
    //query
    u.save().then( (data) => {
+      emitEvent("modified user - desks", {});
       return res.status(200).json({ error: false, errormessage: "", id: data._id });
    }).catch( (reason) => {
    if( reason.code === 11000 )
@@ -176,9 +181,10 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
    //autenticazione
    if(!user.newUser(req.user).hasDeskRole())
       return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
-   
+
    //query al DB
    user.getModel().deleteOne( {username: req.params.username } ).then( ()=> {
+      emitEvent("modified user - desks", {});      
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason)=> {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
@@ -205,6 +211,7 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
    //errore strano con findOneAndReplace, poi vedere, altrimenti tenere findOneAndUpdate
    //occhio al setting dei campi, si può fare diversamente?
    user.getModel().findOneAndUpdate({username: req.params.username}, {$set : {username : req.body.username, password:req.body.password, role: req.body.role}}).then( (data : user.User)=> {
+      emitEvent("modified user - desks", {});
       return res.status(200).json( data );
    }).catch( (reason)=> {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
