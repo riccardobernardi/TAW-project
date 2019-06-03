@@ -220,7 +220,7 @@ app.route("/tables").get(auth, (req, res, next) => {
 
 
    //query al DB
-   table.getModel().find({}, {number:1, max_people:1, _id: 0, state:1}).then( (tableslist) => {
+   table.getModel().find({}, {number:1, max_people:1, _id: 0, state:1, associated_ticket: 1}).then( (tableslist) => {
       return res.status(200).json( tableslist ); 
    }).catch( (reason) => {
       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
@@ -1070,7 +1070,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
          people_number: 2
       }).save().then((data) => {
          console.log(data);
-         table.getModel().findOneAndUpdate({number: 1}, {$set: {state: table.states[1]}}).then();
+         table.getModel().findOneAndUpdate({number: 1}, {$set: {state: table.states[1], associated_ticket: data._id}}).then();
       });
 
       
@@ -1092,7 +1092,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
          total: 0,
          people_number: 5
       }).save().then((data) => {
-         table.getModel().findOneAndUpdate({number: 3}, {$set: {state: table.states[1]}}).then();
+         table.getModel().findOneAndUpdate({number: 3}, {$set: {state: table.states[1],associated_ticket: data._id}}).then();
       });
 
       var ti2 = new ticketModel({
@@ -1129,7 +1129,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
          total: 0,
          people_number: 2
       }).save().then((data) => {
-         table.getModel().findOneAndUpdate({number: 2},{$set: {state: table.states[1]}}).then();
+         table.getModel().findOneAndUpdate({number: 2},{$set: {state: table.states[1], associated_ticket: data._id}}).then();
       });
 
       //fine inizializzazione DB

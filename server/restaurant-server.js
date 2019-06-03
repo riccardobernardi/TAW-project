@@ -173,7 +173,7 @@ app.route("/tables").get(auth, function (req, res, next) {
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
     //query al DB
-    table.getModel().find({}, { number: 1, max_people: 1, _id: 0, state: 1 }).then(function (tableslist) {
+    table.getModel().find({}, { number: 1, max_people: 1, _id: 0, state: 1, associated_ticket: 1 }).then(function (tableslist) {
         return res.status(200).json(tableslist);
     })["catch"](function (reason) {
         return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
@@ -896,7 +896,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
             people_number: 2
         }).save().then(function (data) {
             console.log(data);
-            table.getModel().findOneAndUpdate({ number: 1 }, { $set: { state: table.states[1] } }).then();
+            table.getModel().findOneAndUpdate({ number: 1 }, { $set: { state: table.states[1], associated_ticket: data._id } }).then();
         });
         var ti3 = new ticketModel({
             waiter: "waiter1",
@@ -915,7 +915,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
             total: 0,
             people_number: 5
         }).save().then(function (data) {
-            table.getModel().findOneAndUpdate({ number: 3 }, { $set: { state: table.states[1] } }).then();
+            table.getModel().findOneAndUpdate({ number: 3 }, { $set: { state: table.states[1], associated_ticket: data._id } }).then();
         });
         var ti2 = new ticketModel({
             waiter: "waiter2",
@@ -951,7 +951,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
             total: 0,
             people_number: 2
         }).save().then(function (data) {
-            table.getModel().findOneAndUpdate({ number: 2 }, { $set: { state: table.states[1] } }).then();
+            table.getModel().findOneAndUpdate({ number: 2 }, { $set: { state: table.states[1], associated_ticket: data._id } }).then();
         });
         //fine inizializzazione DB
         Promise.all([ti1, ti2, ti3]).then(function () {
