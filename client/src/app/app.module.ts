@@ -50,7 +50,9 @@ import { StatsChartsComponent } from './statistics-dashboard/stats-charts/stats-
     WaiterStatisticsComponent,
     HistTotalCustomersComponent,
     HistogramWithDatesComponent,
-    StatsChartsComponent
+    StatsChartsComponent,
+    /*UserHttpService,
+    SocketioService*/
   ],
   imports: [
     BrowserModule,
