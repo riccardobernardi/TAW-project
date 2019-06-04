@@ -50,54 +50,43 @@ var ios = undefined;
 
 var rooms = ["waiters", "cooks", "desks", "bartenders"];
 
-var socketEvents = ["modified user - desks", "modified table", "ordered dish", "ordered drink", "dish in preparation", "beverage in preparation", "ready item - cooks", "ready item - bartenders", "ready item - waiters"];
-/*
-   "modified user - desks": {
-      destRooms: [rooms[2]],
-      //senderRole: user.roles[0]
+var socketEvents = {
+   "modified user": {
+      destRooms: [rooms[2]]
    },
    "modified table": {
-      destRooms: [rooms[0], rooms[2]],
-      //senderRole: user.roles[0]
+      destRooms: [rooms[0], rooms[2]]
    },
    
    "ordered dish": {
-      destRooms: [rooms[1]],
-      //senderRole: user.roles[0]
+      destRooms: [rooms[1]]
    },
    "ordered drink":{
-      destRooms: [rooms[3]],
-      //senderRole: user.roles[0]
+      destRooms: [rooms[3]]
    },
    "dish in preparation": {
-      destRooms: [rooms[1]],
-      //senderRole: user.roles[1]
+      destRooms: [rooms[1]]
    },
    "beverage in preparation": {
       destRooms: [rooms[3]]
    },
    "ready item - cooks": {
-      destRooms: [rooms[1]],
-      //senderRole: user.roles[1]
+      destRooms: [rooms[1]]
    },
    "ready item - bartenders": {
-      destRooms: [rooms[3]],
-      //senderRole: user.roles[1]
+      destRooms: [rooms[3]]
    },
    "ready item - waiters": {
-      destRooms: [rooms[0]],
-      //senderRole: user.roles[1]
+      destRooms: [rooms[0]]
    },
 
 };
 
-function emitEvent(eventType, data){
+function emitEvent(eventType){
    socketEvents[eventType].destRooms.forEach(r => {
-      //ios.emit(eventType, data).on(r);
       ios.emit(r);
    });
 };
-*/
 
 app.use( cors() );
 
@@ -166,8 +155,7 @@ app.route("/users").get(auth, (req,res,next) => {
 
    //query
    u.save().then( (data) => {
-      ios.emit(socketEvents[0]);
-      //emitEvent("modified user - desks", {});
+      emitEvent("modified user");
       return res.status(200).json({ error: false, errormessage: "", id: data._id });
    }).catch( (reason) => {
    if( reason.code === 11000 )
@@ -186,8 +174,7 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
 
    //query al DB
    user.getModel().deleteOne( {username: req.params.username } ).then( ()=> {
-      ios.emit(socketEvents[0]);
-      //emitEvent("modified user - desks", {});      
+      emitEvent("modified user");      
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason)=> {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
@@ -217,8 +204,7 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
    //errore strano con findOneAndReplace, poi vedere, altrimenti tenere findOneAndUpdate
    //occhio al setting dei campi, si può fare diversamente?
    user.getModel().findOneAndUpdate({username: req.params.username}, {$set : {username : req.body.username, password:req.body.password, role: req.body.role}}).then( (data : user.User)=> {
-      ios.emit(socketEvents[0]);
-      //emitEvent("modified user - desks", {});
+      emitEvent("modified user");
       return res.status(200).json( data );
    }).catch( (reason)=> {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
@@ -311,8 +297,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
 
          data.update(update).then(() => {
             //notifico sul socket
-            ios.emit(socketEvents[1]);
-            //emitEvent("modified table", req.params.number);
+            emitEvent("modified table");
             return res.status(200).json( {
                number: data.number,
                max_people: data.number,
@@ -330,8 +315,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
          //modifico tavolo
          data.update(update).then(() => {
             //notifico sul socket
-            ios.emit(socketEvents[1]);
-            //emitEvent("modified table", req.params.number);
+            emitEvent("modified table");
             return res.status(200).json( {
                number: data.number,
                max_people: data.number,
@@ -347,8 +331,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
          //modifico tavolo
          data.update(update).then(() => {
             //notifico sul socket
-            ios.emit(socketEvents[1]);
-            //emitEvent("modified table", req.params.number);
+            emitEvent("modified table");
             return res.status(200).json( {
                number: data.number,
                max_people: data.number,
@@ -598,6 +581,8 @@ app.route('/tickets/:id').get(auth, (req, res, next) => {
    if(req.body.total != null && req.body.total != undefined)
       update.total = req.body.total;
 
+   console.log(req.params.id);
+   console.log(update);
    ticket.getModel().findOneAndUpdate( {_id: req.params.id}, { $set: update}, ).then( (data : ticket.Ticket) => {
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason) => {
@@ -631,8 +616,6 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    newer.name_item = req.body.name_item;
    newer.price = req.body.price;
    newer.added = req.body.added;
-   newer.username_waiter = req.body.username_waiter;
-   newer.username_executer = req.body.username_executer;
    newer.state = ticket.orderState[0];
    newer.type_item = req.body.type_item;
    newer.required_time = req.body.required_time;
@@ -644,12 +627,10 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
          //console.log("AAAAAAA:\n" + i + "\n");
          if (i.type == item.type[0]){
             console.log("DISH")
-            ios.emit(socketEvents[2]);
-            //emitEvent("ordered dish", req.params.id);
+            emitEvent("ordered dish");
          } else if (i.type == item.type[1]){
             console.log("DRINK");
-            ios.emit(socketEvents[3]);
-            //emitEvent("ordered drink", req.params.id);
+            emitEvent("ordered drink");
          }
          return res.status(200).json( {error:false, errormessage:""} );
       }).catch((err) => {
@@ -687,13 +668,14 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
          return next({ statusCode:409, error: true, errormessage: "Conflict, orderd state change not coherent with the regular state changes flow" });
       }
 
-
       toChange[0].state = req.body.state;
 
       if(req.body.username_executer)
          toChange[0].username_executer = req.body.username_executer;
       
       order_type = toChange[0].type_item;
+      console.log("BBBB: " + req.body);
+      console.log("AAAA: " + toChange[0]);
       return data.save();
       
    }).then((data) => {
@@ -705,8 +687,7 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
          //console.log(item.type[0]);
          //var order = data.orders.filter((order) => order.id == req.params.idOrder)[0]
          //if(order.type_item == item.type[0]) {
-         ios.emit(socketEvents[4]);
-         //emitEvent("dish in preparation", req.params.idTicket);
+         emitEvent("dish in preparation");
          console.log("emit dish in prepare");
          //} else {
          //   emitEvent("beverage in preparation", req.params.idTicket);
@@ -717,12 +698,10 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
          var order = data.orders.filter((order) => order.id == req.params.idOrder)[0];
          if(order.type_item == item.type[0]) {
             console.log("Emetto piatto pronto per cuochi");
-            ios.emit(socketEvents[6]);
-            //emitEvent("ready item - cooks", req.params.idTicket);
+            emitEvent("ready item - cooks");
          } else {
             console.log("Emetto piatto pronto per cuochi");
-            ios.emit(socketEvents[7]);
-            //emitEvent("ready item - bartenders", req.params.idTicket);
+            emitEvent("ready item - bartenders");
          }
          //controllo che tutti gli ordini dello stesso tipo e dello stesso ticket siano pronti
          var ordersList: Array<ticket.Order[]> = [];
@@ -736,8 +715,7 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
             console.log("Sto per emettere l'evento 'piatti pronti!'");
 
          if (req.body.state == ticket.orderState[2] && ordersList.length == 0){
-            ios.emit(socketEvents[8]);
-            //emitEvent("ready item - waiters", req.params.idTicket);
+            emitEvent("ready item - waiters");
          }
       }
       return res.status(200).json( {error:false, errormessage:""} );
@@ -1176,8 +1154,13 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
              dish: 24,
              beverage: 30
          },
-         average_stay: 40
-      }).save();
+         average_stay: 40,
+         users_reports: {
+            waiters: [{username: "waiter1", customers_served: 20, orders_served: 66}, {username: "waiter2", customers_served: 40, orders_served: 120}],
+            bartenders: [{username: "bartender1", items_served: 60}],
+            cookers: [{username: "cook1", items_served: 60}]
+         }
+      }).save().then(data => console.log(data["bartenders"], data["cookers"] ));
 
       var r2 = new reportModel({
          date: "2019-05-27T00:00:00.000Z",
@@ -1187,8 +1170,13 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
                dish: 50,
                beverage: 112
          },
-         average_stay: 90
-      }).save();
+         average_stay: 90,
+         users_reports: {
+            waiters: [{username: "waiter1", customers_served: 20, orders_served: 66}, {username: "waiter2", customers_served: 40, orders_served: 120}],
+            bartenders: [{username: "bartender1", items_served: 60}],
+            cookers: [{username: "cook1", items_served: 60}]
+         }
+      }).save().then(data => console.log(data["waiters"] ));
 
       Promise.all([r1,r2]).then().catch((err) => console.log("Save of report not completed: " + err));
    })
