@@ -50,7 +50,8 @@ var ios = undefined;
 
 var rooms = ["waiters", "cooks", "desks", "bartenders"];
 
-var socketEvents = {
+var socketEvents = ["modified user - desks", "modified table", "ordered dish", "ordered drink", "dish in preparation", "beverage in preparation", "ready item - cooks", "ready item - bartenders", "ready item - waiters"];
+/*
    "modified user - desks": {
       destRooms: [rooms[2]],
       //senderRole: user.roles[0]
@@ -96,7 +97,7 @@ function emitEvent(eventType, data){
       ios.emit(r);
    });
 };
-
+*/
 
 app.use( cors() );
 
@@ -165,7 +166,8 @@ app.route("/users").get(auth, (req,res,next) => {
 
    //query
    u.save().then( (data) => {
-      emitEvent("modified user - desks", {});
+      ios.emit(socketEvents[0]);
+      //emitEvent("modified user - desks", {});
       return res.status(200).json({ error: false, errormessage: "", id: data._id });
    }).catch( (reason) => {
    if( reason.code === 11000 )
@@ -184,7 +186,8 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
 
    //query al DB
    user.getModel().deleteOne( {username: req.params.username } ).then( ()=> {
-      emitEvent("modified user - desks", {});      
+      ios.emit(socketEvents[0]);
+      //emitEvent("modified user - desks", {});      
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason)=> {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
@@ -214,7 +217,8 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
    //errore strano con findOneAndReplace, poi vedere, altrimenti tenere findOneAndUpdate
    //occhio al setting dei campi, si può fare diversamente?
    user.getModel().findOneAndUpdate({username: req.params.username}, {$set : {username : req.body.username, password:req.body.password, role: req.body.role}}).then( (data : user.User)=> {
-      emitEvent("modified user - desks", {});
+      ios.emit(socketEvents[0]);
+      //emitEvent("modified user - desks", {});
       return res.status(200).json( data );
    }).catch( (reason)=> {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
@@ -307,7 +311,8 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
 
          data.update(update).then(() => {
             //notifico sul socket
-            emitEvent("modified table", req.params.number);
+            ios.emit(socketEvents[1]);
+            //emitEvent("modified table", req.params.number);
             return res.status(200).json( {
                number: data.number,
                max_people: data.number,
@@ -325,7 +330,8 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
          //modifico tavolo
          data.update(update).then(() => {
             //notifico sul socket
-            emitEvent("modified table", req.params.number);
+            ios.emit(socketEvents[1]);
+            //emitEvent("modified table", req.params.number);
             return res.status(200).json( {
                number: data.number,
                max_people: data.number,
@@ -341,7 +347,8 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
          //modifico tavolo
          data.update(update).then(() => {
             //notifico sul socket
-            emitEvent("modified table", req.params.number);
+            ios.emit(socketEvents[1]);
+            //emitEvent("modified table", req.params.number);
             return res.status(200).json( {
                number: data.number,
                max_people: data.number,
@@ -637,10 +644,12 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
          //console.log("AAAAAAA:\n" + i + "\n");
          if (i.type == item.type[0]){
             console.log("DISH")
-            emitEvent("ordered dish", req.params.id);
+            ios.emit(socketEvents[2]);
+            //emitEvent("ordered dish", req.params.id);
          } else if (i.type == item.type[1]){
             console.log("DRINK");
-            emitEvent("ordered drink", req.params.id);
+            ios.emit(socketEvents[3]);
+            //emitEvent("ordered drink", req.params.id);
          }
          return res.status(200).json( {error:false, errormessage:""} );
       }).catch((err) => {
@@ -696,7 +705,8 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
          //console.log(item.type[0]);
          //var order = data.orders.filter((order) => order.id == req.params.idOrder)[0]
          //if(order.type_item == item.type[0]) {
-         emitEvent("dish in preparation", req.params.idTicket);
+         ios.emit(socketEvents[4]);
+         //emitEvent("dish in preparation", req.params.idTicket);
          console.log("emit dish in prepare");
          //} else {
          //   emitEvent("beverage in preparation", req.params.idTicket);
@@ -707,10 +717,12 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
          var order = data.orders.filter((order) => order.id == req.params.idOrder)[0];
          if(order.type_item == item.type[0]) {
             console.log("Emetto piatto pronto per cuochi");
-            emitEvent("ready item - cooks", req.params.idTicket);
+            ios.emit(socketEvents[6]);
+            //emitEvent("ready item - cooks", req.params.idTicket);
          } else {
             console.log("Emetto piatto pronto per cuochi");
-            emitEvent("ready item - bartenders", req.params.idTicket);
+            ios.emit(socketEvents[7]);
+            //emitEvent("ready item - bartenders", req.params.idTicket);
          }
          //controllo che tutti gli ordini dello stesso tipo e dello stesso ticket siano pronti
          var ordersList: Array<ticket.Order[]> = [];
@@ -724,7 +736,8 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
             console.log("Sto per emettere l'evento 'piatti pronti!'");
 
          if (req.body.state == ticket.orderState[2] && ordersList.length == 0){
-            emitEvent("ready item - waiters", req.params.idTicket);
+            ios.emit(socketEvents[8]);
+            //emitEvent("ready item - waiters", req.params.idTicket);
          }
       }
       return res.status(200).json( {error:false, errormessage:""} );
@@ -822,6 +835,11 @@ app.route("/reports").get( auth, (req,res,next) => {
        return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
     }
  
+    //controllo formato
+    if ( !req.body || (req.body.data && req.body.data.toString() == 'Invalid Date') || (req.body.total && typeof(req.body.total) != 'number') || (req.body.total_orders && (typeof(req.body.total_orders[item.type[0]]) != 'number' || typeof(req.body.total_orders[item.type[1]]) != 'number' )) || (req.body.total_customers && typeof(req.body.total_customers) != 'number') || (req.body.average_stay && typeof(req.body.average_stay) != 'number') || ( (req.body.users_reports) && report.isUsersReports(req.body.users_reports)) ){
+      return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
+   }
+
     var update: any = {};
     if (req.body.date)
        update.date = new Date(req.body.end);
@@ -837,13 +855,9 @@ app.route("/reports").get( auth, (req,res,next) => {
     
     if (req.body.average_stay)
        update.average_stay = req.body.average_stay;
- 
-    
-    //controllo formato
-    if ( !req.body || (req.body.data && req.body.data.toString() == 'Invalid Date') || (req.body.total && typeof(req.body.total) != 'number') || (req.body.total_orders && (typeof(req.body.total_orders[item.type[0]]) != 'number' || typeof(req.body.total_orders[item.type[1]]) != 'number' )) || (req.body.total_customers && typeof(req.body.total_customers) != 'number') || (req.body.average_stay && typeof(req.body.average_stay) != 'number') ){
-       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
-    }
- 
+   
+    if (req.body.users_reports )
+      update.users_reports = req.body.users_reports;
     
     report.getModel().findOneAndUpdate( {_id: req.params.id}, { $set: update}, ).then( (data : report.Report) => {
        return res.status(200).json( {error:false, errormessage:""} );
