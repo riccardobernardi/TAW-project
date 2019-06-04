@@ -581,6 +581,8 @@ app.route('/tickets/:id').get(auth, (req, res, next) => {
    if(req.body.total != null && req.body.total != undefined)
       update.total = req.body.total;
 
+   console.log(req.params.id);
+   console.log(update);
    ticket.getModel().findOneAndUpdate( {_id: req.params.id}, { $set: update}, ).then( (data : ticket.Ticket) => {
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason) => {
@@ -614,7 +616,6 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    newer.name_item = req.body.name_item;
    newer.price = req.body.price;
    newer.added = req.body.added;
-   newer.username_waiter = req.body.username_waiter;
    newer.state = ticket.orderState[0];
    newer.type_item = req.body.type_item;
    newer.required_time = req.body.required_time;
@@ -673,8 +674,8 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
          toChange[0].username_executer = req.body.username_executer;
       
       order_type = toChange[0].type_item;
-      console.log(req.body);
-      console.log(toChange[0]);
+      console.log("BBBB: " + req.body);
+      console.log("AAAA: " + toChange[0]);
       return data.save();
       
    }).then((data) => {
@@ -1153,8 +1154,13 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
              dish: 24,
              beverage: 30
          },
-         average_stay: 40
-      }).save();
+         average_stay: 40,
+         users_reports: {
+            waiters: [{username: "waiter1", customers_served: 20, orders_served: 66}, {username: "waiter2", customers_served: 40, orders_served: 120}],
+            bartenders: [{username: "bartender1", items_served: 60}],
+            cookers: [{username: "cook1", items_served: 60}]
+         }
+      }).save().then(data => console.log(data["bartenders"], data["cookers"] ));
 
       var r2 = new reportModel({
          date: "2019-05-27T00:00:00.000Z",
@@ -1164,8 +1170,13 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
                dish: 50,
                beverage: 112
          },
-         average_stay: 90
-      }).save();
+         average_stay: 90,
+         users_reports: {
+            waiters: [{username: "waiter1", customers_served: 20, orders_served: 66}, {username: "waiter2", customers_served: 40, orders_served: 120}],
+            bartenders: [{username: "bartender1", items_served: 60}],
+            cookers: [{username: "cook1", items_served: 60}]
+         }
+      }).save().then(data => console.log(data["waiters"] ));
 
       Promise.all([r1,r2]).then().catch((err) => console.log("Save of report not completed: " + err));
    })
