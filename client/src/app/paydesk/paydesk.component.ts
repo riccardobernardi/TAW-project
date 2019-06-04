@@ -106,13 +106,14 @@ export class PaydeskComponent implements OnInit {
     this.us.register(this.user).subscribe((d) => {
       console.log('Registration ok: ' + JSON.stringify(d));
       this.errmessage = undefined;
-      this.toastr.success('Success!', 'Registration OK', {
+      this.toastr.success('Registration OK', 'Success!', {
         timeOut: 3000
       });
     }, (err) => {
       console.log('Signup error: ' + JSON.stringify(err.error.errormessage));
-      this.errmessage = err.error.errormessage || err.error.message;
-      this.toastr.error('Failure!', 'Registration not OK :(', {
+      let errmessage = err.error.errormessage || err.error.message;
+      console.log(err);
+      this.toastr.error('Registration not OK: ' + errmessage, 'Failure!', {
         timeOut: 3000
       });
     });
@@ -220,11 +221,12 @@ export class PaydeskComponent implements OnInit {
   changePasswordUser(selChangePwdUser : User, newPwd: string) {
     console.log(selChangePwdUser.username, newPwd);
     this.us.changePasswordUser(selChangePwdUser, newPwd).subscribe(() => {
-      this.toastr.success('Success!', 'Changing OK', {
+      this.toastr.success( 'Changing OK', 'Success!', {
         timeOut: 3000
       });
     },(err) => {
-      this.toastr.error('Failure!', 'Changing not OK :(', {
+      let errmessage = err.error.errormessage || err.error.message;
+      this.toastr.error('Changing not OK : ' + errmessage, 'Failure!', {
         timeOut: 3000
       });
     });
@@ -232,11 +234,12 @@ export class PaydeskComponent implements OnInit {
 
   deleteUser(selDelUser : User) {
     this.us.deleteUser(selDelUser.username).subscribe(() => {
-      this.toastr.success('Success!', 'Deletion OK', {
+      this.toastr.success('Deletion OK', 'Success!', {
         timeOut: 3000
       });
     }, (err) => {
-      this.toastr.error('Failure!', 'Deletion not OK :(', {
+      let errmessage = err.error.errormessage || err.error.message;
+      this.toastr.error('Deletion not OK: ' + errmessage, 'Failure!', {
         timeOut: 3000
       });
     })
