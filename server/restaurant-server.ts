@@ -194,19 +194,22 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
    if(!user.newUser(req.user).hasDeskRole()){
       return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
    }
-
+   //console.log(user.roles.includes("desk"))
+   console.log(req.body);
    //controllo formato
-   if ( !req.body || !req.body.username || !req.body.password || !req.body.role || typeof(req.body.username) != 'string' || typeof(req.body.password) != 'string' || typeof(req.body.role) != 'string' || user.roles.includes(req.body.role) )
+   if ( !req.body || !req.body.username || !req.body.password || !req.body.role || typeof(req.body.username) != 'string' || typeof(req.body.password) != 'string' || typeof(req.body.role) != 'string' || !user.roles.includes(req.body.role) )
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
 
+   console.log(req.body);
    //creo utente da inserire
-   var newer;
-   newer.username = req.body.username;
-   newer.password = req.body.password;
-   newer.role = req.body.role;
+   var newer = {};
+   newer["username"] = req.body.username;
+   //newer.password = req.body.password;
+   newer["role"] = req.body.role;
    var u = user.newUser( newer );
-   u.setPassword(newer.password);
+   u.setPassword(req.body.password);
 
+   console.log(newer);
    //query dal DB
    //errore strano con findOneAndReplace, poi vedere, altrimenti tenere findOneAndUpdate
    //occhio al setting dei campi, si può fare diversamente?
