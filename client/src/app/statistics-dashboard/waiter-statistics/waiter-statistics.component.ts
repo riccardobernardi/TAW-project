@@ -9,7 +9,11 @@ import {OrderHttpService} from '../../order-http.service';
 import {TableHttpService} from '../../table-http.service';
 import {Order} from '../../Order';
 import {Ticket} from '../../Ticket';
+import { Report } from "../../Report";
 import {roles} from "../../User";
+import {NgbDate, NgbDatepicker} from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-waiter-statistics',
@@ -17,29 +21,44 @@ import {roles} from "../../User";
   styleUrls: ['./waiter-statistics.component.css']
 })
 export class WaiterStatisticsComponent implements OnInit {
+
   private totalgain: Promise<number | any[] | never>;
-  private resultWaiter = this.waiterStatistics();
-  private resultCook = this.executerStatistics();
-  private allResults = this.getStats();
-  private roles = roles;
-  private selRole;
+
+  private userStatistics;
+  private statisticsXRoles;
+  //private roles = roles;
+  private roles = ["waiters", "cookers", "bartenders"];
+  private selRole = roles[0];
+
+  private min_date : Date;
+  private max_date : Date;
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService, private router: Router, private order: OrderHttpService,
-              private table: TableHttpService) { }
+              private table: TableHttpService, private toastr: ToastrService) { }
+
+  onMinDateSelect($event : NgbDate) {
+    this.min_date = new Date($event.year, $event.month - 1, $event.day, 0, 0, 0, 0);
+  }
+
+  onMaxDateSelect($event : NgbDate) {
+    this.max_date = new Date($event.year, $event.month - 1, $event.day, 0, 0, 0, 0);
+  }
 
   ngOnInit() {
-    this.resultWaiter = this.waiterStatistics();
+    
+    /*this.resultWaiter = this.waiterStatistics();
     console.log(this.getStats());
 
     this.socketio.get().on('waiters', () => {
       this.resultWaiter = this.waiterStatistics();
       this.resultCook = this.executerStatistics();
       this.allResults = this.getStats();
-    });
+    });*/
+
   }
 
-  waiterStatistics() {
+  /*waiterStatistics() {
     return this.ticket.get_tickets({}).pipe(
       map((dd) => {
         const waiters = {};
@@ -134,6 +153,71 @@ export class WaiterStatisticsComponent implements OnInit {
     });
 
     return mm;
+  }*/
+
+  private getStats() {
+    this.ticket.get_reports({start: this.min_date.toISOString(), end: this.max_date.toISOString()}).toPromise().then((reports) => {
+      console.log(reports);
+      var stats = reports.map((report: Report) => {
+        return report.users_reports;
+      })/*.map((user_report) => {
+        let statistics = {};
+        for(let role in user_report) {
+          statistics[role] = {}
+          user_report[role].forEach((dependant) => {
+            if(!statistics[role][dependant.username])
+              statistics[role][dependant.username] = {}
+            for(let stat in dependant) {
+              if(stat != "username")
+                statistics[role][dependant.username][stat] = dependant[stat]
+            }
+          });
+        }
+        return statistics;
+      }).reduce((statistics1, statistics2) => {
+        for(let role in statistics1) {
+          for(let user in statistics1[role])
+            for(let stat in statistics1[role][user])
+            statistics1[role][user][stat] += statistics2[role][user][stat]
+        }
+        return statistics1;
+      });*/.reduce((user_report1, user_report2) => {
+        for(let role in user_report1) {
+          if(role == "waiters") {
+            user_report1[role].forEach((dependant1) =>  {
+              let dep = user_report2[role].filter((dependant2) => dependant1.username == dependant2.username);
+              if(dep[0]) {
+                dependant1.customers_served += dep[0].customers_served;
+                dependant1.orders_served += dep[0].orders_served;
+              }
+            });
+          } else {
+            user_report1[role].forEach((dependant1) =>  {
+              let dep = user_report2[role].filter((dependant2) => dependant1.username == dependant2.username);
+              if(dep[0]) {
+                dependant1.items_served += dep[0].items_served;
+              }
+            });
+          }
+        }
+        return user_report1;
+      });
+      //this.userStatistics = [];
+      /*for(var role in stats) {
+        this.userStatistics.push(stats[role])
+      }*/
+      //this.userStatistics.sort((dep1, dep2) => (dep1.username < dep2.username) ? -1 : 1)
+      /*for(var role in stats) {
+        stats[role].sort((a, b) => (a))
+      }*/
+      this.statisticsXRoles = stats;
+      console.log(this.statisticsXRoles);
+    }, (err) => {
+      let errmessage = err.error.errormessage || err.error.message;
+      this.toastr.error('Registration not OK: ' + errmessage, 'Failure!', {
+        timeOut: 3000
+      });
+    })
   }
 
   filterRoles() {

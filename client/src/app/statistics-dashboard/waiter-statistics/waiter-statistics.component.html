@@ -2,23 +2,23 @@
   <div class="form-group">
     <div class="input-group">
       <input class="form-control" placeholder="yyyy-mm-dd"
-              name="dp_delete" (dateSelect)="onDateDeleteSelect($event)" ngbDatepicker #d_delete="ngbDatepicker">
+              name="dp_min_date" (dateSelect)="onMinDateSelect($event)" ngbDatepicker #d_min_date="ngbDatepicker">
       <div class="input-group-append">
-        <button class="btn btn-outline-secondary calendar" (click)="d_delete.toggle()" type="button"></button>
+        <button class="btn btn-outline-secondary calendar" (click)="d_min_date.toggle()" type="button"></button>
       </div>
     </div>
   </div>
 </form>
 
-<button class="update-button" (click)="update()">Aggiorna</button>
+<button class="update-button" (click)="getStats()">Aggiorna</button>
 
 <form class="form-inline horizontal-dates">
   <div class="form-group">
     <div class="input-group">
       <input class="form-control" placeholder="yyyy-mm-dd"
-              name="dp_delete" (dateSelect)="onDateDeleteSelect($event)" ngbDatepicker #d_delete="ngbDatepicker">
+              name="dp_max_date" (dateSelect)="onMaxDateSelect($event)" ngbDatepicker #d_max_date="ngbDatepicker">
       <div class="input-group-append">
-        <button class="btn btn-outline-secondary calendar" (click)="d_delete.toggle()" type="button"></button>
+        <button class="btn btn-outline-secondary calendar" (click)="d_max_date.toggle()" type="button"></button>
       </div>
     </div>
   </div>
@@ -29,19 +29,54 @@
   <option *ngFor="let role of roles" [ngValue]="role">{{role}}</option>
 </select>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">Username</th>
-      <th scope="col">Role</th>
-      <th scope="col">Items served</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor = "let ww of allResults">
-      <td>{{ww.name}}</td>
-      <td>{{ww.role}}</td>
-      <td>{{ww.num}}</td>
-    </tr>
-  </tbody>
-</table>
+<div *ngIf="statisticsXRoles">
+  <div [ngSwitch]="selRole">
+    <table *ngSwitchCase="roles[0]" class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Username</th>
+          <th scope="col">Customers served</th>
+          <th scope="col">Orders served</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor = "let waiter of statisticsXRoles['waiters']">
+          <td>{{waiter.username}}</td>
+          <td>{{waiter.customers_served}}</td>
+          <td>{{waiter.orders_served}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table *ngSwitchCase="roles[1]" class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Username</th>
+          <th scope="col">Items served</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor = "let cooker of statisticsXRoles['cookers']">
+          <td>{{cooker.username}}</td>
+          <td>{{cooker.items_served}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table *ngSwitchCase="roles[2]" class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Username</th>
+          <th scope="col">Items served</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor = "let bartender of statisticsXRoles['bartenders']">
+          <td>{{bartender.username}}</td>
+          <td>{{bartender.items_served}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

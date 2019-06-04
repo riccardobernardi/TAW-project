@@ -60,15 +60,18 @@ export class PaydeskComponent implements OnInit {
 
   get_tickets() {
     this.ticket.get_tickets({state: 'open'}).subscribe((dd) => {
-      this.tickets.splice(0, this.tickets.length);
+      this.tickets = dd;
+      dd.sort((ticket1 : Ticket, ticket2: Ticket) => {
+        return ticket1.table - ticket2.table;
+      });
       console.log(dd);
       dd.forEach((ss) => {
-        this.tickets.push(ss);
         ss.orders.sort((a: TicketOrder, b: TicketOrder) => {
           return (a.name_item < b.name_item) ? -1 : 1;
         });
       });
       console.log(this.tickets);
+      this.selTicket = this.tickets[0]
     });
     console.log(this.tickets);
   }
@@ -184,10 +187,13 @@ export class PaydeskComponent implements OnInit {
 
   close_ticket() {
     console.log(this.emitReceipt())
+    console.log(this.selTicket._id);
     this.ticket.close_ticket(this.selTicket._id, this.emitReceipt()).toPromise().then(() => {
       return this.table.change_table({number: this.selTicket.table, state: states[0]}, undefined).toPromise();
     })
-      .then()
+      .then((data) => {
+        console.log(data);
+      })
       .catch((err) => console.log(err));
   }
 
