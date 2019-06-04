@@ -40,7 +40,7 @@ var auth = jwt({ secret: process.env.JWT_SECRET });
 //strutture dati e funzione necessarie per il socket
 var ios = undefined;
 var rooms = ["waiters", "cooks", "desks", "bartenders"];
-var socketEvents = ["modified user - desks", "modified table", "ordered dish", "ordered drink", "dish in preparation", "beverage in preparation", "ready item - cooks", "ready item - bartenders", "ready item - waiters"];
+//var socketEvents = ["modified user - desks", "modified table", "ordered dish", "ordered drink", "dish in preparation", "beverage in preparation", "ready item - cooks", "ready item - bartenders", "ready item - waiters"];
 /*
    "modified user - desks": {
       destRooms: [rooms[2]],
@@ -140,7 +140,7 @@ app.route("/users").get(auth, (req, res, next) => {
     u.setPassword(req.body.password);
     //query
     u.save().then((data) => {
-        ios.emit(socketEvents[0]);
+        ios.emit(rooms[2]);
         //emitEvent("modified user - desks", {});
         return res.status(200).json({ error: false, errormessage: "", id: data._id });
     }).catch((reason) => {
@@ -156,7 +156,7 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
     //query al DB
     user.getModel().deleteOne({ username: req.params.username }).then(() => {
-        ios.emit(socketEvents[0]);
+        ios.emit(rooms[2]);
         //emitEvent("modified user - desks", {});      
         return res.status(200).json({ error: false, errormessage: "" });
     }).catch((reason) => {
@@ -185,7 +185,7 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
     //errore strano con findOneAndReplace, poi vedere, altrimenti tenere findOneAndUpdate
     //occhio al setting dei campi, si può fare diversamente?
     user.getModel().findOneAndUpdate({ username: req.params.username }, { $set: { username: req.body.username, password: req.body.password, role: req.body.role } }).then((data) => {
-        ios.emit(socketEvents[0]);
+        ios.emit(rooms[2]);
         //emitEvent("modified user - desks", {});
         return res.status(200).json(data);
     }).catch((reason) => {
@@ -266,7 +266,8 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
                 return next({ statusCode: 401, error: true, errormessage: "Wrong format, associated_ticket not required" });
             data.update(update).then(() => {
                 //notifico sul socket
-                ios.emit(socketEvents[1]);
+                ios.emit(rooms[0]);
+                ios.emit(rooms[2]);
                 //emitEvent("modified table", req.params.number);
                 return res.status(200).json({
                     number: data.number,
@@ -285,7 +286,8 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
             //modifico tavolo
             data.update(update).then(() => {
                 //notifico sul socket
-                ios.emit(socketEvents[1]);
+                ios.emit(rooms[0]);
+                ios.emit(rooms[2]);
                 //emitEvent("modified table", req.params.number);
                 return res.status(200).json({
                     number: data.number,
@@ -301,7 +303,8 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
             //modifico tavolo
             data.update(update).then(() => {
                 //notifico sul socket
-                ios.emit(socketEvents[1]);
+                ios.emit(rooms[0]);
+                ios.emit(rooms[2]);
                 //emitEvent("modified table", req.params.number);
                 return res.status(200).json({
                     number: data.number,
@@ -551,12 +554,12 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
             //console.log("AAAAAAA:\n" + i + "\n");
             if (i.type == item.type[0]) {
                 console.log("DISH");
-                ios.emit(socketEvents[2]);
+                ios.emit(rooms[1]);
                 //emitEvent("ordered dish", req.params.id);
             }
             else if (i.type == item.type[1]) {
                 console.log("DRINK");
-                ios.emit(socketEvents[3]);
+                ios.emit(rooms[3]);
                 //emitEvent("ordered drink", req.params.id);
             }
             return res.status(200).json({ error: false, errormessage: "" });
@@ -600,7 +603,7 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch(auth, (req, res, next) => 
             //console.log(item.type[0]);
             //var order = data.orders.filter((order) => order.id == req.params.idOrder)[0]
             //if(order.type_item == item.type[0]) {
-            ios.emit(socketEvents[4]);
+            ios.emit(rooms[1]);
             //emitEvent("dish in preparation", req.params.idTicket);
             console.log("emit dish in prepare");
             //} else {
@@ -612,12 +615,12 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch(auth, (req, res, next) => 
             var order = data.orders.filter((order) => order.id == req.params.idOrder)[0];
             if (order.type_item == item.type[0]) {
                 console.log("Emetto piatto pronto per cuochi");
-                ios.emit(socketEvents[6]);
+                ios.emit(rooms[1]);
                 //emitEvent("ready item - cooks", req.params.idTicket);
             }
             else {
                 console.log("Emetto piatto pronto per cuochi");
-                ios.emit(socketEvents[7]);
+                ios.emit(rooms[3]);
                 //emitEvent("ready item - bartenders", req.params.idTicket);
             }
             //controllo che tutti gli ordini dello stesso tipo e dello stesso ticket siano pronti
@@ -630,7 +633,7 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch(auth, (req, res, next) => 
             if (req.body.state == ticket.orderState[2] && ordersList.length == 0)
                 console.log("Sto per emettere l'evento 'piatti pronti!'");
             if (req.body.state == ticket.orderState[2] && ordersList.length == 0) {
-                ios.emit(socketEvents[8]);
+                ios.emit(rooms[0]);
                 //emitEvent("ready item - waiters", req.params.idTicket);
             }
         }
