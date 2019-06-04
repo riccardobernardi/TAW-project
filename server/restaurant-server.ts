@@ -615,7 +615,6 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    newer.price = req.body.price;
    newer.added = req.body.added;
    newer.username_waiter = req.body.username_waiter;
-   newer.username_executer = req.body.username_executer;
    newer.state = ticket.orderState[0];
    newer.type_item = req.body.type_item;
    newer.required_time = req.body.required_time;
@@ -668,13 +667,14 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
          return next({ statusCode:409, error: true, errormessage: "Conflict, orderd state change not coherent with the regular state changes flow" });
       }
 
-
       toChange[0].state = req.body.state;
 
       if(req.body.username_executer)
          toChange[0].username_executer = req.body.username_executer;
       
       order_type = toChange[0].type_item;
+      console.log(req.body);
+      console.log(toChange[0]);
       return data.save();
       
    }).then((data) => {
