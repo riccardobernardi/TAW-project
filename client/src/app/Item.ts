@@ -2,7 +2,7 @@ export interface Item {
     ingredients: [string];
     id: string;
     name: string;
-    type: [string];
+    type: string;
     price: number;
     required_time: number;
 }
