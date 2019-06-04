@@ -30,6 +30,8 @@ import { HttpInterceptorService } from './http-interceptor.service';
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { HistogramWithDatesComponent } from './statistics-dashboard/histogram-with-dates/histogram-with-dates.component';
 import { StatsChartsComponent } from './statistics-dashboard/stats-charts/stats-charts.component';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -60,7 +62,9 @@ import { StatsChartsComponent } from './statistics-dashboard/stats-charts/stats-
     HttpClientModule,
     AppRoutingModule,
     NgbModule.forRoot(),
-    ChartsModule
+    ChartsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     {provide: UserHttpService, useClass: UserHttpService },

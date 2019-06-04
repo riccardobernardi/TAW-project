@@ -18,6 +18,9 @@ import {TableHttpService} from '../table-http.service';
 import {of, from} from 'rxjs';
 import {map} from 'rxjs/operators';
 import { Report } from '../Report';
+import { User } from "../User";
+import { ToastrService } from 'ngx-toastr';
+
 
 
 @Component({
@@ -34,7 +37,7 @@ export class PaydeskComponent implements OnInit {
   private user = {username: '', password: '', role: ''};
   private selDelUser: any;
   private selTable: any;
-  private users = [];
+  private users : User[];
   private selChangePwdUser: any;
   private socket;
   private tickets: Ticket[] = [];
@@ -53,7 +56,7 @@ export class PaydeskComponent implements OnInit {
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService, private router: Router, private order: OrderHttpService,
-              private table: TableHttpService) {}
+              private table: TableHttpService, private toastr: ToastrService) {}
 
   get_tickets() {
     this.ticket.get_tickets({state: 'open'}).subscribe((dd) => {
@@ -78,11 +81,20 @@ export class PaydeskComponent implements OnInit {
     }
     this.get_tickets();
     this.socketio.get().on('waiters', () => {this.get_tickets()});
-    this.socketio.get().on('desks', () => {this.get_tickets()});
+    this.socketio.get().on('desks', () => {
+      this.get_tickets();
+      this.get_users();
+    });
+    this.get_users();
+    
+  }
 
-    this.us.get_users().subscribe((data) => {
-      const a: any = data;
-      a.forEach((d) => this.users.push(d));
+  get_users() {
+    this.us.get_users().subscribe((data : User[]) => {
+      this.users = data.sort((user1: User, user2: User) => {
+        return (user1.username < user2.username) ? -1 : 1;
+      })
+      console.log(this.users);
     });
   }
 
@@ -94,10 +106,15 @@ export class PaydeskComponent implements OnInit {
     this.us.register(this.user).subscribe((d) => {
       console.log('Registration ok: ' + JSON.stringify(d));
       this.errmessage = undefined;
-      // this.router.navigate(['/login']);
+      this.toastr.success('Success!', 'Registration OK', {
+        timeOut: 3000
+      });
     }, (err) => {
       console.log('Signup error: ' + JSON.stringify(err.error.errormessage));
       this.errmessage = err.error.errormessage || err.error.message;
+      this.toastr.error('Failure!', 'Registration not OK :(', {
+        timeOut: 3000
+      });
     });
   }
 
@@ -198,5 +215,30 @@ export class PaydeskComponent implements OnInit {
       this.ticket.delete_report(this.reportSelected._id).toPromise()
       .then(() => this.reportSelected = null)
       .catch((err) => console.log(err));
+  }
+
+  changePasswordUser(selChangePwdUser : User, newPwd: string) {
+    console.log(selChangePwdUser.username, newPwd);
+    this.us.changePasswordUser(selChangePwdUser, newPwd).subscribe(() => {
+      this.toastr.success('Success!', 'Changing OK', {
+        timeOut: 3000
+      });
+    },(err) => {
+      this.toastr.error('Failure!', 'Changing not OK :(', {
+        timeOut: 3000
+      });
+    });
+  }
+
+  deleteUser(selDelUser : User) {
+    this.us.deleteUser(selDelUser.username).subscribe(() => {
+      this.toastr.success('Success!', 'Deletion OK', {
+        timeOut: 3000
+      });
+    }, (err) => {
+      this.toastr.error('Failure!', 'Deletion not OK :(', {
+        timeOut: 3000
+      });
+    })
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {ItemHttpService} from '../item-http.service';
 import {UserHttpService} from '../user-http.service';
-import {Item} from '../Item';
+import {Item, types} from '../Item';
 import { TicketHttpService } from 'src/app/ticket-http.service';
 import {SocketioService} from '../socketio.service';
 import {Ticket} from '../Ticket';
@@ -15,27 +15,32 @@ import { TicketOrder } from "../TicketOrder";
 })
 export class InsertOrdersComponent implements OnInit {
 
+  private items = {}
   private tickets = null;
-  private items: Item[] = null;
   private selTicket: Ticket;
   private ordersSelected = [];
   private counter = 0;
   private selMenuEntry: Item;
   private error = false;
+  private types = types;
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
-              private socketio: SocketioService) {}
+              private socketio: SocketioService) 
+  {
+    for(var type in types) 
+      this.items[type] = null; 
+  }
 
   get_items() {
-    //this.items.splice(0, this.items.length);
-    this.items = null;
-    console.log(this.items);
-    this.item.get_Items().toPromise().then( (dd) => {
-      /*dd.forEach( (ss) => {
-        this.items.push(ss);
-      });*/
-      dd.sort((item1: Item, item2: Item) => (item1.name < item2.name) ? -1 : 1);
-      this.items = dd;
+    this.item.get_Items().toPromise().then( (dd : Item[]) => {
+      console.log(types.length);
+      for(var i = 0; i < types.length; i++) {
+        console.log(types[i]);
+        this.items[types[i]] = dd.filter((item: Item) => {
+          return item.type == types[i];
+        }).sort((item1: Item, item2: Item) => (item1.name < item2.name) ? -1 : 1);
+      }
+      console.log(this.items);
       this.error = false;
     }).catch((err) => {
       console.log(err);
