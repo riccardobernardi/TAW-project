@@ -5,10 +5,11 @@ import { Ticket } from './Ticket';
 import { map } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { TicketOrder } from './TicketOrder';
-import { Item } from './Item';
+import { Item, types } from './Item';
 import { Report } from './Report';
 import { from } from 'rxjs';
 import { createOptional } from '@angular/compiler/src/core';
+import { roles } from './User';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,10 @@ export class TicketHttpService {
 
   get_tickets(filters) {
     return this.http.get<Ticket[]>(/*this.url*/this.endpoint, this.create_options(filters));
+  }
+
+  get_ticket(ticket_id) {
+    return this.http.get<Ticket>(/*this.url*/this.endpoint + "/" + ticket_id);
   }
 
   addOrders(ticketId, usernameWaiter, item, added, addedPrice) {
@@ -76,8 +81,18 @@ export class TicketHttpService {
           total : 0,
           total_customers : 0,
           total_orders : {dish: 0, beverage: 0},
-          average_stay : 0
+          average_stay : 0,
+          users_reports: {}
         };
+        var sup_dependants = {}
+
+        roles.forEach((role) => {
+          if(role != "desk") {
+            report.users_reports[role] = [];
+            sup_dependants[role] = {};
+          }
+        });
+
 
         let ticketCount = 0;
 
@@ -92,8 +107,50 @@ export class TicketHttpService {
           });
           ticketCount++;
           report.average_stay += Math.floor((new Date(ticket.end).getTime() - new Date(ticket.start).getTime()) / 60000);
-          console.log(report);
+          console.log(ticket.waiter);
+          if(!sup_dependants["waiter"][ticket.waiter]) {
+            console.log("New " + ticket.waiter)
+            sup_dependants["waiter"][ticket.waiter] = {};
+            sup_dependants["waiter"][ticket.waiter].customers_served = 0;
+            sup_dependants["waiter"][ticket.waiter].orders_served = 0;
+          }
+          sup_dependants["waiter"][ticket.waiter].customers_served += ticket.people_number
+          sup_dependants["waiter"][ticket.waiter].orders_served += ticket.orders.length
+          console.log(sup_dependants["waiter"][ticket.waiter])
+          var role;
+          ticket.orders.forEach((order : TicketOrder) => {
+            console.log(order.username_executer);
+            role = (order.type_item == types[0]) ? "bartender" : "cook";
+            if(!sup_dependants[role][order.username_executer]) {
+              sup_dependants[role][order.username_executer] = {};
+              sup_dependants[role][order.username_executer].items_served = 0;
+            }
+            sup_dependants[role][order.username_executer].items_served++;  
+          });
         });
+
+        console.log(sup_dependants);
+        for(let waiter in sup_dependants["waiter"]) {
+          report.users_reports["waiter"].push({
+            username: waiter,
+            customers_served: sup_dependants["waiter"][waiter].customers_served,
+            orders_served: sup_dependants["waiter"][waiter].orders_served
+          })
+        }
+
+        for(let cook in sup_dependants["cook"]) {
+          report.users_reports["cook"].push({
+            username: cook,
+            customers_server: sup_dependants["cook"][cook].items_served,
+          });
+        }
+
+        for(let bartender in sup_dependants["bartender"]) {
+          report.users_reports["bartender"].push({
+            username: bartender,
+            customers_server: sup_dependants["bartender"][bartender].items_served,
+          });
+        }
 
         report.average_stay = Math.floor(report.average_stay / ticketCount);
         console.log(report);
@@ -106,6 +163,10 @@ export class TicketHttpService {
 
   get_reports(filter) {
     return this.http.get<Report[]>(/*'http://localhost:8080' + */"reports", this.create_options(filter));
+  }
+
+  delete_report(report_id : string) {
+    return this.http.delete<Report>(/*'http://localhost:8080' + */"reports" + "/" + report_id);
   }
 
 }

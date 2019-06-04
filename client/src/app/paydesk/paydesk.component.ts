@@ -17,6 +17,10 @@ import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import {TableHttpService} from '../table-http.service';
 import {of, from} from 'rxjs';
 import {map} from 'rxjs/operators';
+import { Report } from '../Report';
+import { User } from "../User";
+import { ToastrService } from 'ngx-toastr';
+
 
 
 @Component({
@@ -33,22 +37,26 @@ export class PaydeskComponent implements OnInit {
   private user = {username: '', password: '', role: ''};
   private selDelUser: any;
   private selTable: any;
-  private users = [];
+  private users : User[];
   private selChangePwdUser: any;
   private socket;
   private tickets: Ticket[] = [];
   private tables: Table[] = [];
 
   private selTicket: any;
-  day: number;
-  month: number;
-  year: number;
+  private day_insert: number;
+  private month_insert: number;
+  private year_insert: number;
+  private day_delete: number;
+  private month_delete: number;
+  private year_delete: number;
   gainofday = 0;
   totalgain: Promise<any> | null = null;
+  private reportSelected : Report;
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService, private router: Router, private order: OrderHttpService,
-              private table: TableHttpService) {}
+              private table: TableHttpService, private toastr: ToastrService) {}
 
   get_tickets() {
     this.ticket.get_tickets({state: 'open'}).subscribe((dd) => {
@@ -73,11 +81,20 @@ export class PaydeskComponent implements OnInit {
     }
     this.get_tickets();
     this.socketio.get().on('waiters', () => {this.get_tickets()});
-    this.socketio.get().on('desks', () => {this.get_tickets()});
+    this.socketio.get().on('desks', () => {
+      this.get_tickets();
+      this.get_users();
+    });
+    this.get_users();
+    
+  }
 
-    this.us.get_users().subscribe((data) => {
-      const a: any = data;
-      a.forEach((d) => this.users.push(d));
+  get_users() {
+    this.us.get_users().subscribe((data : User[]) => {
+      this.users = data.sort((user1: User, user2: User) => {
+        return (user1.username < user2.username) ? -1 : 1;
+      })
+      console.log(this.users);
     });
   }
 
@@ -89,10 +106,16 @@ export class PaydeskComponent implements OnInit {
     this.us.register(this.user).subscribe((d) => {
       console.log('Registration ok: ' + JSON.stringify(d));
       this.errmessage = undefined;
-      // this.router.navigate(['/login']);
+      this.toastr.success('Registration OK', 'Success!', {
+        timeOut: 3000
+      });
     }, (err) => {
       console.log('Signup error: ' + JSON.stringify(err.error.errormessage));
-      this.errmessage = err.error.errormessage || err.error.message;
+      let errmessage = err.error.errormessage || err.error.message;
+      console.log(err);
+      this.toastr.error('Registration not OK: ' + errmessage, 'Failure!', {
+        timeOut: 3000
+      });
     });
   }
 
@@ -126,9 +149,9 @@ export class PaydeskComponent implements OnInit {
         });
 
         let a = ticketSup.filter((oneTicket) => {
-          return new Date(oneTicket.start).getDate() === this.day
-            && (new Date(oneTicket.start).getMonth() + 1) === this.month
-            && new Date(oneTicket.start).getFullYear() === this.year;
+          return new Date(oneTicket.start).getDate() === this.day_insert
+            && (new Date(oneTicket.start).getMonth() + 1) === this.month_insert
+            && new Date(oneTicket.start).getFullYear() === this.year_insert;
         });
 
         if (a.length === 0) {
@@ -146,10 +169,17 @@ export class PaydeskComponent implements OnInit {
     ).toPromise().then((x) => x);
   }
 
-  onDateSelect($event: NgbDate) {
-    this.month = $event.month;
-    this.day = $event.day;
-    this.year = $event.year;
+  onDateInsertSelect($event: NgbDate) {
+    this.month_insert = $event.month;
+    this.day_insert = $event.day;
+    this.year_insert = $event.year;
+  }
+
+  onDateDeleteSelect($event: NgbDate) {
+    this.month_delete = $event.month;
+    this.day_delete = $event.day;
+    this.year_delete = $event.year;
+    this.getReport();
   }
 
   close_ticket() {
@@ -162,11 +192,56 @@ export class PaydeskComponent implements OnInit {
   }
 
   create_daily_report() {
-    console.log(this.year + "-" + ((this.month > 9) ? this.month : "0" + this.month) + "-" + ((this.day > 9) ? this.day : "0" + this.day) + 'T' + "00:00:00");
-    const date = new Date(this.year, this.month - 1, this.day, 0, 0, 0, 0);
+    console.log(this.year_insert + "-" + ((this.month_insert > 9) ? this.month_insert : "0" + this.month_insert) + "-" + ((this.day_insert > 9) ? this.day_insert : "0" + this.day_insert) + 'T' + "00:00:00");
+    const date = new Date(this.year_insert, this.month_insert - 1, this.day_insert, 0, 0, 0, 0);
     console.log(date);
     this.ticket.create_report({start: date, state: 'closed'})
       .then()
       .catch((err) => console.log(err));
+  }
+
+  getReport() {
+    const date = new Date(this.year_delete, this.month_delete - 1, this.day_delete, 0, 0, 0, 0);
+    this.ticket.get_reports({start: date, end: date}).toPromise().then((data) => {
+      this.reportSelected = data[0];
+    }).catch((err) => {
+      console.log(err);
+      //this.error = true;
+    })
+  }
+
+  delete_daily_report() {
+    const date = new Date(this.year_delete, this.month_delete - 1, this.day_delete, 0, 0, 0, 0);
+    if(this.reportSelected)
+      this.ticket.delete_report(this.reportSelected._id).toPromise()
+      .then(() => this.reportSelected = null)
+      .catch((err) => console.log(err));
+  }
+
+  changePasswordUser(selChangePwdUser : User, newPwd: string) {
+    console.log(selChangePwdUser.username, newPwd);
+    this.us.changePasswordUser(selChangePwdUser, newPwd).subscribe(() => {
+      this.toastr.success( 'Changing OK', 'Success!', {
+        timeOut: 3000
+      });
+    },(err) => {
+      let errmessage = err.error.errormessage || err.error.message;
+      this.toastr.error('Changing not OK : ' + errmessage, 'Failure!', {
+        timeOut: 3000
+      });
+    });
+  }
+
+  deleteUser(selDelUser : User) {
+    this.us.deleteUser(selDelUser.username).subscribe(() => {
+      this.toastr.success('Deletion OK', 'Success!', {
+        timeOut: 3000
+      });
+    }, (err) => {
+      let errmessage = err.error.errormessage || err.error.message;
+      this.toastr.error('Deletion not OK: ' + errmessage, 'Failure!', {
+        timeOut: 3000
+      });
+    })
   }
 }

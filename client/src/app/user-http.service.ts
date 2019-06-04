@@ -13,7 +13,7 @@ export class UserHttpService implements OnDestroy{
 
   public token = '';
   public endpoint = 'users';
-  public users = [];
+  //public users = [];
   private renew_clock;
   private renew_clock_interval;
 
@@ -30,7 +30,7 @@ export class UserHttpService implements OnDestroy{
     this.token = token;
     sessionStorage.setItem('restaurant_token', this.token );
     let decoded_token = jwt_decode(this.token)
-    let exp_date = decoded_token.iat*1000 + Math.floor((decoded_token.exp - decoded_token.iat)*1000*0.9);
+    let exp_date = decoded_token.iat*1000 + Math.floor((decoded_token.exp - decoded_token.iat)*1000*0.6);
     let now = new Date().getTime();
     if(exp_date - now > 0) {
       this.renew_clock_interval = exp_date - now;
@@ -158,28 +158,22 @@ export class UserHttpService implements OnDestroy{
       tap( (data) => {
         console.log(JSON.stringify(data) );
       })
-    ).subscribe();
+    );
   }
 
   changePasswordUser(selUser, newPwd) {
     console.log('new pwd is : ' + newPwd + 'for user : ' + selUser);
 
-    const user = { username: selUser, password: newPwd, role: '' };
-    user.role = this.users.filter((u) => u.username == selUser)[0].role;
-
-    /*const options = {
-      headers: new HttpHeaders({
-        'cache-control': 'no-cache',
-        'Content-Type':  'application/json',
-      }).append('Authorization', 'Bearer ' + this.get_token())
-    };*/
+    const user = { username: selUser.username, password: newPwd, role: selUser.role };
+    //user.role = this.users.filter((u) => u.username == selUser)[0].role;
 
     console.log(/*this.url + '/*/this.endpoint + '/' + selUser );
 
-    return this.http.put( /*this.url + '/*/this.endpoint + '/' + selUser, user/*, options*/ ).pipe(
+    console.log(user.role)
+    return this.http.put( /*this.url + '/*/this.endpoint + '/' + selUser.username, user/*, options*/ ).pipe(
       tap( (data) => {
         //console.log(options);
         console.log(JSON.stringify(data) );
-      })).subscribe();
+      }));
   }
 }

@@ -21,3 +21,7 @@
 .inline-controls > input {
     width: 60%
 }
+
+.custom-control, .custom-switch {
+    padding: 0px 0px;
+}

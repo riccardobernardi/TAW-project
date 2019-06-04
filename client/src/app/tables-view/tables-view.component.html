@@ -1,9 +1,31 @@
 <div *ngIf="(tables && tables.length != 0) else loading">
-    <div class="tables" *ngFor="let table of tables">
-        <button [disabled] = "table.state === states[1]" class="btn btn-primary" (click) = "open_ticket(table, $event.target.nextElementSibling.value)">
-            {{table.number}}
-        </button>
-        <input class="form-control" *ngIf="table.state == states[0]" type="number" min="1" max={{table.max_people}} value={{table.max_people}}>
+    <div *ngIf="this.role != 'desk'">
+        <div class="tables" *ngFor="let table of tables" >
+            <button [disabled] = "table.state === states[1]" class="btn btn-primary" (click) = "open_ticket(table, $event.target.nextElementSibling.value)">
+                {{table.number}}
+            </button>
+            <input class="form-control" *ngIf="table.state == states[0]" type="number" min="1" max={{table.max_people}} value={{table.max_people}}>
+        </div>
+    </div>
+    <div *ngIf="this.role == 'desk'">
+        <div class="tables">
+            <div class="table-responsive-md">
+                <table class="table">
+                    <thead>
+                        <th scope="col">Table</th>
+                        <th scope="col">Max People</th>
+                        <th scope="col">Actual people</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let table of tables">
+                            <td>{{table.number}}</td>
+                            <td>{{table.max_people}} </td>
+                            <td>{{(table.actual_people) ? table.actual_people : "/"}}</td>
+                        </tr> 
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 

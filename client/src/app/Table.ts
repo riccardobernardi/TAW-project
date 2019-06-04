@@ -2,6 +2,8 @@ export interface Table {
     number: number;
     max_people: number;
     state: string;
+    associated_ticket: string;
+    actual_people?: number;
 }
 
 export var states: string[] = ["free", "taken"];
