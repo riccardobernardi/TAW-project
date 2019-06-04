@@ -822,6 +822,11 @@ app.route("/reports").get( auth, (req,res,next) => {
        return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
     }
  
+    //controllo formato
+    if ( !req.body || (req.body.data && req.body.data.toString() == 'Invalid Date') || (req.body.total && typeof(req.body.total) != 'number') || (req.body.total_orders && (typeof(req.body.total_orders[item.type[0]]) != 'number' || typeof(req.body.total_orders[item.type[1]]) != 'number' )) || (req.body.total_customers && typeof(req.body.total_customers) != 'number') || (req.body.average_stay && typeof(req.body.average_stay) != 'number') || ( (req.body.users_reports) && report.isUsersReports(req.body.users_reports)) ){
+      return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
+   }
+
     var update: any = {};
     if (req.body.date)
        update.date = new Date(req.body.end);
@@ -837,13 +842,9 @@ app.route("/reports").get( auth, (req,res,next) => {
     
     if (req.body.average_stay)
        update.average_stay = req.body.average_stay;
- 
-    
-    //controllo formato
-    if ( !req.body || (req.body.data && req.body.data.toString() == 'Invalid Date') || (req.body.total && typeof(req.body.total) != 'number') || (req.body.total_orders && (typeof(req.body.total_orders[item.type[0]]) != 'number' || typeof(req.body.total_orders[item.type[1]]) != 'number' )) || (req.body.total_customers && typeof(req.body.total_customers) != 'number') || (req.body.average_stay && typeof(req.body.average_stay) != 'number') ){
-       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
-    }
- 
+   
+    if (req.body.users_reports )
+      update.users_reports = req.body.users_reports;
     
     report.getModel().findOneAndUpdate( {_id: req.params.id}, { $set: update}, ).then( (data : report.Report) => {
        return res.status(200).json( {error:false, errormessage:""} );
