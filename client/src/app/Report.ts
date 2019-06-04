@@ -18,5 +18,5 @@ export interface WaiterReport {
 
 export interface CookerBartenderReport {
     username: string,
-    items_server: string
+    items_served: string
 }
