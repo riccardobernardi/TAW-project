@@ -205,7 +205,10 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
    //occhio al setting dei campi, si può fare diversamente?
    user.getModel().findOneAndUpdate({username: req.params.username}, {$set : {username : req.body.username, password:req.body.password, role: req.body.role}}).then( (data : user.User)=> {
       emitEvent("modified user");
-      return res.status(200).json( data );
+      return res.status(200).json( {
+         username: data,
+         role: data
+      });
    }).catch( (reason)=> {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
    });
