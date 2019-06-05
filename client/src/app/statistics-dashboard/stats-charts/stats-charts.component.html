@@ -1,15 +1,17 @@
 
 <div *ngIf="statistics['total']">
-    <p>Totale per data</p>
+    <h5>Totale per data</h5>
     <app-histogram-with-dates [barChartData]="statistics['total']['data']" [barChartDates] = "statistics['total']['dates']" (dateRange)="changedRange($event, 'total')"></app-histogram-with-dates>
 </div>
 <div *ngIf="statistics['total_customers']">
-    <p>Consumatori totali per data</p>
+    <h5>Consumatori totali per data</h5>
     <app-histogram-with-dates [barChartData]="statistics['total_customers']['data']" [barChartDates] = "statistics['total_customers']['dates']" (dateRange)="changedRange($event, 'total_customers')"></app-histogram-with-dates>
 </div>
 <div *ngIf="statistics['total_orders']">
+    <h5>Ordinazioni per data e tipo</h5>
     <app-histogram-with-dates [barChartData]="statistics['total_orders']['data']" [barChartDates] = "statistics['total_orders']['dates']" (dateRange)="changedRange($event, 'total_orders')"></app-histogram-with-dates>
 </div>
 <div *ngIf="statistics['average_stay']">
+    <h5>Tempo medio di persistenza</h5>
     <app-histogram-with-dates [barChartData]="statistics['average_stay']['data']" [barChartDates] = "statistics['average_stay']['dates']" (dateRange)="changedRange($event, 'average_stay')"></app-histogram-with-dates>
 </div>

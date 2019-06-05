@@ -35,9 +35,12 @@ export class UserHttpService implements OnDestroy{
     if(exp_date - now > 0) {
       this.renew_clock_interval = exp_date - now;
       this.renew_clock = setInterval(() => {this.renew().subscribe((data) => {
+        let decoded_token = jwt_decode(data.token)
+        console.log(new Date());
+        console.log(new Date(decoded_token.iat*1000 + Math.floor((decoded_token.exp - decoded_token.iat)*1000)));
         this.token = data.token;
         sessionStorage.setItem("restaurant_token", data.token);
-      })}, this.renew_clock_interval);
+      }, () => {this.logout();})}, this.renew_clock_interval);
     } else this.logout();
   }
 
@@ -45,7 +48,7 @@ export class UserHttpService implements OnDestroy{
     this.renew().subscribe((data) => {
       console.log("Renew in refreshAll")
       this.set_token(data.token)
-    }, () => this.logout());
+    }, () => {this.logout()});
   }
 
   login( nick: string, password: string ): Observable<any> {

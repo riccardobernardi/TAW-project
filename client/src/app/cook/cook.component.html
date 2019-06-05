@@ -1,14 +1,10 @@
-<!--<p>
-  cook view
-</p>-->
-
 <div *ngFor="let ticket of this.tickets" class="card" style="margin: 5px" >
   <div class="card-body">
-    <!--<h5 class="card-title"><i class="far fa-envelope"></i>&nbsp;{{ord.selMenuEntry}}</h5>-->
-    <!--<h6 class="card-subtitle mb-2 text-muted">{{ord.timestamp | date}} / {{ord.timestamp | date:'shortTime'}}</h6>-->
-    <p class="card-text">{{ ticket.table }}</p>
     
-    <div *ngFor="let order of ticket.orders">
+    <p class="card-text">Tavolo {{ ticket.table }}</p>
+    <p class="card-text">Ordinazioni:</p>
+    
+    <div class="orders-list" *ngFor="let order of ticket.orders">
       <p class="card-text">{{ order.name_item }}</p>
       <form class="form-inline">
         <div *ngIf="order.state == 'ordered'" class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="setOrderinProgress(ticket._id, order._id)">In progress</button></div>
@@ -17,7 +13,6 @@
     </div>
 
 
-    <!--<span *ngFor="let tag of message.tags" class="badge badge-secondary tag">{{tag}}</span>-->
   </div>
 </div>
 

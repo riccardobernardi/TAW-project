@@ -1,21 +1,30 @@
-<div class="input-group">
-  <input class="form-control" placeholder="yyyy-mm-dd" [startDate]="startDate"
-         name="dp1" (dateSelect)="onMinDateSelect($event)" ngbDatepicker #d1="ngbDatepicker">
-  <div class="input-group-append">
-    <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
-  </div>
+<div class="center">
+  <form class="form-inline horizontal-dates">
+    <div class="form-group">
+      <div class="input-group">
+        <input class="form-control" placeholder="yyyy-mm-dd"
+                name="dp_min_date" (dateSelect)="onMinDateSelect($event)" ngbDatepicker #d_min_date="ngbDatepicker">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary calendar" (click)="d_min_date.toggle()" type="button"></button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <button class="btn btn-primary update-button" (click)="update()">Aggiorna</button>
+
+  <form class="form-inline horizontal-dates">
+    <div class="form-group">
+      <div class="input-group">
+        <input class="form-control" placeholder="yyyy-mm-dd"
+                name="dp_max_date" (dateSelect)="onMaxDateSelect($event)" ngbDatepicker #d_max_date="ngbDatepicker">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary calendar" (click)="d_max_date.toggle()" type="button"></button>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>
-
-<button (click)="update()">Aggiorna</button>
-
-<div class="input-group">
-  <input class="form-control" placeholder="yyyy-mm-dd" [startDate]="startDate"
-         name="dp2" (dateSelect)="onMaxDateSelect($event)" ngbDatepicker #d2="ngbDatepicker">
-  <div class="input-group-append">
-    <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"></button>
-  </div>
-</div>
-
 
 <div>
   <div style="display: block">
