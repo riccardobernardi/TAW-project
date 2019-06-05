@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChange } from '@angular/core';
 import {NgbDate, NgbDatepicker} from '@ng-bootstrap/ng-bootstrap';
-import {ViewChild, ElementRef} from '@angular/core'
 
 
 @Component({

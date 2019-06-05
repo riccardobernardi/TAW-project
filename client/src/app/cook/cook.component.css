@@ -1,0 +1,7 @@
+.orders-list * {
+    display: inline-block;
+}
+
+.orders-list button {
+    margin: 20px;
+}

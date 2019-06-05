@@ -1,0 +1,21 @@
+.horizontal-dates, .update-button {
+    display: inline-block;
+    text-align: center;
+}
+
+.role-filter {
+    display: flex;
+}
+
+.update-button {
+    margin: 10px;
+}
+
+.center {
+    text-align: center;
+}
+
+.role-selection * {
+    display:inline-block;
+    text-align: center
+}
