@@ -869,7 +869,7 @@ app.get('/renew', auth, (req,res,next) => {
    delete tokendata.exp;
    //nuovo token
    console.log("Renewing token for user " + JSON.stringify( tokendata ));
-   var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '30s' } );
+   var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '4h' } );
    
    return res.status(200).json({ error: false, errormessage: "", token: token_signed });
 });
@@ -908,7 +908,7 @@ app.get("/login", passport.authenticate('basic', { session: false }), (req,res,n
       role: req.user.role,
    };
    console.log("Login granted. Generating token" );
-   var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '30s' } );
+   var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '4h' } );
 
    return res.status(200).json({ error: false, errormessage: "", token: token_signed });
 

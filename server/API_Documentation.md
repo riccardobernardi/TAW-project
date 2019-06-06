@@ -231,31 +231,34 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 
 ## Gestione dei ticket e degli ordini
 
-### Inserimento di un ordine 
+### Inserimento di un ticket (scontrino)
 | Titolo    | Inserimento di un ordine                                                 |
 |-----------|--------------------------------------------------------------------------|
 | URL       | /tickets                                                                 |
 | Metodo    | POST                                                                     |
 | Parametri |                                                                          |
-| Corpo     | {id_wait, id_tab, start_hour}                                            |
-| Successo  |  Codice: 200 Contenuto:                                                  |
-| Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                                     |
-| Errore    | Altri errori                                                             |
-| Esempio   |  /tickets  Body: {id_wai: 1, tab_number: 1, start_hour: timestamp(now) } |
-| Note:     | Codice di esempio                                                        |
+| Corpo     | {waiter, table, people_number}                                            |
+| Successo  |  Codice: 200 Contenuto: { error: false, errormessage: "", _id: ticket_id }                                                 |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: { statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"}                                    |
+| Errore    |  Codice: 400 BAD REQUEST Contenuto: { statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"}                                    |
+| Errore    |  Codice: 409 CONFLICT Contenuto: {statusCode:409, error:true, errormessage: "Table associated hasn't enought seats"} |
+| Errore    |  Codice: 409 CONFLICT Contenuto: {statusCode:409, error:true, errormessage: "Table associated doesn't exist"} |
+| Errore    |  Codice: 409 CONFLICT Contenuto: {statusCode:409, error:true, errormessage: "Ticket already exists"} |
+| Errore    | Codice: 500 INTERNAL SERVER ERROR Contenuto: { statusCode:500, error: true, errormessage: "DB error: "+reason } |
+| Esempio   |  /tickets  Body: {id_wai: 1, tab_number: 1, people_number: 2 } |
 
 ### Recupero info di un ordine  
 | Titolo    | Recupero info di un ordine                             |
 |-----------|--------------------------------------------------------|
 | URL       | /tickets                                               |
 | Metodo    | GET                                                    |
-| Parametri | date=[data]&wait=[id_cam]&tab=[id_tavolo]&state=[stato]|
+| Parametri | waiter=[id_cam]&table=[id_tavolo]&state=[stato]|
 | Corpo     |                                                        |
-| Successo  |  Codice: 200 Contenuto:                                |
-| Errore    |  Codice: 401 UNAUTHORIZED Contenuto:                   |
-| Errore    | Altri errori                                           |
-| Esempio   |  /tickets?wai=1&tab=1                                  |
-| Note:     | Codice di esempio                                      |
+| Successo  |  Codice: 200 Contenuto: [{_id, waiter, table, state, orders, total, start, people_number}]                     |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: {error: true, errormessage: "Unauthorized: user is not a desk or a waiter or a cook"}                  |
+| Errore    |  Codice: 400 BAD REQUEST Contenuto: {error: true, errormessage: "The state of orders accepted are ordered, preparation, ready, delivered and all"}                  |
+| Errore    |  Codice: 500 INTERNAL SERVER ERROR Contenuto: { statusCode:500, error: true, errormessage: "DB error: "+reason }                  |
+| Esempio   |  /tickets?waiter=waiter1&table=1                                  |
 
 ### Recupero info di un ordine specifico
 | Titolo    | Recupero info di un ordine specifico |
@@ -264,11 +267,12 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Metodo    | GET                                  |
 | Parametri |                                      |
 | Corpo     |                                      |
-| Successo  |  Codice: 200 Contenuto:              |
-| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
+| Successo  |  Codice: 200 Contenuto: {_id, waiter, table, state, orders, total, start, people_number}              |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: { statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"}|
+| Errore    |  Codice: 500 INTERNAL SERVER ERROR Contenuto: { statusCode:500, error: true, errormessage: "DB error: "+ reason }|
 | Errore    | Altri errori                         |
 | Esempio   |  /tickets/1                          |
-| Note:     | Codice di esempio                    |
+| Note:     | /tickets/1                    |
 
 ### Recupero info di un ordine specifico
 | Titolo    | Recupero info di un ordine specifico |
@@ -276,13 +280,14 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | URL       | /tickets/:id                         |
 | Metodo    | PATCH                                |
 | Parametri |                                      |
-| Corpo     |  {end, state}                        |
-| Successo  |  Codice: 200 Contenuto:              |
-| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
+| Corpo     |  {end, state, total}                        |
+| Successo  |  Codice: 200 Contenuto: {error:false, errormessage:""}             |
+| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: { statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"}|
+| Errore    |  Codice: 400 BAD REQUEST Contenuto: { statusCode:400, error: true, errormessage: "Wrong format"}|
+| Errore    |  Codice: 500 INTERNAL SERVER ERROR Contenuto: { statusCode:500, error: true, errormessage: "DB error: "+ reason }|
 | Errore    | Altri errori                         |
 | Esempio   |  /tickets/1 Body: {end:              |
-|                           timestamp(now),  state: "complete"}  |
-| Note:     | Codice di esempio                    |
+|                           timestamp(now),  state: "close"}  |
 
 ### Recupero comande relative ad un ordine
 | Titolo    | Recupero comande di un ordine specifico |
