@@ -9,7 +9,6 @@ import { UserHttpService } from './user-http.service';
 import { CookComponent } from './cook/cook.component';
 import { BarmanComponent } from './barman/barman.component';
 import { SocketioService } from './socketio.service';
-import { OrderHttpService } from './order-http.service';
 import { ItemHttpService } from './item-http.service';
 import { TableHttpService } from './table-http.service';
 import { TicketHttpService } from './ticket-http.service';
@@ -21,11 +20,9 @@ import { TablesViewComponent } from "./tables-view/tables-view.component";
 import { WaiterDashboardComponent } from './waiter/waiterDashboard.component';
 import { Paydesk2DashboardComponent } from "./paydesk2/paydesk2Dashboard.component";
 import { PaydeskComponent } from './paydesk/paydesk.component';
-import { HistTotalComponent } from './statistics-dashboard/HistTotalComponent/histtotal.component';
 import { ChartsModule } from "ng2-charts";
 import { StatisticsDashboardComponent } from './statistics-dashboard/statistics-dashboard.component';
 import { WaiterStatisticsComponent } from './statistics-dashboard/waiter-statistics/waiter-statistics.component';
-import { HistTotalCustomersComponent } from './statistics-dashboard/hist-total-customers/hist-total-customers.component';
 import { HttpInterceptorService } from './http-interceptor.service';
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { HistogramWithDatesComponent } from './statistics-dashboard/histogram-with-dates/histogram-with-dates.component';
@@ -47,10 +44,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     InsertOrdersComponent,
     TablesViewComponent,
     LogoutComponent,
-    HistTotalComponent,
     StatisticsDashboardComponent,
     WaiterStatisticsComponent,
-    HistTotalCustomersComponent,
     HistogramWithDatesComponent,
     StatsChartsComponent,
   ],
@@ -67,7 +62,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   providers: [
     {provide: UserHttpService, useClass: UserHttpService },
     {provide: SocketioService, useClass: SocketioService },
-    {provide: OrderHttpService, useClass: OrderHttpService},
     {provide: ItemHttpService, useClass: ItemHttpService},
     {provide: TableHttpService, useClass: TableHttpService},
     {provide: TicketHttpService, useClass: TicketHttpService},

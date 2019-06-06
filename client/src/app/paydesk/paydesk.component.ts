@@ -48,7 +48,7 @@ export class PaydeskComponent implements OnInit {
   private reportSelected : Report;
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
-              private socketio: SocketioService, private router: Router, private order: OrderHttpService,
+              private socketio: SocketioService, private router: Router,
               private table: TableHttpService, private toastr: ToastrService) {}
 
   get_tickets() {
