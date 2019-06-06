@@ -113,7 +113,7 @@ app.route("/users").get(auth, function (req, res, next) {
     user.getModel().find(filter, "username role").then(function (userslist) {
         return res.status(200).json(userslist);
     })["catch"](function (reason) {
-        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 }).post(auth, function (req, res, next) {
     //autenticazione
@@ -132,7 +132,7 @@ app.route("/users").get(auth, function (req, res, next) {
     })["catch"](function (reason) {
         if (reason.code === 11000)
             return next({ statusCode: 409, error: true, errormessage: "User already exists" });
-        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason.errmsg });
+        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 });
 //cambiare username con id restituito da mongo e maagari aggiungere filtri su username in get users?
@@ -172,8 +172,8 @@ app.route("/users/:username")["delete"](auth, function (req, res, next) {
     user.getModel().findOneAndUpdate({ username: req.params.username }, { $set: { username: req.body.username, password: req.body.password, role: req.body.role } }).then(function (data) {
         emitEvent("modified user");
         return res.status(200).json({
-            username: data,
-            role: data
+            username: data.username,
+            role: data.role
         });
     })["catch"](function (reason) {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
@@ -188,13 +188,13 @@ app.route("/tables").get(auth, function (req, res, next) {
     table.getModel().find({}, { number: 1, max_people: 1, _id: 0, state: 1, associated_ticket: 1 }).then(function (tableslist) {
         return res.status(200).json(tableslist);
     })["catch"](function (reason) {
-        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 }).post(auth, function (req, res, next) {
     //autenticazione
     var sender = user.newUser(req.user);
-    if (!sender.hasDeskRole() && !sender.hasWaiterRole())
-        return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
+    if (!sender.hasDeskRole())
+        return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
     //controllo formato
     var toInsert = {};
     toInsert.number = req.body.number;
@@ -210,7 +210,9 @@ app.route("/tables").get(auth, function (req, res, next) {
     (new Table(toInsert)).save().then(function (data) {
         return res.status(200).json({
             number: data.number,
-            max_people: data.number
+            max_people: data.max_people,
+            state: data.state,
+            associated_ticket: data.associated_ticket
         });
     })["catch"](function (reason) {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
@@ -223,10 +225,10 @@ app.route("/tables/:number").get(auth, function (req, res, next) {
     if (!sender.hasDeskRole() && !sender.hasWaiterRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
     //query al DB
-    table.getModel().find({ number: req.params.number }, { number: 1, max_people: 1 }).then(function (table) {
+    table.getModel().find({ number: req.params.number }, { number: 1, max_people: 1, state: 1, associated_ticket: 1 }).then(function (table) {
         return res.status(200).json(table);
     })["catch"](function (reason) {
-        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 }).patch(auth, function (req, res, next) {
     //autenticazione
@@ -249,15 +251,17 @@ app.route("/tables/:number").get(auth, function (req, res, next) {
             update.state = req.body.state;
         if (update.state == table.states[0]) {
             //controllo che non ci sia un associated_ticket quando si cerca di liberare un tavolo
-            if (update.associated_ticket)
-                return next({ statusCode: 401, error: true, errormessage: "Wrong format, associated_ticket not required" });
+            /* if (update.associated_ticket)
+               return next({ statusCode:401, error: true, errormessage: "Wrong format, associated_ticket not required" });
+            */
             data.update(update).then(function () {
                 //notifico sul socket
                 emitEvent("modified table");
                 return res.status(200).json({
                     number: data.number,
                     max_people: data.number,
-                    state: data.state
+                    state: data.state,
+                    associated_ticket: data.associated_ticket
                 });
             });
         }
@@ -274,8 +278,9 @@ app.route("/tables/:number").get(auth, function (req, res, next) {
                 emitEvent("modified table");
                 return res.status(200).json({
                     number: data.number,
-                    max_people: data.number,
-                    state: data.state
+                    max_people: data.max_people,
+                    state: data.state,
+                    associated_ticket: data.associated_ticket
                 });
             });
         }
@@ -289,8 +294,9 @@ app.route("/tables/:number").get(auth, function (req, res, next) {
                 emitEvent("modified table");
                 return res.status(200).json({
                     number: data.number,
-                    max_people: data.number,
-                    state: data.state
+                    max_people: data.max_people,
+                    state: data.state,
+                    associated_ticket: data.associated_ticket
                 });
             });
         }
@@ -298,7 +304,7 @@ app.route("/tables/:number").get(auth, function (req, res, next) {
             return next({ statusCode: 401, error: true, errormessage: "Wrong format" });
         }
     })["catch"](function (reason) {
-        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 });
 app.route("/items").get(auth, function (req, res, next) {
@@ -314,7 +320,7 @@ app.route("/items").get(auth, function (req, res, next) {
     item.getModel().find(filter, "name type price required_time ingredients").then(function (itemslist) {
         return res.status(200).json(itemslist);
     })["catch"](function (reason) {
-        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 }).post(auth, function (req, res, next) {
     //autenticazione
@@ -333,7 +339,7 @@ app.route("/items").get(auth, function (req, res, next) {
     })["catch"](function (reason) {
         if (reason.code === 11000)
             return next({ statusCode: 409, error: true, errormessage: "Item already exists" });
-        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason.errmsg });
+        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 });
 /*DECIDERE SE UTILIZZARE ALTRI CAMPI o SEMPRE ID*/
@@ -345,7 +351,7 @@ app.route("/items/:id").get(auth, function (req, res, next) {
     item.getModel().findById(req.params.id).then(function (item) {
         return res.status(200).json(item);
     })["catch"](function (reason) {
-        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 }).put(auth, function (req, res, next) {
     //autenticazione
@@ -377,8 +383,8 @@ app.route("/items/:id").get(auth, function (req, res, next) {
 app.route("/tickets").get(auth, function (req, res, next) {
     //autenticazione
     var sender = user.newUser(req.user);
-    if (!sender.hasDeskRole() && !sender.hasWaiterRole() && !sender.hasCookRole)
-        return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
+    if (!sender.hasDeskRole() && !sender.hasWaiterRole() && !sender.hasCookRole())
+        return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter or a cook" });
     //da togliere
     console.log("entro nella ticket api----");
     //creo il filtro
@@ -451,6 +457,14 @@ app.route("/tickets").get(auth, function (req, res, next) {
     newer.start = startdate.toString();
     newer.people_number = req.body.people_number;
     newer.state = ticket.ticketState[0];
+    //controllo che il tavolo esista
+    table.getModel().findOne({ number: newer.table }).then(function (data) {
+        //controllo numero posti del tavolo
+        if (newer.people_number >= data.number)
+            return next({ statusCode: 409, error: true, errormessage: "Table associated hasn't enought seats" });
+    })["catch"](function () {
+        return next({ statusCode: 409, error: true, errormessage: "Table associated doesn't exist" });
+    });
     var t = new (ticket.getModel())(newer);
     //da togliere
     console.log(t);
@@ -471,13 +485,13 @@ app.route('/tickets/:id').get(auth, function (req, res, next) {
     ticket.getModel().findById(req.params.id).then(function (data) {
         return res.status(200).json(data);
     })["catch"](function (reason) {
-        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 }).patch(auth, function (req, res, next) {
     //autenticazione
     var sender = user.newUser(req.user);
     if (!sender.hasDeskRole()) {
-        return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
+        return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
     }
     var enddate = new Date(req.body.end);
     //console.log(enddate);
@@ -507,7 +521,7 @@ app.route('/tickets/:id/orders').get(auth, function (req, res, next) {
     ticket.getModel().findById(req.params.id).then(function (data) {
         return res.status(200).json(data.orders);
     })["catch"](function (reason) {
-        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 }).post(auth, function (req, res, next) {
     //autenticazioni
@@ -647,7 +661,7 @@ app.route("/reports").get(auth, function (req, res, next) {
     report.getModel().find(filter).then(function (reportslist) {
         return res.status(200).json(reportslist);
     })["catch"](function (reason) {
-        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 }).post(auth, function (req, res, next) {
     //autenticazione
@@ -667,7 +681,7 @@ app.route("/reports").get(auth, function (req, res, next) {
     })["catch"](function (reason) {
         if (reason.code === 11000)
             return next({ statusCode: 409, error: true, errormessage: "Report already exists" });
-        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason.errmsg });
+        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 });
 app.route("/reports/:id").get(auth, function (req, res, next) {
@@ -679,7 +693,7 @@ app.route("/reports/:id").get(auth, function (req, res, next) {
     report.getModel().findById(req.params.id).then(function (data) {
         return res.status(200).json(data);
     })["catch"](function (reason) {
-        return next({ statusCode: 404, error: true, errormessage: "DB error: " + reason });
+        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 })["delete"](auth, function (req, res, next) {
     //autenticazione
@@ -725,7 +739,7 @@ app.get('/renew', auth, function (req, res, next) {
     delete tokendata.exp;
     //nuovo token
     console.log("Renewing token for user " + JSON.stringify(tokendata));
-    var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '30s' });
+    var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '4h' });
     return res.status(200).json({ error: false, errormessage: "", token: token_signed });
 });
 // Configure HTTP basic authentication strategy 
@@ -756,7 +770,7 @@ app.get("/login", passport.authenticate('basic', { session: false }), function (
         role: req.user.role
     };
     console.log("Login granted. Generating token");
-    var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '30s' });
+    var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, { expiresIn: '4h' });
     return res.status(200).json({ error: false, errormessage: "", token: token_signed });
 });
 // Add error handling middleware
