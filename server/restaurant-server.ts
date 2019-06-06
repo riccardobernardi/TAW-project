@@ -653,7 +653,7 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
          }
          return res.status(200).json( {error:false, errormessage:""} );
       }).catch((err) => {
-         return res.status(500).json( {error:true, errormessage:err} );
+         return res.status(500).json( {error:true, errormessage:"DB error: "+ err} );
       });
    }).catch( (reason) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
@@ -728,7 +728,6 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
             console.log(order);
             return (order.state != ticket.orderState[2] && order.type_item ==  order_type && order.state != ticket.orderState[3]);
          });
-         console.log("La porcamadonna di orderlist " + ordersList + " " + !ordersList);
 
          if (req.body.state == ticket.orderState[2] && ordersList.length == 0) 
             console.log("Sto per emettere l'evento 'piatti pronti!'");
