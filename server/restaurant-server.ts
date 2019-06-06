@@ -138,7 +138,7 @@ app.route("/users").get(auth, (req,res,next) => {
    user.getModel().find(filter, "username role").then( (userslist) => {
       return res.status(200).json( userslist ); 
    }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    })
 }).post(auth, (req, res, next) => {
    //autenticazione
@@ -160,7 +160,7 @@ app.route("/users").get(auth, (req,res,next) => {
    }).catch( (reason) => {
    if( reason.code === 11000 )
       return next({statusCode:409, error:true, errormessage: "User already exists"} );
-   return next({ statusCode:500, error: true, errormessage: "DB error: "+reason.errmsg });
+   return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
    })
 });
 
@@ -206,8 +206,8 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
    user.getModel().findOneAndUpdate({username: req.params.username}, {$set : {username : req.body.username, password:req.body.password, role: req.body.role}}).then( (data : user.User)=> {
       emitEvent("modified user");
       return res.status(200).json( {
-         username: data,
-         role: data
+         username: data.username,
+         role: data.role
       });
    }).catch( (reason)=> {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
@@ -226,13 +226,13 @@ app.route("/tables").get(auth, (req, res, next) => {
    table.getModel().find({}, {number:1, max_people:1, _id: 0, state:1, associated_ticket: 1}).then( (tableslist) => {
       return res.status(200).json( tableslist ); 
    }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
 }).post(auth, (req, res, next) => {
    //autenticazione
    var sender = user.newUser(req.user);
-   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
-      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+   if(!sender.hasDeskRole())
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
 
    //controllo formato
    var toInsert: any = {};
@@ -252,7 +252,9 @@ app.route("/tables").get(auth, (req, res, next) => {
    (new Table(toInsert)).save().then( (data : table.Table) => {
       return res.status(200).json( {
          number: data.number,
-         max_people: data.number
+         max_people: data.max_people,
+         state: data.state,
+         associated_ticket: data.associated_ticket
       }); 
    }).catch( (reason) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
@@ -266,10 +268,10 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
       return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
    //query al DB
-   table.getModel().find({number: req.params.number}, {number: 1, max_people: 1}).then( (table) => {
+   table.getModel().find({number: req.params.number}, {number: 1, max_people: 1, state: 1, associated_ticket: 1}).then( (table) => {
       return res.status(200).json( table ); 
    }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
 }).patch(auth, (req, res, next) => {
    //autenticazione
@@ -295,16 +297,17 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
       
       if (update.state == table.states[0]){
          //controllo che non ci sia un associated_ticket quando si cerca di liberare un tavolo
-         if (update.associated_ticket)
+         /* if (update.associated_ticket)
             return next({ statusCode:401, error: true, errormessage: "Wrong format, associated_ticket not required" });
-
+         */
          data.update(update).then(() => {
             //notifico sul socket
             emitEvent("modified table");
             return res.status(200).json( {
                number: data.number,
                max_people: data.number,
-               state: data.state
+               state: data.state,
+               associated_ticket: data.associated_ticket
             });
          });
          
@@ -321,8 +324,9 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
             emitEvent("modified table");
             return res.status(200).json( {
                number: data.number,
-               max_people: data.number,
-               state: data.state
+               max_people: data.max_people,
+               state: data.state,
+               associated_ticket: data.associated_ticket
             });
          });
 
@@ -337,8 +341,9 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
             emitEvent("modified table");
             return res.status(200).json( {
                number: data.number,
-               max_people: data.number,
-               state: data.state
+               max_people: data.max_people,
+               state: data.state,
+               associated_ticket: data.associated_ticket
             });
          });
 
@@ -347,7 +352,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
          return next({ statusCode:401, error: true, errormessage: "Wrong format" });
       }
    }).catch((reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
 });
 
@@ -366,7 +371,7 @@ app.route("/items").get(auth, (req,res,next) => {
    item.getModel().find(filter, "name type price required_time ingredients").then( (itemslist) => {
       return res.status(200).json( itemslist ); 
    }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    })
 }).post(auth, (req, res, next) => {
    //autenticazione
@@ -389,7 +394,7 @@ app.route("/items").get(auth, (req,res,next) => {
    }).catch( (reason) => {
    if( reason.code === 11000 )
       return next({statusCode:409, error:true, errormessage: "Item already exists"} );
-   return next({ statusCode:500, error: true, errormessage: "DB error: "+reason.errmsg });
+   return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
    })
    
 });
@@ -405,7 +410,7 @@ app.route("/items/:id").get(auth, (req,res,next) => {
    item.getModel().findById(req.params.id).then( (item) => {
       return res.status(200).json( item ); 
    }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    })
 }).put(auth, (req, res, next) => {
    //autenticazione
@@ -443,8 +448,8 @@ app.route("/items/:id").get(auth, (req,res,next) => {
 app.route("/tickets").get(auth, (req, res, next) => {
    //autenticazione
    var sender = user.newUser(req.user);
-   if(!sender.hasDeskRole() && !sender.hasWaiterRole() && !sender.hasCookRole)
-      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+   if(!sender.hasDeskRole() && !sender.hasWaiterRole() && !sender.hasCookRole())
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter or a cook"} );
 
    //da togliere
    console.log("entro nella ticket api----");
@@ -532,6 +537,17 @@ app.route("/tickets").get(auth, (req, res, next) => {
    newer.people_number = req.body.people_number;
    newer.state = ticket.ticketState[0]
 
+   //controllo che il tavolo esista
+   table.getModel().findOne({number: newer.table}).then((data: table.Table) => {
+      //controllo numero posti del tavolo
+   if (newer.people_number >= data.number)
+      return next({statusCode:409, error:true, errormessage: "Table associated hasn't enought seats"} );
+   }).catch(() => {
+      return next({statusCode:409, error:true, errormessage: "Table associated doesn't exist"} );
+   })
+
+   
+
    var t = new (ticket.getModel()) (newer);
    
    //da togliere
@@ -558,13 +574,13 @@ app.route('/tickets/:id').get(auth, (req, res, next) => {
    ticket.getModel().findById(req.params.id).then( (data) => {
       return res.status(200).json( data ); 
    }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
 }).patch(auth, (req, res, next) => {
    //autenticazione
    var sender = user.newUser(req.user);
    if(!sender.hasDeskRole()){
-      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
    }
 
    var enddate: Date = new Date(req.body.end); 
@@ -598,7 +614,7 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    ticket.getModel().findById(req.params.id).then( (data : ticket.Ticket) => {
       return res.status(200).json( data.orders ); 
    }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
 }).post(auth, (req, res, next) => {
    //autenticazioni
@@ -758,7 +774,7 @@ app.route("/reports").get( auth, (req,res,next) => {
     report.getModel().find(filter).then( (reportslist) => {
        return res.status(200).json( reportslist ); 
     }).catch( (reason) => {
-       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
     })
  }).post( auth, (req,res,next) => {
     //autenticazione
@@ -782,7 +798,7 @@ app.route("/reports").get( auth, (req,res,next) => {
     }).catch( (reason) => {
     if( reason.code === 11000)
        return next({statusCode:409, error:true, errormessage: "Report already exists"} );
-    return next({ statusCode:500, error: true, errormessage: "DB error: "+reason.errmsg });
+    return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
     });
  });
  
@@ -797,7 +813,7 @@ app.route("/reports").get( auth, (req,res,next) => {
     report.getModel().findById(req.params.id).then( (data) => {
        return res.status(200).json(data); 
     }).catch( (reason) => {
-       return next({ statusCode:404, error: true, errormessage: "DB error: "+ reason });
+       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
     });
  }).delete( auth, (req,res,next) => {
     //autenticazione
