@@ -191,16 +191,38 @@ export class WaiterStatisticsComponent implements OnInit {
                   if(dep[0]) {
                     dependant1.customers_served += dep[0].customers_served;
                     dependant1.orders_served += dep[0].orders_served;
+                    var i = user_report2[role].indexOf(dep[0]);
+                    if(i != -1) {
+                      user_report2[role].splice(i, 1);
+                    }
                   }
+                });
+                user_report2[role].forEach((dependant2) => {
+                  user_report1[role].push({
+                    username: dependant2.username,
+                    customers_served: dependant2.customers_served,
+                    orders_served: dependant2.orders_served
+                  })
                 });
               } else {
                 user_report1[role].forEach((dependant1) =>  {
                   let dep = user_report2[role].filter((dependant2) => dependant1.username == dependant2.username);
                   if(dep[0]) {
                     dependant1.items_served += dep[0].items_served;
+                    var i = user_report2[role].indexOf(dep[0]);
+                    if(i != -1) {
+                      user_report2[role].splice(i, 1);
+                    }
                   }
                 });
+                user_report2[role].forEach((dependant2) => {
+                  user_report1[role].push({
+                    username: dependant2.username,
+                    items_served: dependant2.items_served
+                  })
+                });
               }
+              
             }
             return user_report1;
           });
