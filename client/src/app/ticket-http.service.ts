@@ -2,13 +2,9 @@ import { Injectable } from '@angular/core';
 import { UserHttpService } from './user-http.service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Ticket } from './Ticket';
-import { map } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
 import { TicketOrder } from './TicketOrder';
-import { Item, types } from './Item';
+import { types } from './Item';
 import { Report } from './Report';
-import { from } from 'rxjs';
-import { createOptional } from '@angular/compiler/src/core';
 import { roles } from './User';
 
 @Injectable({
@@ -22,34 +18,29 @@ export class TicketHttpService {
 
   private create_options( params = {} ) {
     return  {
-      /*headers: new HttpHeaders({
-        authorization: 'Bearer ' + this.us.get_token(),
-        'cache-control': 'no-cache',
-        'Content-Type':  'application/json',
-      }),*/
       params : new HttpParams( {fromObject: params} )
     };
   }
 
   open_ticket(waiter: string, table: number, people_number: number) {
-    return this.http.post<Ticket>(/*this.url*/ this.endpoint, {waiter, table, start: Date(), people_number}, this.create_options());
+    return this.http.post<Ticket>(this.endpoint, {waiter, table, start: Date(), people_number}, this.create_options());
   }
 
   close_ticket(ticketId: string, total: number) {
-    console.log(total);
-    return this.http.patch<Ticket>(/*this.url + */this.endpoint + '/' + ticketId, {state: 'closed', end: Date(), total: total}, this.create_options());
+    //console.log(total);
+    return this.http.patch<Ticket>(this.endpoint + '/' + ticketId, {state: 'closed', end: Date(), total: total}, this.create_options());
   }
 
   get_tickets(filters) {
-    return this.http.get<Ticket[]>(/*this.url*/this.endpoint, this.create_options(filters));
+    return this.http.get<Ticket[]>(this.endpoint, this.create_options(filters));
   }
 
   get_ticket(ticket_id) {
-    return this.http.get<Ticket>(/*this.url*/this.endpoint + "/" + ticket_id);
+    return this.http.get<Ticket>(this.endpoint + "/" + ticket_id);
   }
 
   addOrders(ticketId, usernameWaiter, item, added, addedPrice) {
-    console.log(addedPrice);
+    //console.log(addedPrice);
     let order: TicketOrder;
     order = {
       name_item : item.name,
@@ -62,20 +53,20 @@ export class TicketHttpService {
       type_item: item.type,
       required_time: item.required_time
     };
-    console.log(ticketId, order);
-    return this.http.post(/*this.url +*/ this.endpoint + "/" + ticketId + '/' + 'orders', order, this.create_options());
+    //console.log(ticketId, order);
+    return this.http.post(this.endpoint + "/" + ticketId + '/' + 'orders', order, this.create_options());
   }
 
   changeOrderState(ticketId, orderId, state, name) {
-    console.log(ticketId, orderId);
-    return this.http.patch(/*this.url + */this.endpoint + '/' + ticketId + '/' + 'orders' + '/' + orderId, {state, username_executer: name}, this.create_options());
+    //console.log(ticketId, orderId);
+    return this.http.patch(this.endpoint + '/' + ticketId + '/' + 'orders' + '/' + orderId, {state, username_executer: name}, this.create_options());
   }
 
   create_report(filters) {
     const today = new Date();
     return this.get_tickets(filters).toPromise().then((data: Ticket[]) => {
       if(data.length != 0) {
-      console.log(data);
+      //console.log(data);
         const report: Report = {
           date : today,
           total : 0,
@@ -93,11 +84,9 @@ export class TicketHttpService {
           }
         });
 
-
         let ticketCount = 0;
 
-        console.log(report);
-
+        //console.log(report);
 
         data.forEach((ticket) => {
           report.total += ticket.total;
@@ -107,19 +96,19 @@ export class TicketHttpService {
           });
           ticketCount++;
           report.average_stay += Math.floor((new Date(ticket.end).getTime() - new Date(ticket.start).getTime()) / 60000);
-          console.log(ticket.waiter);
+          //console.log(ticket.waiter);
           if(!sup_dependants["waiter"][ticket.waiter]) {
-            console.log("New " + ticket.waiter)
+            //console.log("New " + ticket.waiter)
             sup_dependants["waiter"][ticket.waiter] = {};
             sup_dependants["waiter"][ticket.waiter].customers_served = 0;
             sup_dependants["waiter"][ticket.waiter].orders_served = 0;
           }
           sup_dependants["waiter"][ticket.waiter].customers_served += ticket.people_number
           sup_dependants["waiter"][ticket.waiter].orders_served += ticket.orders.length
-          console.log(sup_dependants["waiter"][ticket.waiter])
+          //console.log(sup_dependants["waiter"][ticket.waiter])
           var role;
           ticket.orders.forEach((order : TicketOrder) => {
-            console.log(order.username_executer);
+            //console.log(order.username_executer);
             role = (order.type_item == types[0]) ? "bartender" : "cook";
             if(!sup_dependants[role][order.username_executer]) {
               sup_dependants[role][order.username_executer] = {};
@@ -129,7 +118,7 @@ export class TicketHttpService {
           });
         });
 
-        console.log(sup_dependants);
+        //console.log(sup_dependants);
         for(let waiter in sup_dependants["waiter"]) {
           report.users_reports["waiter"].push({
             username: waiter,
@@ -153,8 +142,8 @@ export class TicketHttpService {
         }
 
         report.average_stay = Math.floor(report.average_stay / ticketCount);
-        console.log(report);
-        return this.http.post(/*'http://localhost:8080' +*/ "reports", report, this.create_options()).toPromise();
+        //console.log(report);
+        return this.http.post("reports", report, this.create_options()).toPromise();
       } else {
         throw new Error("Impossibile to generate the report: zero tickets");
       };
@@ -162,11 +151,11 @@ export class TicketHttpService {
   }
 
   get_reports(filter) {
-    return this.http.get<Report[]>(/*'http://localhost:8080' + */"reports", this.create_options(filter));
+    return this.http.get<Report[]>("reports", this.create_options(filter));
   }
 
   delete_report(report_id : string) {
-    return this.http.delete<Report>(/*'http://localhost:8080' + */"reports" + "/" + report_id);
+    return this.http.delete<Report>("reports" + "/" + report_id);
   }
 
 }

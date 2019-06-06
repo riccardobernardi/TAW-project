@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { UserLoginComponent } from './user-login/user-login.component';
-import { AppComponent } from './app.component';
 import { CookComponent} from './cook/cook.component';
 import { PaydeskComponent } from './paydesk/paydesk.component';
 import { BarmanComponent } from './barman/barman.component';
@@ -12,7 +10,6 @@ import { InsertOrdersComponent } from './insert-orders/insert-orders.component';
 import { TablesViewComponent } from './tables-view/tables-view.component';
 import { LogoutComponent } from './logout/logout.component';
 import { Paydesk2DashboardComponent } from './paydesk2/paydesk2Dashboard.component';
-import { HistTotalComponent } from './statistics-dashboard/HistTotalComponent/histtotal.component';
 import { StatisticsDashboardComponent } from './statistics-dashboard/statistics-dashboard.component';
 import {WaiterStatisticsComponent} from './statistics-dashboard/waiter-statistics/waiter-statistics.component';
 import { StatsChartsComponent } from "./statistics-dashboard/stats-charts/stats-charts.component"
@@ -102,19 +99,7 @@ const routes: Routes = [
         component: LogoutComponent
       }
     ],
-  },
-/*  { path: 'barman', component:  BarmanComponent},
-  { path: 'bartender', component:  BarmanComponent},
-  { path: 'desk/insertOrders', component:  InsertOrdersComponent},
-  { path: 'desk/logout', component:  LogoutComponent},
-  { path: 'desk/viewOrders', component:  TablesViewComponent},
-  { path: 'desk/servedOrders', component:  OrdersServedComponent},
-  { path: 'desk/paydesk', component:  PaydeskComponent},
-  { path: 'waiter/insertOrders', component:  InsertOrdersComponent},
-  { path: 'waiter/logout', component:  LogoutComponent},
-  { path: 'waiter/viewOrders', component:  TablesViewComponent},
-  { path: 'waiter/servedOrders', component:  OrdersServedComponent},*/
-
+  }
 ];
 
 @NgModule({

@@ -1,16 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
-import {OrderService} from '../order.service';
-import * as io from 'socket.io-client';
 import {SocketioService} from '../socketio.service';
-import {Order} from '../Order';
-import {mockorders} from '../mock-orders';
 import {UserHttpService} from '../user-http.service';
 import { Ticket } from '../Ticket';
 import {TicketOrder } from '../TicketOrder';
 import { TicketHttpService } from '../ticket-http.service';
-import { Item } from '../Item';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
+import { order_states } from "../TicketOrder";
+import { types } from "../Item";
 
 @Component({
   selector: 'app-cook',
@@ -24,22 +21,22 @@ export class CookComponent implements OnInit {
               private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) {}
 
   get_tickets() {
-    this.ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
+    this.ticket.get_tickets({state: 'open'}).subscribe( (tickets: Ticket[]) => {
       this.tickets.splice(0, this.tickets.length);
-      dd.forEach( (ss) => {
-        console.log(ss.orders);
-        const orders = ss.orders.filter((order: TicketOrder) =>
-          order.state !== 'ready' && order.state !== 'delivered' && ((order.state == "preparation") ? order.username_executer === this.us.get_nick() : true ) && order.type_item !== 'beverage');
-        console.log(orders);
+      tickets.forEach( (ticket) => {
+        //console.log(ss.orders);
+        const orders = ticket.orders.filter((order: TicketOrder) =>
+          order.state !== order_states[2] && order.state !== order_states[3] && ((order.state == order_states[1]) ? order.username_executer === this.us.get_nick() : true ) && order.type_item !== types[1]);
+        //console.log(orders);
         if (orders.length !== 0) {
-          this.tickets.push(ss);
-          orders.sort((a: TicketOrder, b: TicketOrder) => {
-            return a.required_time - b.required_time;
+          this.tickets.push(ticket);
+          orders.sort((order1: TicketOrder, order2: TicketOrder) => {
+            return order1.required_time - order2.required_time;
           });
-          ss.orders = orders;
+          ticket.orders = orders;
         }
       });
-      console.log(this.tickets);
+      //console.log(this.tickets);
     });
   }
 

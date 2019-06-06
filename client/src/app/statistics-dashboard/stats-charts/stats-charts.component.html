@@ -1,4 +1,3 @@
-
 <div *ngIf="statistics['total']">
     <h5>Totale per data</h5>
     <app-histogram-with-dates [barChartData]="statistics['total']['data']" [barChartDates] = "statistics['total']['dates']" (dateRange)="changedRange($event, 'total')"></app-histogram-with-dates>

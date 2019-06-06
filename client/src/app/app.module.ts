@@ -53,8 +53,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HistTotalCustomersComponent,
     HistogramWithDatesComponent,
     StatsChartsComponent,
-    /*UserHttpService,
-    SocketioService*/
   ],
   imports: [
     BrowserModule,
