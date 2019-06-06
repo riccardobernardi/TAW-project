@@ -6,6 +6,8 @@
 /out-tsc
 # Only exists if Bazel was run
 /bazel-out
+../../ionic_test
+../../ionic_test2
 
 # dependencies
 /node_modules

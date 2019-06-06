@@ -6,7 +6,7 @@ import { Ticket } from 'src/app/Ticket';
 import { Table, states } from '../Table';
 import { Observable } from 'rxjs/Observable';
 import { SocketioService } from '../socketio.service';
-import { componentNeedsResolution } from '@angular/core/src/metadata/resource_loading';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -22,7 +22,7 @@ export class TablesViewComponent implements OnInit {
   private error = false;
   private role
 
-  constructor(private table: TableHttpService, private user: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {
+  constructor(private toastr: ToastrService, private table: TableHttpService, private user: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {
     this.get_tables()
     this.socketio.get().on('waiters', () => { 
       console.log("Waiters view evento ricevuto");
@@ -58,17 +58,23 @@ export class TablesViewComponent implements OnInit {
 
   public open_ticket(tableToChange: Table, people_number: number) {
     console.log(people_number);
-    this.ticket.open_ticket(this.user.get_nick(), tableToChange.number, people_number).toPromise().then((data: Ticket) => {
-      console.log(data);
-      const table = Object.assign({}, tableToChange);
-      table.state = states[1];
-      console.log(table.state);
-      return this.table.change_table(table, data._id).toPromise();
-      // update del tavolo da rimuovere perchè si deve usare il websocket
-    }).then().catch(err => {
-      console.log(err);
-      this.error = true;
-    });
+    if(people_number > 0 && people_number < tableToChange.max_people) {
+      this.ticket.open_ticket(this.user.get_nick(), tableToChange.number, people_number).toPromise().then((data: Ticket) => {
+        console.log(data);
+        const table = Object.assign({}, tableToChange);
+        table.state = states[1];
+        console.log(table.state);
+        return this.table.change_table(table, data._id).toPromise();
+        // update del tavolo da rimuovere perchè si deve usare il websocket
+      }).then().catch(err => {
+        console.log(err);
+        this.error = true;
+      });
+    } else {
+      this.toastr.error('People Number has to be smaller than max number supported!', 'Failure!', {
+        timeOut: 3000
+      });
+    }
   }
 
 }
