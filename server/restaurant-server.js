@@ -171,7 +171,10 @@ app.route("/users/:username")["delete"](auth, function (req, res, next) {
     //occhio al setting dei campi, si può fare diversamente?
     user.getModel().findOneAndUpdate({ username: req.params.username }, { $set: { username: req.body.username, password: req.body.password, role: req.body.role } }).then(function (data) {
         emitEvent("modified user");
-        return res.status(200).json(data);
+        return res.status(200).json({
+            username: data,
+            role: data
+        });
     })["catch"](function (reason) {
         return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
@@ -1005,7 +1008,52 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
                 cookers: [{ username: "cook1", items_served: 60 }]
             }
         }).save().then(function (data) { return console.log(data["waiters"]); });
-        Promise.all([r1, r2]).then()["catch"](function (err) { return console.log("Save of report not completed: " + err); });
+        var r3 = new reportModel({
+            date: "2019-05-29T00:00:00.000Z",
+            total: 5600,
+            total_customers: 120,
+            total_orders: {
+                dish: 350,
+                beverage: 712
+            },
+            average_stay: 120,
+            users_reports: {
+                waiters: [{ username: "waiter1", customers_served: 80, orders_served: 912 }, { username: "waiter2", customers_served: 40, orders_served: 305 }],
+                bartenders: [{ username: "bartender1", items_served: 400 }, { username: "waiter2", items_served: 700 }],
+                cookers: [{ username: "cook1", items_served: 60 }, { username: "cook2", items_served: 1110 }]
+            }
+        }).save() /*.then(data => console.log(data["waiters"] ))*/;
+        var r4 = new reportModel({
+            date: "2019-05-30T00:00:00.000Z",
+            total: 5600,
+            total_customers: 120,
+            total_orders: {
+                dish: 350,
+                beverage: 712
+            },
+            average_stay: 120,
+            users_reports: {
+                waiters: [{ username: "waiter1", customers_served: 80, orders_served: 912 }, { username: "waiter2", customers_served: 40, orders_served: 305 }],
+                bartenders: [{ username: "bartender1", items_served: 400 }, { username: "waiter2", items_served: 700 }],
+                cookers: [{ username: "cook1", items_served: 60 }, { username: "cook2", items_served: 1110 }]
+            }
+        }).save() /*.then(data => console.log(data["waiters"] ))*/;
+        var r5 = new reportModel({
+            date: "2019-06-03T00:00:00.000Z",
+            total: 5600,
+            total_customers: 120,
+            total_orders: {
+                dish: 350,
+                beverage: 712
+            },
+            average_stay: 120,
+            users_reports: {
+                waiters: [{ username: "waiter1", customers_served: 80, orders_served: 912 }, { username: "waiter2", customers_served: 40, orders_served: 305 }],
+                bartenders: [{ username: "bartender1", items_served: 400 }, { username: "waiter2", items_served: 700 }],
+                cookers: [{ username: "cook1", items_served: 60 }, { username: "cook2", items_served: 1110 }]
+            }
+        }).save() /*.then(data => console.log(data["waiters"] ))*/;
+        Promise.all([r1, r2, r3, r4, r5]).then()["catch"](function (err) { return console.log("Save of report not completed: " + err); });
     });
     var server = http.createServer(app);
     ios = io(server);

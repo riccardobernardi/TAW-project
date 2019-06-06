@@ -1181,7 +1181,55 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
          }
       }).save().then(data => console.log(data["waiters"] ));
 
-      Promise.all([r1,r2]).then().catch((err) => console.log("Save of report not completed: " + err));
+      var r3 = new reportModel({
+         date: "2019-05-29T00:00:00.000Z",
+         total: 5600,
+         total_customers: 120,
+         total_orders: {
+               dish: 350,
+               beverage: 712
+         },
+         average_stay: 120,
+         users_reports: {
+            waiters: [{username: "waiter1", customers_served: 80, orders_served: 912}, {username: "waiter2", customers_served: 40, orders_served: 305}],
+            bartenders: [{username: "bartender1", items_served: 400}, {username: "waiter2", items_served: 700}],
+            cookers: [{username: "cook1", items_served: 60}, {username: "cook2", items_served: 1110}]
+         }
+      }).save()/*.then(data => console.log(data["waiters"] ))*/;
+
+      var r4 = new reportModel({
+         date: "2019-05-30T00:00:00.000Z",
+         total: 5600,
+         total_customers: 120,
+         total_orders: {
+               dish: 350,
+               beverage: 712
+         },
+         average_stay: 120,
+         users_reports: {
+            waiters: [{username: "waiter1", customers_served: 80, orders_served: 912}, {username: "waiter2", customers_served: 40, orders_served: 305}],
+            bartenders: [{username: "bartender1", items_served: 400}, {username: "waiter2", items_served: 700}],
+            cookers: [{username: "cook1", items_served: 60}, {username: "cook2", items_served: 1110}]
+         }
+      }).save()/*.then(data => console.log(data["waiters"] ))*/;
+
+      var r5 = new reportModel({
+         date: "2019-06-03T00:00:00.000Z",
+         total: 5600,
+         total_customers: 120,
+         total_orders: {
+               dish: 350,
+               beverage: 712
+         },
+         average_stay: 120,
+         users_reports: {
+            waiters: [{username: "waiter1", customers_served: 80, orders_served: 912}, {username: "waiter2", customers_served: 40, orders_served: 305}],
+            bartenders: [{username: "bartender1", items_served: 400}, {username: "waiter2", items_served: 700}],
+            cookers: [{username: "cook1", items_served: 60}, {username: "cook2", items_served: 1110}]
+         }
+      }).save()/*.then(data => console.log(data["waiters"] ))*/;
+
+      Promise.all([r1,r2, r3, r4, r5]).then().catch((err) => console.log("Save of report not completed: " + err));
    })
 
 
