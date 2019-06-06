@@ -385,48 +385,7 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Errore    |  Codice: 400 BAD REQUEST Contenuto: { statusCode:400, error: true, errormessage: "Wrong format"}|
 | Errore    |  Codice: 409 CONFLICT Contenuto: {statusCode:409, error:true, errormessage: "Report already exists"}|
 | Errore    |  Codice: 500 INTERNAL SERVER ERROR Contenuto: { statusCode:500, error: true, errormessage: "DB error: "+reason }|
-| Esempio   |   /report  Body: "date": "2019-06-03T00:00:00.000Z",
-        "total": 5600,
-        "total_customers": 120,
-        "total_orders": {
-            "dish": 350,
-            "beverage": 712
-        },
-        "average_stay": 120,
-        "users_reports": {
-            "waiters": [
-                {
-                    "username": "waiter1",
-                    "customers_served": 80,
-                    "orders_served": 912
-                },
-                {
-                    "username": "waiter2",
-                    "customers_served": 40,
-                    "orders_served": 305
-                }
-            ],
-            "bartenders": [
-                {
-                    "username": "bartender1",
-                    "items_served": 400
-                },
-                {
-                    "username": "waiter2",
-                    "items_served": 700
-                }
-            ],
-            "cookers": [
-                {
-                    "username": "cook1",
-                    "items_served": 60
-                },
-                {
-                    "username": "cook2",
-                    "items_served": 1110
-                }
-            ]
-        }       |
+| Esempio   |   /report  Body: "date": "2019-06-03T00:00:00.000Z", "total": 5600, "total_customers": 120, "total_orders": {"dish": 350, "beverage": 712 },"average_stay": 120, "users_reports": { "waiters": [ { "username": "waiter1", "customers_served": 80,  "orders_served": 912 },{"username": "waiter2", "customers_served": 40, "orders_served": 305 }], "bartenders": [{"username": "bartender1","items_served": 400 }, {"username": "waiter2", "items_served": 700 }], "cookers": [{ "username": "cook1","items_served": 60},{    "username": "cook2","items_served": 1110}]}       |
 
 ### Ottenere un report specifico
 | Titolo    | Ottenere un report specifico                |
