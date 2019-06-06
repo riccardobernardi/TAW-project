@@ -1,26 +1,18 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {UserHttpService} from '../user-http.service';
-import {OrderService} from '../order.service';
-import {Order} from '../Order';
-import {mockorders} from '../mock-orders';
-import {OrderHttpService} from '../order-http.service';
-import * as io from 'socket.io-client';
 import {ItemHttpService} from '../item-http.service';
 import {TicketHttpService} from '../ticket-http.service';
 import {SocketioService} from '../socketio.service';
 import {TicketOrder} from '../TicketOrder';
 import {Table, states} from '../Table';
 import {Ticket} from '../Ticket';
-import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import {TableHttpService} from '../table-http.service';
-import {of, from} from 'rxjs';
 import {map} from 'rxjs/operators';
 import { Report } from '../Report';
 import { User } from "../User";
 import { ToastrService } from 'ngx-toastr';
-
 
 
 @Component({
@@ -28,6 +20,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './paydesk.component.html',
   styleUrls: ['./paydesk.component.css']
 })
+
 export class PaydeskComponent implements OnInit {
 
   private roles: string[] = ['waiter', 'cook', 'bartender', 'admin'];
@@ -59,21 +52,21 @@ export class PaydeskComponent implements OnInit {
               private table: TableHttpService, private toastr: ToastrService) {}
 
   get_tickets() {
-    this.ticket.get_tickets({state: 'open'}).subscribe((dd) => {
-      this.tickets = dd;
-      dd.sort((ticket1 : Ticket, ticket2: Ticket) => {
+    this.ticket.get_tickets({state: 'open'}).subscribe((tickets: Ticket[]) => {
+      this.tickets = tickets;
+      tickets.sort((ticket1 : Ticket, ticket2: Ticket) => {
         return ticket1.table - ticket2.table;
       });
-      console.log(dd);
-      dd.forEach((ss) => {
+      //console.log(dd);
+      tickets.forEach((ss) => {
         ss.orders.sort((a: TicketOrder, b: TicketOrder) => {
           return (a.name_item < b.name_item) ? -1 : 1;
         });
       });
-      console.log(this.tickets);
+      //console.log(this.tickets);
       this.selTicket = this.tickets[0]
     });
-    console.log(this.tickets);
+    //console.log(this.tickets);
   }
 
   ngOnInit() {
@@ -83,13 +76,12 @@ export class PaydeskComponent implements OnInit {
       console.log('your token is: [' + this.us.get_token() + ']');
     }
     this.get_tickets();
+    this.get_users();
     this.socketio.get().on('waiters', () => {this.get_tickets()});
     this.socketio.get().on('desks', () => {
       this.get_tickets();
       this.get_users();
     });
-    this.get_users();
-    
   }
 
   get_users() {
@@ -97,7 +89,7 @@ export class PaydeskComponent implements OnInit {
       this.users = data.sort((user1: User, user2: User) => {
         return (user1.username < user2.username) ? -1 : 1;
       })
-      console.log(this.users);
+      //console.log(this.users);
     });
   }
 
@@ -105,17 +97,17 @@ export class PaydeskComponent implements OnInit {
     this.user.username = name;
     this.user.password = password;
     this.user.role = this.newRoleSelected;
-    console.log(this.user);
+    //console.log(this.user);
     this.us.register(this.user).subscribe((d) => {
-      console.log('Registration ok: ' + JSON.stringify(d));
+      //console.log('Registration ok: ' + JSON.stringify(d));
       this.errmessage = undefined;
       this.toastr.success('Registration OK', 'Success!', {
         timeOut: 3000
       });
     }, (err) => {
-      console.log('Signup error: ' + JSON.stringify(err.error.errormessage));
+      //console.log('Signup error: ' + JSON.stringify(err.error.errormessage));
       let errmessage = err.error.errormessage || err.error.message;
-      console.log(err);
+      //console.log(err);
       this.toastr.error('Registration not OK: ' + errmessage, 'Failure!', {
         timeOut: 3000
       });
@@ -144,30 +136,30 @@ export class PaydeskComponent implements OnInit {
   async allGainOfDay() {
 
     this.totalgain = this.ticket.get_tickets({}).pipe(
-      map((dd) => {
+      map((tickets : Ticket[] ) => {
         const ticketSup = [];
 
-        dd.forEach((ss) => {
+        tickets.forEach((ss) => {
           ticketSup.push(ss);
         });
 
-        let a = ticketSup.filter((oneTicket) => {
+        let tickets_on_date = ticketSup.filter((oneTicket) => {
           return new Date(oneTicket.start).getDate() === this.day_insert
             && (new Date(oneTicket.start).getMonth() + 1) === this.month_insert
             && new Date(oneTicket.start).getFullYear() === this.year_insert;
         });
 
-        if (a.length === 0) {
+        if (tickets_on_date.length === 0) {
           return 0;
         }
 
-        a = a.map((oneTicket) => {
+        tickets_on_date = tickets_on_date.map((oneTicket) => {
           return (oneTicket.orders.length != 0 ) ? oneTicket.orders.map((oneOrder) => {
             return oneOrder.price;
           }).reduce((total, onePrice) => total + onePrice) : 0;
         }).reduce((total, nPrices) => total + nPrices);
 
-        return a;
+        return tickets_on_date;
       })
     ).toPromise().then((x) => x);
   }
@@ -186,21 +178,21 @@ export class PaydeskComponent implements OnInit {
   }
 
   close_ticket() {
-    console.log(this.emitReceipt())
-    console.log(this.selTicket._id);
+    //console.log(this.emitReceipt())
+    //console.log(this.selTicket._id);
     this.ticket.close_ticket(this.selTicket._id, this.emitReceipt()).toPromise().then(() => {
       return this.table.change_table({number: this.selTicket.table, state: states[0]}, undefined).toPromise();
     })
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => console.log(err));
+    .then((data) => {
+      //console.log(data);
+    })
+    .catch((err) => console.log(err));
   }
 
   create_daily_report() {
-    console.log(this.year_insert + "-" + ((this.month_insert > 9) ? this.month_insert : "0" + this.month_insert) + "-" + ((this.day_insert > 9) ? this.day_insert : "0" + this.day_insert) + 'T' + "00:00:00");
+    //console.log(this.year_insert + "-" + ((this.month_insert > 9) ? this.month_insert : "0" + this.month_insert) + "-" + ((this.day_insert > 9) ? this.day_insert : "0" + this.day_insert) + 'T' + "00:00:00");
     const date = new Date(this.year_insert, this.month_insert - 1, this.day_insert, 0, 0, 0, 0);
-    console.log(date);
+    //console.log(date);
     this.ticket.create_report({start: date, state: 'closed'})
       .then()
       .catch((err) => console.log(err));

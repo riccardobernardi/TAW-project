@@ -37,36 +37,20 @@ export class StatsChartsComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    /*console.log(new Date().toISOString())
-    this.ticket.get_reports({start: new Date().toISOString(), end: new Date().toISOString()}).toPromise().then((reports : Report[]) => {
-      console.log(reports);
-      if(reports.length != 0) {
-        for (let f in this.statistics) {
-          if(f == "total_orders") 
-            this.statistics[f] = {data : [{data: [], label: this.labels[f].dish}, {data: [], label: this.labels[f].beverage}], dates: reports.map((report) => report.date)}
-          else 
-            this.statistics[f] = {data : [{data: [], label: this.labels[f]}], dates: []}
-        }
-        console.log(this.statistics);
-      } else this.showError("No reports found!");
-    }).catch((err) => {
-      this.showError(err);
-    })*/
-  }
+  ngOnInit() {}
 
   changedRange($event, field) {
-    console.log($event);
-    console.log(field);
-    console.log(this.statistics[field]);
+    //console.log($event);
+    //console.log(field);
+    //console.log(this.statistics[field]);
     if($event.min_date && $event.max_date) {
       this.ticket.get_reports({start: $event.min_date, end: $event.max_date}).toPromise().then((reports : Report[]) => {
-        console.log(reports);
+        //console.log(reports);
         if(field == "total_orders") 
           this.statistics[field] = {data : [{data: reports.map((report) => report[field].dish), label: this.labels[field].dish}, {data: reports.map((report) => report[field].beverage), label: this.labels[field].beverage}], dates: reports.map((report) => report.date)}
         else 
           this.statistics[field] = {data : [{data: reports.map((report) => report[field]), label: this.labels[field]}], dates: reports.map((report) => report.date)}
-        console.log(this.statistics);
+        //console.log(this.statistics);
       }).catch((err) => {
         this.showError(err);
       })

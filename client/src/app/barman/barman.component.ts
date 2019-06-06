@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {Order} from '../Order';
-import {mockorders} from '../mock-orders';
 import {SocketioService} from '../socketio.service';
 import {Router} from '@angular/router';
-import {OrderService} from '../order.service';
 import {UserHttpService} from '../user-http.service';
 import {HttpClient} from '@angular/common/http';
 import { Ticket } from '../Ticket';
+import { types } from "../Item";
+import { order_states } from "../TicketOrder"
 import {TicketOrder } from '../TicketOrder';
 import { TicketHttpService } from '../ticket-http.service';
 
@@ -19,26 +18,25 @@ import { TicketHttpService } from '../ticket-http.service';
 export class BarmanComponent implements OnInit {
 
   private tickets: Ticket[] = [];
-  private dd;
 
   constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) {}
 
   get_tickets() {
-    this.ticket.get_tickets({state: 'open'}).subscribe( (dd) => {
+    this.ticket.get_tickets({state: 'open'}).subscribe( (tickets: Ticket[]) => {
       this.tickets.splice(0, this.tickets.length);
-      console.log(dd);
-      dd.forEach( (ss) => {
-        console.log(ss.orders);
-        let orders = ss.orders.filter((order: TicketOrder) => order.state != 'ready' && order.state != 'delivered' && order.type_item != 'dish');
+      //console.log(tickets);
+      tickets.forEach( (ticket) => {
+        //console.log(ticket.orders);
+        let orders = ticket.orders.filter((order: TicketOrder) => order.state != order_states[2] && order.state != order_states[3] && order.type_item != types[0]);
         if (orders.length != 0) {
-          this.tickets.push(ss);
-          orders.sort((a: TicketOrder, b: TicketOrder) => {
-            return a.required_time - b.required_time;
+          this.tickets.push(ticket);
+          orders.sort((order1: TicketOrder, order2: TicketOrder) => {
+            return order1.required_time - order2.required_time;
           });
-          ss.orders = orders;
+          ticket.orders = orders;
         }
       });
-      console.log(this.tickets);
+      //console.log(this.tickets);
     });
   }
 

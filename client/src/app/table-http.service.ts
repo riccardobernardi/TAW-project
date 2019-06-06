@@ -12,27 +12,16 @@ export class TableHttpService {
 
   constructor(private us: UserHttpService, private http: HttpClient) {}
 
-  /*private create_options( params = {} ) {
-    return  {
-      headers: new HttpHeaders({
-        authorization: 'Bearer ' + this.us.get_token(),
-        'cache-control': 'no-cache',
-        'Content-Type':  'application/json',
-      }),
-    };
-  }*/
-
   get_tables() {
-    //this.us.renew().subscribe();
-    return this.http.get<Table[]>(/*this.url,*/this.endpoint/*, this.create_options()*/);
+    return this.http.get<Table[]>(this.endpoint);
   }
 
   get_table(num: number) {
-    return this.http.get<Table[]>(/*this.url + */this.endpoint + '/' + num/*, this.create_options()*/);
+    return this.http.get<Table[]>(this.endpoint + '/' + num);
   }
 
   change_table(newTable/*: Table*/, associated_ticket: string) {
     newTable.associated_ticket = associated_ticket
-    return this.http.patch<Table>(/*this.url +*/ this.endpoint + '/' + newTable.number, newTable/*, this.create_options()*/);
+    return this.http.patch<Table>(this.endpoint + '/' + newTable.number, newTable);
   }
 }

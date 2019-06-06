@@ -1,11 +1,6 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {OrderService} from '../order.service';
-import * as io from 'socket.io-client';
-import {Order} from '../Order';
 import {SocketioService} from '../socketio.service';
-import {BehaviorSubject, Observable, of} from 'rxjs';
-import {mockorders} from '../mock-orders';
 import {UserHttpService} from '../user-http.service';
 
 @Component({

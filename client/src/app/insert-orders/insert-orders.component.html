@@ -3,8 +3,6 @@
     <form>
 
       <div class="form-group">
-        <!--<p>Your nick is {{this.us.get_nick()}}</p>
-        <p for="button">Your role is {{this.us.get_role()}}</p>-->
 
         <label for="tables">Seleziona un tavolo</label>
         <select *ngIf="tickets.length != 0 " class="form-control" [(ngModel)]="selTicket" name="tables" id="tables">

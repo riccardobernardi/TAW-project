@@ -1,14 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {map, tap} from 'rxjs/operators';
 import {UserHttpService} from '../../user-http.service';
 import {ItemHttpService} from '../../item-http.service';
 import {TicketHttpService} from '../../ticket-http.service';
 import {SocketioService} from '../../socketio.service';
 import {Router} from '@angular/router';
-import {OrderHttpService} from '../../order-http.service';
 import {TableHttpService} from '../../table-http.service';
-import {Order} from '../../Order';
-import {Ticket} from '../../Ticket';
 import { Report } from "../../Report";
 import {roles} from "../../User";
 import {NgbDate, NgbDatepicker} from '@ng-bootstrap/ng-bootstrap';
@@ -22,11 +18,10 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class WaiterStatisticsComponent implements OnInit {
 
-  private totalgain: Promise<number | any[] | never>;
+  //private totalgain: Promise<number | any[] | never>;
 
-  private userStatistics;
+  //private userStatistics;
   private statisticsXRoles;
-  //private roles = roles;
   private roles = ["waiters", "cookers", "bartenders"];
   private selRole = roles[0];
 
@@ -45,18 +40,7 @@ export class WaiterStatisticsComponent implements OnInit {
     this.max_date = new Date($event.year, $event.month - 1, $event.day, 0, 0, 0, 0);
   }
 
-  ngOnInit() {
-    
-    /*this.resultWaiter = this.waiterStatistics();
-    console.log(this.getStats());
-
-    this.socketio.get().on('waiters', () => {
-      this.resultWaiter = this.waiterStatistics();
-      this.resultCook = this.executerStatistics();
-      this.allResults = this.getStats();
-    });*/
-
-  }
+  ngOnInit() {}
 
   /*waiterStatistics() {
     return this.ticket.get_tickets({}).pipe(
@@ -158,32 +142,11 @@ export class WaiterStatisticsComponent implements OnInit {
   private getStats() {
     if(this.min_date && this.max_date) {
       this.ticket.get_reports({start: this.min_date.toISOString(), end: this.max_date.toISOString()}).toPromise().then((reports) => {
-        console.log(reports);
+        //console.log(reports);
         if(reports.length != 0) {
           this.statisticsXRoles = reports.map((report: Report) => {
             return report.users_reports;
-          })/*.map((user_report) => {
-            let statistics = {};
-            for(let role in user_report) {
-              statistics[role] = {}
-              user_report[role].forEach((dependant) => {
-                if(!statistics[role][dependant.username])
-                  statistics[role][dependant.username] = {}
-                for(let stat in dependant) {
-                  if(stat != "username")
-                    statistics[role][dependant.username][stat] = dependant[stat]
-                }
-              });
-            }
-            return statistics;
-          }).reduce((statistics1, statistics2) => {
-            for(let role in statistics1) {
-              for(let user in statistics1[role])
-                for(let stat in statistics1[role][user])
-                statistics1[role][user][stat] += statistics2[role][user][stat]
-            }
-            return statistics1;
-          });*/.reduce((user_report1, user_report2) => {
+          }).reduce((user_report1, user_report2) => {
             for(let role in user_report1) {
               if(role == "waiters") {
                 user_report1[role].forEach((dependant1) =>  {
@@ -226,15 +189,7 @@ export class WaiterStatisticsComponent implements OnInit {
             }
             return user_report1;
           });
-          //this.userStatistics = [];
-          /*for(var role in stats) {
-            this.userStatistics.push(stats[role])
-          }*/
-          //this.userStatistics.sort((dep1, dep2) => (dep1.username < dep2.username) ? -1 : 1)
-          /*for(var role in stats) {
-            stats[role].sort((a, b) => (a))
-          }*/
-          console.log(this.statisticsXRoles);
+          //console.log(this.statisticsXRoles);
           this.toastr.success('Done! Select a role!', 'Success!', {
             timeOut: 3000
           });
@@ -258,9 +213,4 @@ export class WaiterStatisticsComponent implements OnInit {
     }
   }
 
-  filterRoles() {
-    if(this.selRole) {
-
-    }
-  }
 }

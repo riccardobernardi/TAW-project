@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChange } from '@angular/core';
-import {NgbDate, NgbDatepicker} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -14,8 +14,6 @@ export class HistogramWithDatesComponent implements OnInit {
   @Input() barChartData = null;
   @Input() barChartDates = null;
 
-  //@ViewChild('d1') d1: ElementRef<NgbDatepicker>;
-  //@ViewChild('d2') d2: ElementRef<NgbDatepicker>;
   public barChartLabels = null;
 
   private min_date : Date;

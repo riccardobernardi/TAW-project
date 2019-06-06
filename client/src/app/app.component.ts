@@ -8,9 +8,7 @@ import {UserHttpService} from './user-http.service';
 })
 export class AppComponent {
   title = 'client';
-  constructor( ) {
-
-  }
+  constructor( ) {}
 
 }
 

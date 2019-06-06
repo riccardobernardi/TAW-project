@@ -4,7 +4,6 @@ import { UserHttpService } from 'src/app/user-http.service';
 import { TicketHttpService } from '../ticket-http.service';
 import { Ticket } from 'src/app/Ticket';
 import { Table, states } from '../Table';
-import { Observable } from 'rxjs/Observable';
 import { SocketioService } from '../socketio.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -17,7 +16,6 @@ import { ToastrService } from 'ngx-toastr';
 export class TablesViewComponent implements OnInit {
 
   private tables: Table[];
-  private socketObserver: Observable<any>;
   private states = states;
   private error = false;
   private role
@@ -29,8 +27,7 @@ export class TablesViewComponent implements OnInit {
       this.get_tables() ;
     });
     this.role = this.user.get_role();
-    console.log(this.role);
-    
+    //console.log(this.role);
   }
 
   ngOnInit() {}
@@ -52,22 +49,22 @@ export class TablesViewComponent implements OnInit {
       });
     }).catch((err) => {
       this.error = true;
-      console.log(err);
+      //console.log(err);
     });
   }
 
   public open_ticket(tableToChange: Table, people_number: number) {
-    console.log(people_number);
+    //console.log(people_number);
     if(people_number > 0 && people_number < tableToChange.max_people) {
       this.ticket.open_ticket(this.user.get_nick(), tableToChange.number, people_number).toPromise().then((data: Ticket) => {
-        console.log(data);
+        //console.log(data);
         const table = Object.assign({}, tableToChange);
         table.state = states[1];
-        console.log(table.state);
+        //console.log(table.state);
         return this.table.change_table(table, data._id).toPromise();
         // update del tavolo da rimuovere perchè si deve usare il websocket
       }).then().catch(err => {
-        console.log(err);
+        //console.log(err);
         this.error = true;
       });
     } else {
