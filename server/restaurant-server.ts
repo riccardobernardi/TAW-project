@@ -367,6 +367,8 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
 
    //query al DB
    table.getModel().findOneAndDelete({number: req.params.number}).then( () => {
+      //notifico sul socket
+      emitEvent("modified table");
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
