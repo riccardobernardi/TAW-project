@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TicketHttpService } from 'src/app/ticket-http.service';
 import { Report } from "../../Report";
 import { ToastrService } from 'ngx-toastr';
-
+import { HttpReportService } from "../../http-report.service";
 
 @Component({
   selector: 'app-stats-charts',
@@ -28,7 +28,7 @@ export class StatsChartsComponent implements OnInit {
     average_stay : "Tempo medio di accomodamento in minuti per data"
   }
 
-  constructor(private ticket: TicketHttpService, private toastr: ToastrService) { }
+  constructor(private ticket: TicketHttpService, private toastr: ToastrService, private report: HttpReportService) { }
 
   private showError(err) {
     let errmessage = (err.error) ? err.error.errormessage || err.error.message : err;
@@ -44,7 +44,7 @@ export class StatsChartsComponent implements OnInit {
     //console.log(field);
     //console.log(this.statistics[field]);
     if($event.min_date && $event.max_date) {
-      this.ticket.get_reports({start: $event.min_date, end: $event.max_date}).toPromise().then((reports : Report[]) => {
+      this.report.get_reports({start: $event.min_date, end: $event.max_date}).toPromise().then((reports : Report[]) => {
         //console.log(reports);
         if(field == "total_orders") 
           this.statistics[field] = {data : [{data: reports.map((report) => report[field].dish), label: this.labels[field].dish}, {data: reports.map((report) => report[field].beverage), label: this.labels[field].beverage}], dates: reports.map((report) => report.date)}

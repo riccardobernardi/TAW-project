@@ -9,6 +9,7 @@ import { Report } from "../../Report";
 import {roles} from "../../User";
 import {NgbDate, NgbDatepicker} from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { HttpReportService } from 'src/app/http-report.service';
 
 
 @Component({
@@ -30,7 +31,7 @@ export class WaiterStatisticsComponent implements OnInit {
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService, private router: Router,
-              private table: TableHttpService, private toastr: ToastrService) { }
+              private table: TableHttpService, private toastr: ToastrService, private report: HttpReportService) { }
 
   onMinDateSelect($event : NgbDate) {
     this.min_date = new Date($event.year, $event.month - 1, $event.day, 0, 0, 0, 0);
@@ -141,7 +142,7 @@ export class WaiterStatisticsComponent implements OnInit {
 
   private getStats() {
     if(this.min_date && this.max_date) {
-      this.ticket.get_reports({start: this.min_date.toISOString(), end: this.max_date.toISOString()}).toPromise().then((reports) => {
+      this.report.get_reports({start: this.min_date.toISOString(), end: this.max_date.toISOString()}).toPromise().then((reports) => {
         //console.log(reports);
         if(reports.length != 0) {
           this.statisticsXRoles = reports.map((report: Report) => {

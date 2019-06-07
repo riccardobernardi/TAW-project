@@ -13,7 +13,7 @@ import {map} from 'rxjs/operators';
 import { Report } from '../Report';
 import { User } from "../User";
 import { ToastrService } from 'ngx-toastr';
-
+import { HttpReportService } from "../http-report.service";
 
 @Component({
   selector: 'app-paydesk',
@@ -30,6 +30,7 @@ export class PaydeskComponent implements OnInit {
   private user = {username: '', password: '', role: ''};
   private selDelUser: any;
   private selTable: any;
+  private selDelTable : Table;
   private users : User[];
   private selChangePwdUser: any;
   private socket;
@@ -49,7 +50,7 @@ export class PaydeskComponent implements OnInit {
 
   constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService, private router: Router,
-              private table: TableHttpService, private toastr: ToastrService) {}
+              private table: TableHttpService, private toastr: ToastrService, private report: HttpReportService) {}
 
   get_tickets() {
     this.ticket.get_tickets({state: 'open'}).subscribe((tickets: Ticket[]) => {
@@ -77,10 +78,12 @@ export class PaydeskComponent implements OnInit {
     }
     this.get_tickets();
     this.get_users();
+    this.get_tables();
     this.socketio.get().on('waiters', () => {this.get_tickets()});
     this.socketio.get().on('desks', () => {
       this.get_tickets();
       this.get_users();
+      this.get_tables();
     });
   }
 
@@ -91,6 +94,13 @@ export class PaydeskComponent implements OnInit {
       })
       //console.log(this.users);
     });
+  }
+
+  get_tables() {
+    this.table.get_tables().subscribe((data: Table[]) => {
+      this.tables = data;
+      this.tables.sort((table1: Table, table2 : Table) => table1.number - table1.number);
+    })
   }
 
   send(name, password) {
@@ -177,6 +187,26 @@ export class PaydeskComponent implements OnInit {
     this.getReport();
   }
 
+  add_Table(number: string, max_people: string) {
+    if(parseInt(number) <= 0 || parseInt(max_people) <= 0)
+      this.toastr.error('Parameters have to be positive!', 'Failure!', {
+        timeOut: 3000}
+      );
+    else {
+      console.log(number, max_people);
+      this.table.add_table(parseInt(number), parseInt(max_people)).subscribe(() => {
+        this.toastr.success( 'Add table OK', 'Success!', {
+          timeOut: 3000
+        });
+      }, (err) => {
+        let errmessage = err.error.errormessage || err.error.message;
+        this.toastr.error('Changing not OK : ' + errmessage, 'Failure!', {
+          timeOut: 3000
+        });
+      })
+    }
+  }
+
   close_ticket() {
     //console.log(this.emitReceipt())
     //console.log(this.selTicket._id);
@@ -193,14 +223,14 @@ export class PaydeskComponent implements OnInit {
     //console.log(this.year_insert + "-" + ((this.month_insert > 9) ? this.month_insert : "0" + this.month_insert) + "-" + ((this.day_insert > 9) ? this.day_insert : "0" + this.day_insert) + 'T' + "00:00:00");
     const date = new Date(this.year_insert, this.month_insert - 1, this.day_insert, 0, 0, 0, 0);
     //console.log(date);
-    this.ticket.create_report({start: date, state: 'closed'})
+    this.report.create_report({start: date, state: 'closed'})
       .then()
       .catch((err) => console.log(err));
   }
 
   getReport() {
     const date = new Date(this.year_delete, this.month_delete - 1, this.day_delete, 0, 0, 0, 0);
-    this.ticket.get_reports({start: date, end: date}).toPromise().then((data) => {
+    this.report.get_reports({start: date, end: date}).toPromise().then((data) => {
       this.reportSelected = data[0];
     }).catch((err) => {
       console.log(err);
@@ -211,7 +241,7 @@ export class PaydeskComponent implements OnInit {
   delete_daily_report() {
     const date = new Date(this.year_delete, this.month_delete - 1, this.day_delete, 0, 0, 0, 0);
     if(this.reportSelected)
-      this.ticket.delete_report(this.reportSelected._id).toPromise()
+      this.report.delete_report(this.reportSelected._id).toPromise()
       .then(() => this.reportSelected = null)
       .catch((err) => console.log(err));
   }
@@ -240,6 +270,17 @@ export class PaydeskComponent implements OnInit {
       this.toastr.error('Deletion not OK: ' + errmessage, 'Failure!', {
         timeOut: 3000
       });
+    })
+  }
+
+  deleteTable(number: number) {
+    console.log(number);
+    this.table.delete_table(number).subscribe(() => this.toastr.success('Deletion OK', 'Success!', {
+      timeOut: 3000
+    }), (err) => {
+      let errmessage = err.error.errormessage || err.error.message;
+      this.toastr.error('Deletion not OK: ' + errmessage, 'Failure!', {
+      timeOut: 3000})
     })
   }
 }
