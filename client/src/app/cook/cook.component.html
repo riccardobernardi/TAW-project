@@ -4,15 +4,27 @@
     <p class="card-text">Tavolo {{ ticket.table }}</p>
     <p class="card-text">Ordinazioni:</p>
     
-    <div class="orders-list" *ngFor="let order of ticket.orders">
-      <p class="card-text">{{ order.name_item }}</p>
-      <form class="form-inline">
-        <div *ngIf="order.state == 'ordered'" class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="setOrderinProgress(ticket._id, order._id)">In progress</button></div>
-        <div *ngIf="order.state == 'preparation'" class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="setOrderCompleted(ticket._id, order._id)">Completed</button></div>
-      </form>
-    </div>
-
-
+    <table style="width:100%">
+      <!--<thead style="width:100%">
+        <tr>
+          <th>Item</th>
+          <th>Added</th>
+          <th>Button</th>
+        </tr>
+      </thead>-->
+      <tbody>
+        <tr style="width:100%" class="orders-list" *ngFor="let order of ticket.orders">
+          <td style="width:40%">{{ order.name_item }}</td>
+          <td style="width:40%">{{ order.added }}</td>
+          <td style="width:20%">
+            <form class="form-inline">
+              <div *ngIf="order.state == 'ordered'" class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="setOrderinProgress(ticket._id, order._id)">In progress</button></div>
+              <div *ngIf="order.state == 'preparation'" class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="setOrderCompleted(ticket._id, order._id)">Completed</button></div>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 
