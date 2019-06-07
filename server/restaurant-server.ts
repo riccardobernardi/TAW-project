@@ -561,8 +561,11 @@ app.route("/tickets").get(auth, (req, res, next) => {
    //controllo che il tavolo esista
    table.getModel().findOne({number: newer.table}).then((data: table.Table) => {
       //controllo numero posti del tavolo
-   if (newer.people_number >= data.number)
+   if (newer.people_number > data.number)
       return next({statusCode:409, error:true, errormessage: "Table associated hasn't enought seats"} );
+      //controllo che il tavolo sia libero
+   if (data.state == table.states[1])
+      return next({statusCode:409, error:true, errormessage: "Table is already taken"} );
    }).catch(() => {
       return next({statusCode:409, error:true, errormessage: "Table associated doesn't exist"} );
    })
