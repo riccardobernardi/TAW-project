@@ -398,10 +398,6 @@ app.route("/items/:id").get(auth, (req, res, next) => {
     });
 });
 app.route("/tickets").get(auth, (req, res, next) => {
-    //autenticazione
-    var sender = user.newUser(req.user);
-    if (!sender.hasDeskRole() && !sender.hasWaiterRole() && !sender.hasCookRole())
-        return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter or a cook" });
     //da togliere
     console.log("entro nella ticket api----");
     //creo il filtro
@@ -477,8 +473,11 @@ app.route("/tickets").get(auth, (req, res, next) => {
     //controllo che il tavolo esista
     table.getModel().findOne({ number: newer.table }).then((data) => {
         //controllo numero posti del tavolo
-        if (newer.people_number >= data.number)
+        if (newer.people_number > data.number)
             return next({ statusCode: 409, error: true, errormessage: "Table associated hasn't enought seats" });
+        //controllo che il tavolo sia libero
+        if (data.state == table.states[1])
+            return next({ statusCode: 409, error: true, errormessage: "Table is already taken" });
     }).catch(() => {
         return next({ statusCode: 409, error: true, errormessage: "Table associated doesn't exist" });
     });
@@ -581,6 +580,7 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
     });
 });
 app.route('/tickets/:idTicket/orders/:idOrder').patch(auth, (req, res, next) => {
+    var sender = user.newUser(req.user);
     var order_type;
     //controllo formato richiesta
     if (!req.body || (req.body.state && typeof (req.body.state) != 'string')) {
@@ -601,8 +601,11 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch(auth, (req, res, next) => 
             return next({ statusCode: 409, error: true, errormessage: "Conflict, orderd state change not coherent with the regular state changes flow" });
         }
         toChange[0].state = req.body.state;
-        if (req.body.username_executer)
+        //controllo per assegnare l'executer
+        if (req.body.username_executer && ((nextStateIndex == 1 && sender.hasCookRole()) || (nextStateIndex == 2 && sender.hasBartenderRole())))
             toChange[0].username_executer = req.body.username_executer;
+        else if (req.body.username_executer)
+            return next({ statusCode: 400, error: true, errormessage: "Username_executer not required" });
         order_type = toChange[0].type_item;
         console.log("BBBB: " + req.body);
         console.log("AAAA: " + toChange[0]);
@@ -646,7 +649,30 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch(auth, (req, res, next) => 
         }
         return res.status(200).json({ error: false, errormessage: "" });
     }).catch((reason) => {
-        return next({ statusCode: 404, error: true, errormessage: "Ticket id not found" });
+        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
+    });
+}).delete(auth, (req, res, next) => {
+    //autenticazione
+    if (!user.newUser(req.user).hasWaiterRole()) {
+        return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a waiter" });
+    }
+    //trovo il ticket usando l'id specificato nella richiesta
+    ticket.getModel().findById(req.params.idTicket).then((data) => {
+        //trovo l'order (interno al ticket) usando l'id specificato nella richiesta
+        var indexToDel = -1;
+        for (let i in data.orders) {
+            if (data.orders[i].id == req.params.idOrder)
+                indexToDel = parseInt(i);
+        }
+        if (indexToDel < 0) {
+            return next({ statusCode: 404, error: true, errormessage: "Order id not found" });
+        }
+        data.orders.splice(indexToDel, 1);
+        return data.save();
+    }).then(() => {
+        return res.status(200).json({ error: false, errormessage: "" });
+    }).catch((reason) => {
+        return next({ statusCode: 500, error: true, errormessage: "DB error: " + reason });
     });
 });
 app.route("/reports").get(auth, (req, res, next) => {
@@ -724,7 +750,7 @@ app.route("/reports/:id").get(auth, (req, res, next) => {
 }).patch(auth, (req, res, next) => {
     //autenticazione
     if (!user.newUser(req.user).hasDeskRole()) {
-        return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter" });
+        return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk" });
     }
     //controllo formato
     if (!req.body || (req.body.data && req.body.data.toString() == 'Invalid Date') || (req.body.total && typeof (req.body.total) != 'number') || (req.body.total_orders && (typeof (req.body.total_orders[item.type[0]]) != 'number' || typeof (req.body.total_orders[item.type[1]]) != 'number')) || (req.body.total_customers && typeof (req.body.total_customers) != 'number') || (req.body.average_stay && typeof (req.body.average_stay) != 'number') || ((req.body.users_reports) && report.isUsersReports(req.body.users_reports))) {
@@ -870,7 +896,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
         console.log("Dataset items pulito: " + data);
         var itemModel = item.getModel();
         var i1 = (new itemModel({
-            name: "Spaghetti al pomodoro.",
+            name: "Spaghetti al pomodoro",
             type: item.type[0],
             price: 5,
             ingredients: ["spaghetti", "sugo di pomodoro"],
@@ -878,7 +904,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
             description: "Semplici spaghetti al pomodoro che Cecchini non può però mangiare a pranzo, perchè porta sempre il riso per cani."
         })).save();
         var i2 = (new itemModel({
-            name: "Spaghetti al ragu",
+            name: "Spaghetti al ragù",
             type: item.type[0],
             price: 6,
             ingredients: ["spaghetti", "sugo di pomodoro", "carne macinata"],

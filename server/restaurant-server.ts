@@ -467,11 +467,7 @@ app.route("/items/:id").get(auth, (req,res,next) => {
 
 
 app.route("/tickets").get(auth, (req, res, next) => {
-   //autenticazione
-   var sender = user.newUser(req.user);
-   if(!sender.hasDeskRole() && !sender.hasWaiterRole() && !sender.hasCookRole())
-      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter or a cook"} );
-
+   
    //da togliere
    console.log("entro nella ticket api----");
    
@@ -561,8 +557,11 @@ app.route("/tickets").get(auth, (req, res, next) => {
    //controllo che il tavolo esista
    table.getModel().findOne({number: newer.table}).then((data: table.Table) => {
       //controllo numero posti del tavolo
-   if (newer.people_number >= data.number)
+   if (newer.people_number > data.number)
       return next({statusCode:409, error:true, errormessage: "Table associated hasn't enought seats"} );
+      //controllo che il tavolo sia libero
+   if (data.state == table.states[1])
+      return next({statusCode:409, error:true, errormessage: "Table is already taken"} );
    }).catch(() => {
       return next({statusCode:409, error:true, errormessage: "Table associated doesn't exist"} );
    })
@@ -682,7 +681,8 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
 });
 
 app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
-   
+   var sender = user.newUser(req.user);
+
    var order_type;
 
    //controllo formato richiesta
@@ -710,8 +710,11 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
 
       toChange[0].state = req.body.state;
 
-      if(req.body.username_executer)
+      //controllo per assegnare l'executer
+      if(req.body.username_executer && ( (nextStateIndex == 1 && sender.hasCookRole()) || (nextStateIndex == 2 && sender.hasBartenderRole()) ) )
          toChange[0].username_executer = req.body.username_executer;
+      else if (req.body.username_executer)
+         return next({ statusCode:400, error: true, errormessage: "Username_executer not required"} );
       
       order_type = toChange[0].type_item;
       console.log("BBBB: " + req.body);
@@ -759,8 +762,41 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
       }
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason) => {
-      return next({ statusCode:404, error: true, errormessage: "Ticket id not found" });
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
    });
+}).delete(auth, (req,res,next) => {
+   //autenticazione
+   if(!user.newUser(req.user).hasWaiterRole()){
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a waiter"} );
+   }
+   
+   //trovo il ticket usando l'id specificato nella richiesta
+   ticket.getModel().findById( req.params.idTicket).then( (data : ticket.Ticket) => {
+      
+      //trovo l'order (interno al ticket) usando l'id specificato nella richiesta
+      
+      
+      var indexToDel: number = -1;
+      for (let i in data.orders){
+         if (data.orders[i].id == req.params.idOrder)
+            indexToDel = parseInt(i);
+      }
+
+      if (indexToDel < 0){
+         return next({ statusCode:404, error: true, errormessage: "Order id not found" });
+      }
+
+      data.orders.splice(indexToDel,1);
+      return data.save();
+
+   }).then(()=>{
+      return res.status(200).json( {error:false, errormessage:""} );
+   }).catch((reason) => {
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
+   });
+
+
+   
 });
 
 
@@ -849,7 +885,7 @@ app.route("/reports").get( auth, (req,res,next) => {
  }).patch(auth, (req, res, next) => {
     //autenticazione
     if(!user.newUser(req.user).hasDeskRole()){
-       return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
+       return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
     }
  
     //controllo formato
@@ -1030,7 +1066,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
       
       var itemModel = item.getModel();
       var i1 = (new itemModel({
-         name: "Spaghetti al pomodoro.",
+         name: "Spaghetti al pomodoro",
          type: item.type[0],
          price: 5,
          ingredients: ["spaghetti", "sugo di pomodoro"],
@@ -1039,7 +1075,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
       })).save();
 
       var i2 = (new itemModel({
-         name: "Spaghetti al ragu",
+         name: "Spaghetti al ragù",
          type: item.type[0],
          price: 6,
          ingredients: ["spaghetti", "sugo di pomodoro", "carne macinata"],

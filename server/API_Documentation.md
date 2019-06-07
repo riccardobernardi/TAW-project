@@ -23,6 +23,9 @@ Tramite estensione dell'URL base (descritto sopra) è possibile accedere alle fu
 Il server controlla che tutti i campi richiesti siano presenti nelle richieste; per i campi non richiesti ma possibili (es: nelle PATCH non è obbligatorio modificare tutti i campi), il server controlla il loro formato solo se sono presenti.
 Se nel  body vengono inseriti dei campi non richiesti e non utili, il server li ignora.
 I codici di errore ritornati dal server dipendono dal tipo di errore, in alcuni casi il messaggio è "fisso"  (es: 401-"Unauthorized: user is not a desk"), in altri esso dipende da errori ritornati da componenti interne del server (es: DBMS), in questi casi il messaggio di errore ritornato conterrà una stringa **reason** che conterrà il messaggio di errore generato dal componente interno.
+Nella tabella sottostante verranno elencati, per ogni tipo di richiesta, alcuni degli errori possibili ma non tutti; saranno presenti solo gli errori più specifici e riguardanti l'integrità dei dati (es: "tavolo già occupato" o "quest'azione è effettuabile solo dai cuochi").
+Altri tipi di errori (più generici) potranno essere ritornati nelle response (es: "invalid_token" o "parse failed").
+
 
 ## Autenticazione 
 
@@ -236,33 +239,33 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 ## Gestione dei ticket (scontrini) e degli ordini
 
 ### Inserimento di un ticket 
-| Titolo    | Inserimento di un ordine                                                 |
-|-----------|--------------------------------------------------------------------------|
-| URL       | /tickets                                                                 |
-| Metodo    | POST                                                                     |
-| Parametri |                                                                          |
-| Corpo     | {waiter, table, people_number}                                            |
-| Successo  |  Codice: 200 Contenuto: { error: false, errormessage: "", _id: ticket_id }                                                 |
-| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: { statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"}                                    |
-| Errore    |  Codice: 400 BAD REQUEST Contenuto: { statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"}                                    |
-| Errore    |  Codice: 409 CONFLICT Contenuto: {statusCode:409, error:true, errormessage: "Table associated hasn't enought seats"} |
-| Errore    |  Codice: 409 CONFLICT Contenuto: {statusCode:409, error:true, errormessage: "Table associated doesn't exist"} |
-| Errore    |  Codice: 409 CONFLICT Contenuto: {statusCode:409, error:true, errormessage: "Ticket already exists"} |
+| Titolo    | Inserimento di un ordine                                     |
+| --------- | ------------------------------------------------------------ |
+| URL       | /tickets                                                     |
+| Metodo    | POST                                                         |
+| Parametri |                                                              |
+| Corpo     | {waiter, table, people_number}                               |
+| Successo  | Codice: 200 Contenuto: { error: false, errormessage: "", _id: ticket_id } |
+| Errore    | Codice: 401 UNAUTHORIZED Contenuto: { statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} |
+| Errore    | Codice: 400 BAD REQUEST Contenuto: { statusCode:400, error: true, errormessage: "Wrong format"} |
+| Errore    | Codice: 409 CONFLICT Contenuto: {statusCode:409, error:true, errormessage: "Table associated hasn't enought seats"} |
+| Errore    | Codice: 409 CONFLICT Contenuto: {statusCode:409, error:true, errormessage: "Table associated doesn't exist"} |
+| Errore    | Codice: 409 CONFLICT Contenuto: {statusCode:409, error:true, errormessage: "Ticket already exists"} |
+| Errore    | Codice: 409 CONFLICT Contenuto: {statusCode:409, error:true, errormessage: "Table is already taken"} |
 | Errore    | Codice: 500 INTERNAL SERVER ERROR Contenuto: { statusCode:500, error: true, errormessage: "DB error: "+reason } |
-| Esempio   |  /tickets  Body: {id_wai: 1, tab_number: 1, people_number: 2 } |
+| Esempio   | /tickets  Body: {id_wai: 1, tab_number: 1, people_number: 2 } |
 
 ### Recupero info dei tickets
-| Titolo    | Recupero info dei tickets                             |
-|-----------|--------------------------------------------------------|
-| URL       | /tickets                                               |
-| Metodo    | GET                                                    |
-| Parametri | waiter=[id_cam]&table=[id_tavolo]&state=[stato]|
-| Corpo     |                                                        |
-| Successo  |  Codice: 200 Contenuto: [{_id, waiter, table, state, orders, total, start, people_number}]                     |
-| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: {error: true, errormessage: "Unauthorized: user is not a desk or a waiter or a cook"}                  |
-| Errore    |  Codice: 400 BAD REQUEST Contenuto: {error: true, errormessage: "The state of orders accepted are ordered, preparation, ready, delivered and all"}                  |
-| Errore    |  Codice: 500 INTERNAL SERVER ERROR Contenuto: { statusCode:500, error: true, errormessage: "DB error: "+reason }                  |
-| Esempio   |  /tickets?waiter=waiter1&table=1                                  |
+| Titolo    | Recupero info dei tickets                                    |
+| --------- | ------------------------------------------------------------ |
+| URL       | /tickets                                                     |
+| Metodo    | GET                                                          |
+| Parametri | waiter=[id_cam]&table=[id_tavolo]&state=[stato]              |
+| Corpo     |                                                              |
+| Successo  | Codice: 200 Contenuto: [{_id, waiter, table, state, orders, total, start, people_number}] |
+| Errore    | Codice: 400 BAD REQUEST Contenuto: {error: true, errormessage: "The state of orders accepted are ordered, preparation, ready, delivered and all"} |
+| Errore    | Codice: 500 INTERNAL SERVER ERROR Contenuto: { statusCode:500, error: true, errormessage: "DB error: "+reason } |
+| Esempio   | /tickets?waiter=waiter1&table=1                              |
 
 ### Recupero info di un ticket specifico
 | Titolo    | Recupero info di un ticket specifico |
@@ -274,23 +277,21 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Successo  |  Codice: 200 Contenuto: {_id, waiter, table, state, orders, total, start, people_number}              |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: { statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"}|
 | Errore    |  Codice: 500 INTERNAL SERVER ERROR Contenuto: { statusCode:500, error: true, errormessage: "DB error: "+ reason }|
-| Errore    | Altri errori                         |
 | Esempio   |  /tickets/1                          |
 | Note:     | /tickets/1                    |
 
 ### Modifica info di un ticket specifico
-| Titolo    | Modifica info di un ticket specifico |
-|-----------|--------------------------------------|
-| URL       | /tickets/:id                         |
-| Metodo    | PATCH                                |
-| Parametri |                                      |
-| Corpo     |  {end, state, total}                        |
-| Successo  |  Codice: 200 Contenuto: {error:false, errormessage:""}             |
-| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: { statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"}|
-| Errore    |  Codice: 400 BAD REQUEST Contenuto: { statusCode:400, error: true, errormessage: "Wrong format"}|
-| Errore    |  Codice: 500 INTERNAL SERVER ERROR Contenuto: { statusCode:500, error: true, errormessage: "DB error: "+ reason }|
-| Errore    | Altri errori                         |
-| Esempio   |  /tickets/1 Body: {end:timestamp(now),  state: "close"}  |
+| Titolo    | Modifica info di un ticket specifico                         |
+| --------- | ------------------------------------------------------------ |
+| URL       | /tickets/:id                                                 |
+| Metodo    | PATCH                                                        |
+| Parametri |                                                              |
+| Corpo     | {end, state, total}                                          |
+| Successo  | Codice: 200 Contenuto: {error:false, errormessage:""}        |
+| Errore    | Codice: 401 UNAUTHORIZED Contenuto: { statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} |
+| Errore    | Codice: 400 BAD REQUEST Contenuto: { statusCode:400, error: true, errormessage: "Wrong format"} |
+| Errore    | Codice: 500 INTERNAL SERVER ERROR Contenuto: { statusCode:500, error: true, errormessage: "DB error: "+ reason } |
+| Esempio   | /tickets/1 Body: {end:timestamp(now),  state: "close"}       |
 
 ### Recupero ordini relativi ad un ticket
 | Titolo    | Recupero ordini relativi ad un ticket |
@@ -301,7 +302,6 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Corpo     |                                         |
 | Successo  |  Codice: 200 Contenuto: [{added, _id, name_item, username_waiter, state, price, type_item, required_time}]               |
 | Errore    |  Codice: 500 INTERNAL SERVER ERROR { statusCode:500, error: true, errormessage: "DB error: "+ reason }    |
-| Errore    | Altri errori                            |
 | Esempio   | /tickets/1/orders                       |
 
 ### Inserimento di un ordine in un ticket
@@ -314,50 +314,39 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Successo  |  Codice: 200 Contenuto: {error:false, errormessage:""}                                                                                             |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: { statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"}                                                                               |
 | Errore    |  Codice: 400 BAD REQUEST Contenuto: { statusCode:400, error: true, errormessage: "Wrong format"}|
-| Errore    |  Codice: 500 BAD REQUEST Contenuto: { statusCode:500, error: true, errormessage: "DB error: "+ reason }| 
-| Errore    |  Codice: 500 BAD REQUEST Contenuto: { statusCode:500, error: true, errormessage:err }| 
+| Errore    | Codice: 500 INTERNAL SERVER ERROR Contenuto: { statusCode:500, error: true, errormessage: "DB error: "+ reason } |
 |Esempio   |  /tickets/1/orders   Body: {  name_item: "Spaghetti",   price: 7.00,  added: ["doppio pomodoro"],  required_item: 12, type: "dish" } |
 
 ### Modifica di un ordine
-| Titolo    | Modifica ordine                                      |
-|-----------|-------------------------------------------------------|
-| URL       | /tickets/:id/orders/:id                               |
-| Metodo    | PATCH                                                 |
-| Parametri |                                                       |
-| Corpo     | {state, username_executer }                                              |
-| Successo  |  Codice: 200 Contenuto: {error:false, errormessage:""}                              |
-| Errore    |  Codice: 400 BAD REQUEST Contenuto: { statusCode:400, error: true, errormessage: "Wrong format"}                 |
-| Errore    |  Codice: 404 NOT FOUND Contenuto: { statusCode:404, error: true, errormessage: "Order id not found" }                 |
-| Errore    |  Codice: 409 CONFLICT Contenuto: { statusCode:409, error: true, errormessage: "Conflict, orderd state change not coherent with the regular state changes flow" }                 |
-| Errore    |  Codice: 404 NOT FOUND Contenuto: { statusCode:404, error: true, errormessage: "Ticket id not found" }                 |
-| Errore    | Altri errori                                          |
-| Esempio   |  /tickets/1/orders   Body: {  state: "pronto" }       |
-| Note:     | Codice di esempio                                     |
+| Titolo    | Modifica ordine                                              |
+| --------- | ------------------------------------------------------------ |
+| URL       | /tickets/:id/orders/:id                                      |
+| Metodo    | PATCH                                                        |
+| Parametri |                                                              |
+| Corpo     | {state, username_executer }                                  |
+| Successo  | Codice: 200 Contenuto: {error:false, errormessage:""}        |
+| Errore    | Codice: 400 BAD REQUEST Contenuto: { statusCode:400, error: true, errormessage: "Wrong format"} |
+| Errore    | Codice: 400 BAD REQUEST Contenuto: { statusCode:400, error: true, errormessage: "Username_executer not required"} |
+| Errore    | Codice: 404 NOT FOUND Contenuto: { statusCode:404, error: true, errormessage: "Order id not found" } |
+| Errore    | Codice: 409 CONFLICT Contenuto: { statusCode:409, error: true, errormessage: "Conflict, orderd state change not coherent with the regular state changes flow" } |
+| Errore    | Codice: 500 INTERNAL SERVER ERROR Contenuto: { statusCode:500, error: true, errormessage: "DB error: "+ reason } |
+| Errore    | Altri errori                                                 |
+| Esempio   | /tickets/1/orders   Body: {  state: "pronto" }               |
+| Note:     | Codice di esempio                                            |
 
 ### Cancellazione di una comanda
-| Titolo    | Cancellazione comanda                |
-|-----------|--------------------------------------|
-| URL       | /tickets/:id/orders/:id              |
-| Metodo    | DELETE                               |
-| Parametri |                                      |
-| Corpo     |                                      |
-| Successo  |  Codice: 200 Contenuto:              |
-| Errore    |  Codice: 401 UNAUTHORIZED Contenuto: |
-| Errore    | Altri errori                         |
-| Esempio   |  /tickets/1/orders                   |
-| Note:     | Codice di esempio                    |
-
-### Dare tutte gli ordini pendenti
-| Titolo    | Lista totale ordini                 |
-|-----------|-------------------------------------|
-| URL       | /tickets/orders                     |
-| Metodo    | GET                                 |
-| Parametri | state=[stato]                       |
-| Corpo     |                                     |
-| Successo  | Codice: 200 Contenuto:              |
-| Errore    | Codice: 401 UNAUTHORIZED Contenuto: |
-| Errore    | Altri errori                        |
-| Esempio   | /tickets/orders?state="open"        |
+| Titolo    | Cancellazione comanda                                        |
+| --------- | ------------------------------------------------------------ |
+| URL       | /tickets/:id/orders/:id                                      |
+| Metodo    | DELETE                                                       |
+| Parametri |                                                              |
+| Corpo     |                                                              |
+| Successo  | Codice: 200 Contenuto: {error:false, errormessage:""}        |
+| Errore    | Codice: 401 UNAUTHORIZED Contenuto: { statusCode:401, error: true, errormessage: "Unauthorized: user is not a waiter"} |
+| Errore    | Codice: 404 NOT FOUND Contenuto: { statusCode:404, error: true, errormessage: "Order id not found" } |
+| Errore    | Codice: 500 INTERNAL SERVER ERROR Contenuto: { statusCode:500, error: true, errormessage: "DB error: "+reason } |
+| Esempio   | /tickets/1/orders                                            |
+| Note:     | Codice di esempio                                            |
 
 
 ## Report
@@ -418,10 +407,10 @@ E' possibile ottenere informazioni riguardo il personale del ristorante ed effet
 | Metodo    | PUT                                  |
 | Parametri |                                      |
 | Corpo     | {date, total, total_orders, total_customers, average_stay, users_reports}                  |
-| Successo  |  Codice: 200 Contenuto:              |
+| Successo  | Codice: 200 Contenuto: {error:false, errormessage:""} |
 | Errore    |  Codice: 401 UNAUTHORIZED Contenuto: { statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"}|
 | Errore    |  Codice: 400 BAD REQUEST Contenuto: { statusCode:400, error: true, errormessage: "Wrong format"} |
-| Errore    | Altri errori                         |
+| Errore    | Codice: 500 INTERNAL SERVER ERROR Contenuto: { statusCode:500, error: true, errormessage: "DB error: "+reason } |
 | Esempio   |   /report/1   Body: {"total": 5600}    |
 
 ## Modelli per la documentazione 
