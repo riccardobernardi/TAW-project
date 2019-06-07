@@ -55,7 +55,7 @@ export class TablesViewComponent implements OnInit {
 
   public open_ticket(tableToChange: Table, people_number: number) {
     //console.log(people_number);
-    if(people_number > 0 && people_number < tableToChange.max_people) {
+    if(people_number > 0 && people_number <= tableToChange.max_people) {
       this.ticket.open_ticket(this.user.get_nick(), tableToChange.number, people_number).toPromise().then((data: Ticket) => {
         //console.log(data);
         const table = Object.assign({}, tableToChange);

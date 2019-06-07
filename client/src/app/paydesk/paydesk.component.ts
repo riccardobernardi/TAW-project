@@ -214,9 +214,16 @@ export class PaydeskComponent implements OnInit {
       return this.table.change_table({number: this.selTicket.table, state: states[0]}, undefined).toPromise();
     })
     .then((data) => {
-      //console.log(data);
+      this.toastr.success( 'Close ticket OK', 'Success!', {
+        timeOut: 3000
+      });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      let errmessage = err.error.errormessage || err.error.message;
+      this.toastr.error('Changing not OK : ' + errmessage, 'Failure!', {
+        timeOut: 3000
+      });
+    });
   }
 
   create_daily_report() {

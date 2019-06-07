@@ -21,6 +21,11 @@ const routes: Routes = [
     component: WaiterDashboardComponent,
     children: [
       {
+        path:'',
+        redirectTo: 'tables',
+        pathMatch: 'full' 
+      },
+      {
         path: 'tables',
         component:  TablesViewComponent
       },
@@ -44,6 +49,11 @@ const routes: Routes = [
     component: Paydesk2DashboardComponent,
     children: [
       {
+        path:'',
+        redirectTo: 'tables',
+        pathMatch: 'full' 
+      },
+      {
         path: 'tables',
         component:  TablesViewComponent
       },
@@ -65,6 +75,11 @@ const routes: Routes = [
     component: Paydesk2DashboardComponent,
     children: [
       {
+        path:'',
+        redirectTo: 'tables',
+        pathMatch: 'full' 
+      },
+      {
         path: 'tables',
         component:  TablesViewComponent
       },
@@ -84,6 +99,11 @@ const routes: Routes = [
         path: 'statistics',
         component: StatisticsDashboardComponent,
         children: [
+          {
+            path:'',
+            redirectTo: 'total charts',
+            pathMatch: 'full' 
+          },
           {
             path: 'total charts',
             component: StatsChartsComponent
