@@ -208,6 +208,8 @@ app.route("/tables").get(auth, (req, res, next) => {
     var Table = table.getModel();
     //query al DB
     (new Table(toInsert)).save().then((data) => {
+        //notifico sul socket
+        emitEvent("modified table");
         return res.status(200).json({
             number: data.number,
             max_people: data.max_people,
