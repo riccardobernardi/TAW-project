@@ -62,6 +62,41 @@
 </div>
 
 <div class="card" style="margin: 5px" >
+  <div class="btn btn-lg btn-primary btn-block" #addTable (click)="formAddTable.hidden = !formAddTable.hidden" >Add a Table</div>
+
+    <form #formAddTable hidden="true" >
+      <div class="form-group">
+        <label for="newtablenumber">Number of new table</label>
+        <input type="number" class="form-control" id="newtablenumber" #newtablenumber aria-describedby="tableHelp" placeholder="Enter number">
+      </div>
+      <div class="form-group">
+        <label for="newtablemaxpeople">Max people</label>
+        <input type="number" class="form-control" id="newtablemaxpeople" #newtablemaxpeople placeholder="Max people number">
+      </div>
+
+      <button type="submit" class="btn btn-primary" (click)="add_Table(newtablenumber.value, newtablemaxpeople.value)">Submit</button>
+    </form>
+</div>
+
+
+<div class="card" style="margin: 5px" >
+
+  <div class="btn btn-lg btn-primary btn-block" (click)="formDelTable.hidden = !formDelTable.hidden" >Delete a Table</div>
+
+  <form #formDelTable hidden="true" >
+
+    <label for="selTableDel">Seleziona un Utente</label>
+    <select class="form-control" [(ngModel)]="selDelTable" name="selTableDel" id="selTableDel">
+      <option *ngFor="let table of this.tables" [ngValue]="table.number">{{table.number}}</option>
+    </select>
+
+    <br>
+    <button type="submit" class="btn btn-primary" (click)="deleteTable(selDelTable)">Submit</button>
+  </form>
+
+</div>
+
+<div class="card" style="margin: 5px" >
 
   <div class="btn btn-lg btn-primary btn-block" (click)="formEmitReceipt.hidden = !formEmitReceipt.hidden" >Emit Receipt</div>
 

@@ -24,4 +24,13 @@ export class TableHttpService {
     newTable.associated_ticket = associated_ticket
     return this.http.patch<Table>(this.endpoint + '/' + newTable.number, newTable);
   }
+
+  add_table(number: number, max_people: number) {
+    return this.http.post<Table>(this.endpoint, {number: number, max_people: max_people});
+  }
+
+  delete_table(number: number) {
+    console.log(number);
+    return this.http.delete(this.endpoint + "/" + number);
+  }
 }

@@ -9,7 +9,7 @@ import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
 
 @Injectable()
-export class UserHttpService implements OnDestroy {
+export class UserHttpService {
 
   public token = '';
   public endpoint = 'users';
