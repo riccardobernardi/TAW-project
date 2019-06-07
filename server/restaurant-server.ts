@@ -239,7 +239,7 @@ app.route("/tables").get(auth, (req, res, next) => {
    toInsert.number = req.body.number;
    toInsert.max_people = req.body.max_people;
    
-   if (!toInsert.number || typeof(toInsert.number != "number") || !toInsert.max_people || typeof(toInsert.max_people) != "number" ){
+   if (!toInsert.number || typeof(toInsert.number) != "number" || !toInsert.max_people || typeof(toInsert.max_people) != "number" ){
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
 
