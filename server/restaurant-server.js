@@ -400,7 +400,7 @@ app.route("/items/:id").get(auth, function (req, res, next) {
 app.route("/tickets").get(auth, function (req, res, next) {
     //autenticazione
     var sender = user.newUser(req.user);
-    if (!sender.hasDeskRole() && !sender.hasWaiterRole() && !sender.hasCookRole())
+    if (!sender.hasDeskRole() && !sender.hasWaiterRole() && !sender.hasCookRole() && !sender.hasBartenderRole())
         return next({ statusCode: 401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter or a cook" });
     //da togliere
     console.log("entro nella ticket api----");
@@ -872,7 +872,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
         console.log("Dataset items pulito: " + data);
         var itemModel = item.getModel();
         var i1 = (new itemModel({
-            name: "Spaghetti al pomodoro.",
+            name: "Spaghetti al pomodoro",
             type: item.type[0],
             price: 5,
             ingredients: ["spaghetti", "sugo di pomodoro"],
@@ -880,7 +880,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
             description: "Semplici spaghetti al pomodoro che Cecchini non può però mangiare a pranzo, perchè porta sempre il riso per cani."
         })).save();
         var i2 = (new itemModel({
-            name: "Spaghetti al ragu",
+            name: "Spaghetti al ragù",
             type: item.type[0],
             price: 6,
             ingredients: ["spaghetti", "sugo di pomodoro", "carne macinata"],

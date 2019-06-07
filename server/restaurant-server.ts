@@ -469,7 +469,7 @@ app.route("/items/:id").get(auth, (req,res,next) => {
 app.route("/tickets").get(auth, (req, res, next) => {
    //autenticazione
    var sender = user.newUser(req.user);
-   if(!sender.hasDeskRole() && !sender.hasWaiterRole() && !sender.hasCookRole())
+   if(!sender.hasDeskRole() && !sender.hasWaiterRole() && !sender.hasCookRole() && !sender.hasBartenderRole())
       return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter or a cook"} );
 
    //da togliere
@@ -1033,7 +1033,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
       
       var itemModel = item.getModel();
       var i1 = (new itemModel({
-         name: "Spaghetti al pomodoro.",
+         name: "Spaghetti al pomodoro",
          type: item.type[0],
          price: 5,
          ingredients: ["spaghetti", "sugo di pomodoro"],
@@ -1042,7 +1042,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
       })).save();
 
       var i2 = (new itemModel({
-         name: "Spaghetti al ragu",
+         name: "Spaghetti al ragù",
          type: item.type[0],
          price: 6,
          ingredients: ["spaghetti", "sugo di pomodoro", "carne macinata"],
