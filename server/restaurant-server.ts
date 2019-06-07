@@ -239,9 +239,11 @@ app.route("/tables").get(auth, (req, res, next) => {
    toInsert.number = req.body.number;
    toInsert.max_people = req.body.max_people;
    
-   if (!toInsert.number || typeof(toInsert.number != "number") || !toInsert.max_people || typeof(toInsert.max_people) != "number" ){
+   if (!toInsert.number || typeof(toInsert.number) != "number" || !toInsert.max_people || typeof(toInsert.max_people) != "number" ){
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
+
+   
 
    //tavolo libero di default
    toInsert.state = table.states[0];
@@ -250,6 +252,8 @@ app.route("/tables").get(auth, (req, res, next) => {
    
    //query al DB
    (new Table(toInsert)).save().then( (data : table.Table) => {
+      //notifico sul socket
+      emitEvent("modified table");
       return res.status(200).json( {
          number: data.number,
          max_people: data.max_people,
@@ -257,7 +261,10 @@ app.route("/tables").get(auth, (req, res, next) => {
          associated_ticket: data.associated_ticket
       }); 
    }).catch( (reason) => {
-      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
+      if( reason.code === 11000 )
+         return next({statusCode:409, error:true, errormessage: "Table number already taken"} );
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
+      
    });
 });;
 
@@ -352,6 +359,20 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
          return next({ statusCode:401, error: true, errormessage: "Wrong format" });
       }
    }).catch((reason) => {
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
+   });
+}).delete(auth, (req, res, next) => {
+   //autenticazione
+   var sender = user.newUser(req.user);   
+   if(!sender.hasDeskRole() && !sender.hasWaiterRole())
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
+
+   //query al DB
+   table.getModel().findOneAndDelete({number: req.params.number}).then( () => {
+      //notifico sul socket
+      emitEvent("modified table");
+      return res.status(200).json( {error:false, errormessage:""} );
+   }).catch( (reason) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
 });
