@@ -1,21 +1,14 @@
 <div *ngFor="let ticket of this.tickets" class="card" style="margin: 5px" >
-  <div class="card-body">
+  <div style="width:100%" class="card-body">
     
-    <p class="card-text">Tavolo {{ ticket.table }}</p>
-    <p class="card-text">Ordinazioni:</p>
+    <p class="card-text"><b>Tavolo {{ ticket.table }}</b></p>
+    <p class="card-text"><b>Ordinazioni:</b></p>
     
     <table style="width:100%">
-      <!--<thead style="width:100%">
-        <tr>
-          <th>Item</th>
-          <th>Added</th>
-          <th>Button</th>
-        </tr>
-      </thead>-->
       <tbody>
         <tr style="width:100%" class="orders-list" *ngFor="let order of ticket.orders">
-          <td style="width:40%">{{ order.name_item }}</td>
-          <td style="width:40%">{{ order.added }}</td>
+          <td style="width:30%">{{ order.name_item }}</td>
+          <td style="width:50%">{{ order.added }}</td>
           <td style="width:20%">
             <form class="form-inline">
               <div *ngIf="order.state == 'ordered'" class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="setOrderinProgress(ticket._id, order._id)">In progress</button></div>

@@ -36,6 +36,9 @@ export class CookComponent implements OnInit {
           ticket.orders = orders;
         }
       });
+      this.tickets.sort((ticket1 : Ticket, ticket2 : Ticket) => {
+        return ticket1.table - ticket2.table;
+      })
       //console.log(this.tickets);
     });
   }
