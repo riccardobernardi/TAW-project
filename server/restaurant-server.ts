@@ -568,7 +568,7 @@ app.route("/tickets").get(auth, (req, res, next) => {
 
 
    table.getModel().findOne({number: newer.table}).then((data: table.Table) => {
-      if (data.state == table.states[1]){
+      if (data.state == table.states[0]){
          var t = new (ticket.getModel()) (newer);
 
          //da togliere
