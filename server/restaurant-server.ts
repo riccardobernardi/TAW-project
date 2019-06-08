@@ -552,7 +552,7 @@ app.route("/tickets").get(auth, (req, res, next) => {
    newer.table = req.body.table;
    newer.start = startdate.toString();
    newer.people_number = req.body.people_number;
-   newer.state = ticket.ticketState[0]
+   newer.state = ticket.ticketState[0];
 
    //controllo che il tavolo esista
    table.getModel().findOne({number: newer.table}).then((data: table.Table) => {
@@ -562,12 +562,7 @@ app.route("/tickets").get(auth, (req, res, next) => {
       //controllo che il tavolo sia libero
    if (data.state == table.states[1])
       return next({statusCode:409, error:true, errormessage: "Table is already taken"} );
-   }).catch(() => {
-      return next({statusCode:409, error:true, errormessage: "Table associated doesn't exist"} );
-   })
-
-
-   table.getModel().findOne({number: newer.table}).then((data: table.Table) => {
+   }).then( (data: table.Table) => {
       if (data.state == table.states[0]){
          var t = new (ticket.getModel()) (newer);
 
@@ -583,6 +578,8 @@ app.route("/tickets").get(auth, (req, res, next) => {
             return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
          })
       }
+   }).catch(() => {
+      return next({statusCode:409, error:true, errormessage: "Table associated doesn't exist"} );
    });
 });
 
