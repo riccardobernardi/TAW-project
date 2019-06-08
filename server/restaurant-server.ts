@@ -537,9 +537,9 @@ app.route("/tickets").get(auth, (req, res, next) => {
    var startdate: Date = new Date(req.body.start);
    
    //da togliere
-   console.log(req.body) ;
-   console.log(startdate.toString());
-   console.log(typeof(req.body.table));
+   //console.log(req.body) ;
+   //console.log(startdate.toString());
+   //console.log(typeof(req.body.table));
    
 
    //controllo formato
@@ -554,33 +554,41 @@ app.route("/tickets").get(auth, (req, res, next) => {
    newer.people_number = req.body.people_number;
    newer.state = ticket.ticketState[0];
 
-   //controllo che il tavolo esista
-   table.getModel().findOne({number: newer.table}).then((data: table.Table) => {
-      //controllo numero posti del tavolo
-   if (newer.people_number > data.number)
-      return next({statusCode:409, error:true, errormessage: "Table associated hasn't enought seats"} );
-      //controllo che il tavolo sia libero
-   if (data.state == table.states[1])
-      return next({statusCode:409, error:true, errormessage: "Table is already taken"} );
-   }).then( (data: table.Table) => {
-      if (data.state == table.states[0]){
-         var t = new (ticket.getModel()) (newer);
+   ticket.getModel().findOne({table: newer.table, state: ticket.ticketState[0]}).then((data) => {
+      console.log("AAAAAAAAAAA" + data);
+      if(!data) {
+         return table.getModel().findOne({number: newer.table})
+      } else return next({statusCode:409, error:true, errormessage: "Ticket for this table already is open"} );
+   }).then((data: table.Table) => {
 
-         //da togliere
-         console.log(t);
+      if(!data)
+         return next({statusCode:409, error:true, errormessage: "Table associated doesn't exist."} );
 
+         //controllo numero posti del tavolo
+      if (newer.people_number > data.max_people)
+         return next({statusCode:409, error:true, errormessage: "Table associated hasn't enought seats"} );
+         //controllo che il tavolo sia libero
+      if (data.state == table.states[1])
+         return next({statusCode:409, error:true, errormessage: "Table is already taken"} );
 
-         t.save().then( (data) => {
-            return res.status(200).json({ error: false, errormessage: "", _id: data._id });
-         }).catch( (reason) => {
-            if( reason.code === 11000 )
-               return next({statusCode:409, error:true, errormessage: "Ticket already exists"} );
-            return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
-         })
-      }
-   }).catch(() => {
+      console.log({table: newer.table, state: ticket.ticketState[0]});
+      
+      var t = new (ticket.getModel()) (newer);
+
+      //da togliere
+      console.log(t);
+
+      return t.save();
+   }, () => {
       return next({statusCode:409, error:true, errormessage: "Table associated doesn't exist"} );
+   }).then( (data) => {
+      return res.status(200).json({ error: false, errormessage: "", _id: data._id });
+   }).catch((reason) => {
+      if( reason.code === 11000 )
+         return next({statusCode:409, error:true, errormessage: "Ticket already exists"} );
+      return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
    });
+   
 });
 
 app.route('/tickets/:id').get(auth, (req, res, next) => {
