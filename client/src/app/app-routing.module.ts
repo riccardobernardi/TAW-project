@@ -45,32 +45,6 @@ const routes: Routes = [
   },
   { path: 'cook', component:  CookComponent},
   { path: 'bartender', component:  BarmanComponent},
-  { path: 'paydesk2',
-    component: Paydesk2DashboardComponent,
-    children: [
-      {
-        path:'',
-        redirectTo: 'tables',
-        pathMatch: 'full' 
-      },
-      {
-        path: 'tables',
-        component:  TablesViewComponent
-      },
-      {
-        path: 'served',
-        component: OrdersServedComponent
-      },
-      {
-        path: 'insertOrders',
-        component: InsertOrdersComponent
-      },
-      {
-        path: 'paydesk',
-        component: PaydeskComponent
-      },
-    ]
-  },
   { path: 'desk',
     component: Paydesk2DashboardComponent,
     children: [

@@ -1,8 +1,9 @@
 <div *ngIf="(tables && tables.length != 0) else loading">
     <div *ngIf="this.role != 'desk'">
         <div class="tables" *ngFor="let table of tables" >
-            <button [disabled] = "table.state === states[1]" class="btn btn-primary" (click) = "open_ticket(table, $event.target.nextElementSibling.value)">
+            <button [disabled] = "table.state === states[1]" class="btn btn-primary" (click) = "open_ticket(table, $event.target.nextElementSibling.value, $event.target.children[0], $event.target)">
                 {{table.number}}
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden="{{true}}"></span>
             </button>
             <input class="form-control" *ngIf="table.state == states[0]" type="number" min="1" max={{table.max_people}} value={{table.max_people}}>
         </div>

@@ -14,7 +14,7 @@
         
           <label for="ordini">Select the product to add</label>
           <select class="form-control" [(ngModel)]="selMenuEntry" name="ordini" id="ordini">
-            <optgroup *ngFor="let type of types" label="{{type}}">
+            <optgroup *ngFor="let type of types" label="{{type.charAt(0).toUpperCase() + type.slice(1)}}">
                 <option *ngFor="let item of items[type]" [ngValue]="item">{{item.name}}</option>
             </optgroup>   
           </select>
