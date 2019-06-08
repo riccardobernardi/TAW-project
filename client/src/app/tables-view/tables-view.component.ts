@@ -53,9 +53,13 @@ export class TablesViewComponent implements OnInit {
     });
   }
 
-  public open_ticket(tableToChange: Table, people_number: number) {
+  public open_ticket(tableToChange: Table, people_number: number, spinner: HTMLElement, button: HTMLButtonElement) {
+    console.log(event)
+  
     //console.log(people_number);
     if(people_number > 0 && people_number <= tableToChange.max_people) {
+      spinner.hidden = false;
+      button.disabled = true;
       this.ticket.open_ticket(this.user.get_nick(), tableToChange.number, people_number).toPromise().then((data: Ticket) => {
         //console.log(data);
         const table = Object.assign({}, tableToChange);
@@ -63,7 +67,9 @@ export class TablesViewComponent implements OnInit {
         //console.log(table.state);
         return this.table.change_table(table, data._id).toPromise();
         // update del tavolo da rimuovere perchè si deve usare il websocket
-      }).then().catch(err => {
+      }).then(() => {
+        spinner.hidden = true;
+      }).catch(err => {
         //console.log(err);
         this.error = true;
       });
@@ -71,6 +77,8 @@ export class TablesViewComponent implements OnInit {
       this.toastr.error('People Number has to be smaller than max number supported!', 'Failure!', {
         timeOut: 3000
       });
+      spinner.hidden = true;
+      button.disabled = false;
     }
   }
 
