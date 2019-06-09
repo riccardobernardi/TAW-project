@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { UserHttpService } from './user-http.service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Ticket } from './Ticket';
-import { TicketOrder } from './TicketOrder';
-import { types } from './Item';
-import { Report } from './Report';
-import { roles } from './User';
+import { Ticket } from '../interfaces/Ticket';
+import { TicketOrder } from '../interfaces/TicketOrder';
+import { types } from '../interfaces/Item';
+import { Report } from '../interfaces/Report';
+import { roles } from '../interfaces/User';
 
 @Injectable({
   providedIn: 'root'
@@ -57,9 +57,9 @@ export class TicketHttpService {
     return this.http.post(this.endpoint + "/" + ticketId + '/' + 'orders', order, this.create_options());
   }
 
-  changeOrderState(ticketId, orderId, state, name) {
+  changeOrderState(ticketId, orderId, state, username_executer) {
     //console.log(ticketId, orderId);
-    return this.http.patch(this.endpoint + '/' + ticketId + '/' + 'orders' + '/' + orderId, {state, username_executer: name}, this.create_options());
+    return this.http.patch(this.endpoint + '/' + ticketId + '/' + 'orders' + '/' + orderId, {state, username_executer: username_executer}, this.create_options());
   }
 
 }

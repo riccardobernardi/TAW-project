@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { TicketHttpService } from 'src/app/ticket-http.service';
-import { Report } from "../../Report";
+import { TicketHttpService } from 'src/app/services/ticket-http.service';
+import { Report } from "../../../interfaces/Report";
 import { ToastrService } from 'ngx-toastr';
-import { HttpReportService } from "../../http-report.service";
+import { HttpReportService } from "../../../services/http-report.service";
 
 @Component({
   selector: 'app-stats-charts',

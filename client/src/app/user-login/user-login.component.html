@@ -20,7 +20,10 @@
       Login error: {{errmessage}}
     </div>
 
-    <button class="btn btn-lg btn-primary btn-block" (click)="login( mailtxt.value, passwdtxt.value);" >Sign in</button>
+    <button class="btn btn-lg btn-primary btn-block" (click)="login( mailtxt.value, passwdtxt.value);" [disabled]="disableButton">
+      Sign in
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" [hidden]="!disableButton"></span>
+    </button>
 
     <!--<button class="btn btn-lg btn-primary btn-block" (click)="login( 'admin', 'admin');" >Admin</button>
 

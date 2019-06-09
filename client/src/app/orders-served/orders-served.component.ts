@@ -1,12 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Ticket } from '../Ticket';
-import { TicketOrder, order_states } from '../TicketOrder';
-import { types } from '../Item';
-import { roles } from '../User';
-import {ItemHttpService} from '../item-http.service';
-import {UserHttpService} from '../user-http.service';
-import { TicketHttpService } from 'src/app/ticket-http.service';
-import {SocketioService} from '../socketio.service';
+import { Ticket } from '../interfaces/Ticket';
+import { TicketOrder, order_states } from '../interfaces/TicketOrder';
+import { types } from '../interfaces/Item';
+import { roles } from '../interfaces/User';
+import {ItemHttpService} from '../services/item-http.service';
+import {UserHttpService} from '../services/user-http.service';
+import { TicketHttpService } from 'src/app/services/ticket-http.service';
+import {SocketioService} from '../services/socketio.service';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-orders-served',
@@ -21,22 +23,19 @@ export class OrdersServedComponent implements OnInit {
   private order_states = order_states;
 
 
-  constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService, private socketio: SocketioService) {
+  constructor(private us: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService, private toastr: ToastrService) {
     this.role = us.get_role();
   }
 
   get_tickets() {
-    let tickets_promise;
-    tickets_promise = this.ticket.get_tickets((this.us.get_role() === roles[2]) ? {state: 'open'} : {state: 'open', waiter: this.us.get_nick()});
-    tickets_promise.subscribe( (tickets: Ticket[]) => {
-      //this.tickets.splice(0, this.tickets.length);
+    this.ticket.get_tickets((this.us.get_role() === roles[2]) ? {state: 'open'} : {state: 'open', waiter: this.us.get_nick()})
+    .subscribe( (tickets: Ticket[]) => {
       //console.log(tickets);
       this.tickets = tickets;
       tickets.sort((ticket1: Ticket, ticket2: Ticket) => {
         return ticket1.table - ticket2.table;
       });
       tickets.forEach( (ss) => {
-        var n_ready = 0;
         ss.orders.sort((ticket1: TicketOrder, ticket2: TicketOrder) => {
           if((ticket1.type_item == types[1] && ticket2.type_item == types[1]) || (ticket1.type_item != types[1] && ticket2.type_item != types[1])) {
             if((ticket1.state == order_states[2] && ticket2.state == order_states[2]) || (ticket1.state != order_states[2] && ticket2.state != order_states[2]))
@@ -68,12 +67,15 @@ export class OrdersServedComponent implements OnInit {
 
   deliver(ticketIndex: number, orderIndex: number, state: string) {
     const ticket = this.tickets[ticketIndex];
-    this.ticket.changeOrderState(ticket._id, ticket.orders[orderIndex]._id, 'delivered', this.us.get_nick()).toPromise().then((data) => {
+    this.ticket.changeOrderState(ticket._id, ticket.orders[orderIndex]._id, 'delivered', null).toPromise().then((data) => {
       ticket.orders[orderIndex].state = 'delivered';
       this.error = false;
     }).catch((err) => {
       //console.log(err);
       this.error = true;
+      this.toastr.error('Error: ' + err, 'Failure!', {
+        timeOut: 3000
+      });
     });
   }
 

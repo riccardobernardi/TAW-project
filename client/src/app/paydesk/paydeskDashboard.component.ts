@@ -1,14 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {SocketioService} from '../socketio.service';
-import {UserHttpService} from '../user-http.service';
+import {SocketioService} from '../services/socketio.service';
+import {UserHttpService} from '../services/user-http.service';
 
 @Component({
-  selector: 'app-waiter',
-  templateUrl: './paydesk2Dashboard.component.html',
-  styleUrls: ['./paydesk2Dashboard.component.css']
+  selector: 'app-paydesk-dashboard',
+  templateUrl: './paydeskDashboard.component.html',
+  styleUrls: ['./paydeskDashboard.component.css']
 })
-export class Paydesk2DashboardComponent implements OnInit {
+export class PaydeskDashboardComponent implements OnInit {
   constructor(private sio: SocketioService, private us: UserHttpService, private router: Router) { }
 
   ngOnInit() {

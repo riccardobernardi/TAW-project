@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import {UserHttpService} from './user-http.service';
-import { environment } from "../environments/environment";
+import { environment } from "../../environments/environment";
 
 @Injectable()
 export class SocketioService {

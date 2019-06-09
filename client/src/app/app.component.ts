@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {UserHttpService} from './user-http.service';
+import {UserHttpService} from './services/user-http.service';
 
 @Component({
   selector: 'app-root',

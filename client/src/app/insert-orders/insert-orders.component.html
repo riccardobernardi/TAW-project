@@ -14,7 +14,7 @@
         
           <label for="ordini">Select the product to add</label>
           <select class="form-control" [(ngModel)]="selMenuEntry" name="ordini" id="ordini">
-            <optgroup *ngFor="let type of types" label="{{type.charAt(0).toUpperCase() + type.slice(1)}}">
+            <optgroup *ngFor="let type of types" label="{{ (type == 'dish') ? 'food' : type.charAt(0).toUpperCase() + type.slice(1) }}">
                 <option *ngFor="let item of items[type]" [ngValue]="item">{{item.name}}</option>
             </optgroup>   
           </select>
@@ -27,8 +27,9 @@
             <div class="col-sm-2"><button type="submit" class="btn btn-primary" (click)="sub()">Subtract</button></div>
           </form>
 
-          <button class="btn btn-lg btn-primary btn-block" (click)="insertItem(selMenuEntry, counter)">Insert</button>
+          <button class="btn btn-lg btn-primary btn-block" (click)="insertItem(selMenuEntry, counter)" [disabled]="!selMenuEntry || counter <= 0">Insert</button>
         </div>
+
         <p *ngIf="items.length == 0">No items</p>
 
         <div *ngIf="selTicket">
@@ -50,7 +51,10 @@
 
         <br>
 
-        <button class="btn btn-lg btn-primary btn-block" (click)="sendOrders(selTicket._id, this.us.get_nick(), ordersSelected)">Invia ordini</button>
+        <button class="btn btn-lg btn-primary btn-block" (click)="sendOrders(selTicket._id, this.us.get_nick(), ordersSelected)" [disabled]="!selTicket || ordersSelected.length == 0 || disableSend">
+          Invia ordini
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" [hidden]="!disableSend"></span>
+        </button>
       </div>
 
     </form>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {UserHttpService} from '../user-http.service';
+import {UserHttpService} from '../services/user-http.service';
 
 @Component({
   selector: 'app-user-login',
@@ -12,10 +12,14 @@ export class UserLoginComponent implements OnInit {
   private errmessage = undefined;
   constructor(private us: UserHttpService, private router: Router  ) { }
   private role = undefined
+  private disableButton;
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.disableButton = false;
+  }
 
   login( mail: string, password: string ) {
+    this.disableButton = true;
     this.us.login( mail, password).subscribe( (d) => {
       //console.log('Login granted: ' + JSON.stringify(d) );
       //console.log('User service token: ' + this.us.get_token() );
@@ -26,7 +30,7 @@ export class UserLoginComponent implements OnInit {
     }, (err) => {
       //console.log('Login error: ' + JSON.stringify(err.error.errormessage) );
       this.errmessage = (err.error) ? err.error.errormessage || err.error.message : err;
-
+      this.disableButton = false;
     });
   }
 

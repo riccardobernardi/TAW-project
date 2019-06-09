@@ -5,28 +5,28 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { UserLoginComponent } from './user-login/user-login.component';
 import { AppRoutingModule } from './app-routing.module';
-import { UserHttpService } from './user-http.service';
 import { CookComponent } from './cook/cook.component';
 import { BarmanComponent } from './barman/barman.component';
-import { SocketioService } from './socketio.service';
-import { ItemHttpService } from './item-http.service';
-import { TableHttpService } from './table-http.service';
-import { TicketHttpService } from './ticket-http.service';
+import { SocketioService } from './services/socketio.service';
+import { ItemHttpService } from './services/item-http.service';
+import { TableHttpService } from './services/table-http.service';
+import { TicketHttpService } from './services/ticket-http.service';
+import { UserHttpService } from './services/user-http.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LogoutComponent } from './logout/logout.component';
 import { OrdersServedComponent } from "./orders-served/orders-served.component";
 import { InsertOrdersComponent } from "./insert-orders/insert-orders.component";
 import { TablesViewComponent } from "./tables-view/tables-view.component";
 import { WaiterDashboardComponent } from './waiter/waiterDashboard.component';
-import { Paydesk2DashboardComponent } from "./paydesk2/paydesk2Dashboard.component";
-import { PaydeskComponent } from './paydesk/paydesk.component';
+import { PaydeskDashboardComponent } from "./paydesk/paydeskDashboard.component";
+import { PaydeskOptionsComponent } from './paydesk/paydeskOptions/paydeskOptions.component';
 import { ChartsModule } from "ng2-charts";
-import { StatisticsDashboardComponent } from './statistics-dashboard/statistics-dashboard.component';
-import { WaiterStatisticsComponent } from './statistics-dashboard/waiter-statistics/waiter-statistics.component';
-import { HttpInterceptorService } from './http-interceptor.service';
+import { StatisticsDashboardComponent } from './paydesk/statistics-dashboard/statistics-dashboard.component';
+import { WaiterStatisticsComponent } from './paydesk/statistics-dashboard/waiter-statistics/waiter-statistics.component';
+import { HttpInterceptorService } from './services/http-interceptor.service';
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
-import { HistogramWithDatesComponent } from './statistics-dashboard/histogram-with-dates/histogram-with-dates.component';
-import { StatsChartsComponent } from './statistics-dashboard/stats-charts/stats-charts.component';
+import { HistogramWithDatesComponent } from './paydesk/statistics-dashboard/histogram-with-dates/histogram-with-dates.component';
+import { StatsChartsComponent } from './paydesk/statistics-dashboard/stats-charts/stats-charts.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -38,8 +38,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CookComponent,
     BarmanComponent,
     WaiterDashboardComponent,
-    Paydesk2DashboardComponent,
-    PaydeskComponent,
+    PaydeskDashboardComponent,
+    PaydeskOptionsComponent,
     OrdersServedComponent,
     InsertOrdersComponent,
     TablesViewComponent,
@@ -57,15 +57,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NgbModule.forRoot(),
     ChartsModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
   ],
   providers: [
-    {provide: UserHttpService, useClass: UserHttpService },
     {provide: SocketioService, useClass: SocketioService },
     {provide: ItemHttpService, useClass: ItemHttpService},
     {provide: TableHttpService, useClass: TableHttpService},
     {provide: TicketHttpService, useClass: TicketHttpService},
-    {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true}
+    {provide: UserHttpService, useClass: UserHttpService},
+    {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
   ],
   bootstrap: [AppComponent],
 })
