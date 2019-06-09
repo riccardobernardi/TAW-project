@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import {SocketioService} from '../socketio.service';
+import {SocketioService} from '../services/socketio.service';
 import {Router} from '@angular/router';
-import {UserHttpService} from '../user-http.service';
+import {UserHttpService} from '../services/user-http.service';
 import {HttpClient} from '@angular/common/http';
-import { Ticket } from '../Ticket';
-import { types } from "../Item";
-import { order_states } from "../TicketOrder"
-import {TicketOrder } from '../TicketOrder';
-import { TicketHttpService } from '../ticket-http.service';
+import { Ticket } from '../interfaces/Ticket';
+import { types } from "../interfaces/Item";
+import { order_states } from "../interfaces/TicketOrder"
+import {TicketOrder } from '../interfaces/TicketOrder';
+import { TicketHttpService } from '../services/ticket-http.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -17,9 +18,10 @@ import { TicketHttpService } from '../ticket-http.service';
 })
 export class BarmanComponent implements OnInit {
 
+  private error;
   private tickets: Ticket[] = [];
 
-  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) {}
+  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService, private toastr: ToastrService  ) {}
 
   get_tickets() {
     this.ticket.get_tickets({state: 'open'}).subscribe( (tickets: Ticket[]) => {
@@ -37,6 +39,8 @@ export class BarmanComponent implements OnInit {
         }
       });
       //console.log(this.tickets);
+    }, () => {
+      this.error = true;
     });
   }
 
@@ -44,7 +48,7 @@ export class BarmanComponent implements OnInit {
     if (this.us.get_token() === undefined || this.us.get_token() === '') {
       this.us.logout();
     }
-
+    this.error = false;
     this.get_tickets();
     this.socketio.get().on('bartenders', () => { this.get_tickets() });
   }
@@ -55,19 +59,25 @@ export class BarmanComponent implements OnInit {
   }
 
   setOrderinProgress(ticketid: string, orderid: string) {
-    console.log(ticketid, orderid);
+    //console.log(ticketid, orderid);
     this.ticket.changeOrderState(ticketid, orderid, 'preparation', undefined).toPromise().then(() => {
-      console.log('Changing state to preparation OK');
+      //console.log('Changing state to preparation OK');
     }).catch((err) => {
-      console.log('Changing state to prepation failed: ' + err);
+      this.toastr.error('Error: ' + err, 'Failure!', {
+        timeOut: 3000
+      });
+      //console.log('Changing state to prepation failed: ' + err);
     });
   }
 
   setOrderCompleted(ticketid: string, orderid: string) {
     this.ticket.changeOrderState(ticketid, orderid, 'ready', this.us.get_nick()).toPromise().then(() => {
-      console.log('Changing state to ready OK');
+      //console.log('Changing state to ready OK');
     }).catch((err) => {
-      console.log('Changing state to ready failed: ' + err);
+      this.toastr.error('Error: ' + err, 'Failure!', {
+        timeOut: 3000
+      });
+      //console.log('Changing state to ready failed: ' + err);
     });
   }
 

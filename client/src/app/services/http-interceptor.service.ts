@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from "../environments/environment";
+import { environment } from "../../environments/environment";
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from "@angular/common/http";
 import { Observable } from 'rxjs';
 import { UserHttpService } from './user-http.service';

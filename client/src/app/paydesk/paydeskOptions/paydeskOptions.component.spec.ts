@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Paydesk2DashboardComponent } from './paydesk2Dashboard.component';
+import { PaydeskOptionsComponent } from './paydeskOptions.component';
 
-describe('WaiterComponent', () => {
-  let component: Paydesk2DashboardComponent;
-  let fixture: ComponentFixture<Paydesk2DashboardComponent>;
+describe('PaydeskComponent', () => {
+  let component: PaydeskOptionsComponent;
+  let fixture: ComponentFixture<PaydeskOptionsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ Paydesk2DashboardComponent ]
+      declarations: [ PaydeskOptionsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(Paydesk2DashboardComponent);
+    fixture = TestBed.createComponent(PaydeskOptionsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

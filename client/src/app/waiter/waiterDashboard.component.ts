@@ -1,7 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
-import {UserHttpService} from '../user-http.service';
+import {UserHttpService} from '../services/user-http.service';
 
 @Component({
   selector: 'app-waiter',

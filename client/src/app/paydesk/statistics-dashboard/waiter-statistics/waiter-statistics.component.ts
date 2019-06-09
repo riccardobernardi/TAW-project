@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import {UserHttpService} from '../../user-http.service';
-import {ItemHttpService} from '../../item-http.service';
-import {TicketHttpService} from '../../ticket-http.service';
-import {SocketioService} from '../../socketio.service';
+import {UserHttpService} from '../../../services/user-http.service';
+import {ItemHttpService} from '../../../services/item-http.service';
+import {TicketHttpService} from '../../../services/ticket-http.service';
+import {SocketioService} from '../../../services/socketio.service';
 import {Router} from '@angular/router';
-import {TableHttpService} from '../../table-http.service';
-import { Report } from "../../Report";
-import {roles} from "../../User";
+import {TableHttpService} from '../../../services/table-http.service';
+import { Report } from "../../../interfaces/Report";
+import {roles} from "../../../interfaces/User";
 import {NgbDate, NgbDatepicker} from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { HttpReportService } from 'src/app/http-report.service';
+import { HttpReportService } from 'src/app/services/http-report.service';
 
 
 @Component({

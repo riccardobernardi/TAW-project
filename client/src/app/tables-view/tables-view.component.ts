@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { TableHttpService } from 'src/app/table-http.service';
-import { UserHttpService } from 'src/app/user-http.service';
-import { TicketHttpService } from '../ticket-http.service';
-import { Ticket } from 'src/app/Ticket';
-import { Table, states } from '../Table';
-import { SocketioService } from '../socketio.service';
+import { TableHttpService } from 'src/app/services/table-http.service';
+import { UserHttpService } from 'src/app/services/user-http.service';
+import { TicketHttpService } from '../services/ticket-http.service';
+import { Ticket } from 'src/app/interfaces/Ticket';
+import { Table, states } from '../interfaces/Table';
+import { SocketioService } from '../services/socketio.service';
 import { ToastrService } from 'ngx-toastr';
 
 

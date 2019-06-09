@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
-import {SocketioService} from '../socketio.service';
-import {UserHttpService} from '../user-http.service';
-import { Ticket } from '../Ticket';
-import {TicketOrder } from '../TicketOrder';
-import { TicketHttpService } from '../ticket-http.service';
+import {SocketioService} from '../services/socketio.service';
+import {UserHttpService} from '../services/user-http.service';
+import { Ticket } from '../interfaces/Ticket';
+import {TicketOrder } from '../interfaces/TicketOrder';
+import { TicketHttpService } from '../services/ticket-http.service';
 import {HttpClient} from '@angular/common/http';
-import { order_states } from "../TicketOrder";
-import { types } from "../Item";
+import { order_states } from "../interfaces/TicketOrder";
+import { types } from "../interfaces/Item";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-cook',
@@ -16,18 +17,16 @@ import { types } from "../Item";
 })
 export class CookComponent implements OnInit {
   private tickets: Ticket[] = [];
+  private error;
 
-  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router,
-              private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService  ) {}
+  constructor(private us: UserHttpService, private router: Router, private socketio: SocketioService, private ticket: TicketHttpService, private toastr: ToastrService  ) {}
 
   get_tickets() {
     this.ticket.get_tickets({state: 'open'}).subscribe( (tickets: Ticket[]) => {
       this.tickets.splice(0, this.tickets.length);
       tickets.forEach( (ticket) => {
-        //console.log(ss.orders);
         const orders = ticket.orders.filter((order: TicketOrder) =>
           order.state !== order_states[2] && order.state !== order_states[3] && ((order.state == order_states[1]) ? order.username_executer === this.us.get_nick() : true ) && order.type_item !== types[1]);
-        //console.log(orders);
         if (orders.length !== 0) {
           this.tickets.push(ticket);
           orders.sort((order1: TicketOrder, order2: TicketOrder) => {
@@ -39,7 +38,8 @@ export class CookComponent implements OnInit {
       this.tickets.sort((ticket1 : Ticket, ticket2 : Ticket) => {
         return ticket1.table - ticket2.table;
       })
-      //console.log(this.tickets);
+    }, () => {
+      this.error = true;
     });
   }
 
@@ -47,7 +47,7 @@ export class CookComponent implements OnInit {
     if (this.us.get_token() === undefined || this.us.get_token() === '') {
       this.us.logout();
     }
-
+    this.error = false;
     this.get_tickets();
     this.socketio.get().on('cooks', () => {this.get_tickets();});
   }
@@ -59,19 +59,25 @@ export class CookComponent implements OnInit {
   }
 
   setOrderinProgress(ticketid: string, orderid: string) {
-    console.log(ticketid, orderid);
+    //console.log(ticketid, orderid);
     this.ticket.changeOrderState(ticketid, orderid, 'preparation', this.us.get_nick()).toPromise().then(() => {
-      console.log('Changing state to preparation OK');
+      //console.log('Changing state to preparation OK');
     }).catch((err) => {
-      console.log('Changing state to prepation failed: ' + err);
+      this.toastr.error('Error: ' + err, 'Failure!', {
+        timeOut: 3000
+      });
+      //console.log('Changing state to prepation failed: ' + err);
     });
   }
 
   setOrderCompleted(ticketid: string, orderid: string) {
     this.ticket.changeOrderState(ticketid, orderid, 'ready', undefined).toPromise().then(() => {
-      console.log('Changing state to ready OK');
+      //console.log('Changing state to ready OK');
     }).catch((err) => {
-      console.log('Changing state to ready failed: ' + err);
+      this.toastr.error('Error: ' + err, 'Failure!', {
+        timeOut: 3000
+      });
+      //console.log('Changing state to ready failed: ' + err);
     });
   }
 }

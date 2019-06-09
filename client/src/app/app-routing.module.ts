@@ -2,19 +2,19 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { UserLoginComponent } from './user-login/user-login.component';
 import { CookComponent} from './cook/cook.component';
-import { PaydeskComponent } from './paydesk/paydesk.component';
+import { PaydeskOptionsComponent } from './paydesk/paydeskOptions/paydeskOptions.component';
 import { BarmanComponent } from './barman/barman.component';
 import { WaiterDashboardComponent } from './waiter/waiterDashboard.component';
 import { OrdersServedComponent } from './orders-served/orders-served.component';
 import { InsertOrdersComponent } from './insert-orders/insert-orders.component';
 import { TablesViewComponent } from './tables-view/tables-view.component';
 import { LogoutComponent } from './logout/logout.component';
-import { Paydesk2DashboardComponent } from './paydesk2/paydesk2Dashboard.component';
-import { StatisticsDashboardComponent } from './statistics-dashboard/statistics-dashboard.component';
-import {WaiterStatisticsComponent} from './statistics-dashboard/waiter-statistics/waiter-statistics.component';
-import { StatsChartsComponent } from "./statistics-dashboard/stats-charts/stats-charts.component"
+import { PaydeskDashboardComponent } from './paydesk/paydeskDashboard.component';
+import { StatisticsDashboardComponent } from './paydesk/statistics-dashboard/statistics-dashboard.component';
+import {WaiterStatisticsComponent} from './paydesk/statistics-dashboard/waiter-statistics/waiter-statistics.component';
+import { StatsChartsComponent } from "./paydesk/statistics-dashboard/stats-charts/stats-charts.component"
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: UserLoginComponent },
   { path: 'waiter',
@@ -46,7 +46,7 @@ const routes: Routes = [
   { path: 'cook', component:  CookComponent},
   { path: 'bartender', component:  BarmanComponent},
   { path: 'desk',
-    component: Paydesk2DashboardComponent,
+    component: PaydeskDashboardComponent,
     children: [
       {
         path:'',
@@ -67,7 +67,7 @@ const routes: Routes = [
       },
       {
         path: 'paydesk',
-        component: PaydeskComponent
+        component: PaydeskOptionsComponent
       },
       {
         path: 'statistics',
@@ -97,7 +97,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [ RouterModule.forRoot(routes) ],
+  imports: [ 
+    RouterModule.forRoot(routes),
+  ],
   exports: [ RouterModule ]
 })
 export class AppRoutingModule { }

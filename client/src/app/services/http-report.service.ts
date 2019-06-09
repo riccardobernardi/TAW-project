@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Report } from './Report';
-import { Ticket } from './Ticket';
-import { TicketOrder } from './TicketOrder';
-import { types } from './Item';
-import { roles } from './User';
+import { Report } from '../interfaces/Report';
+import { Ticket } from '../interfaces/Ticket';
+import { TicketOrder } from '../interfaces/TicketOrder';
+import { types } from '../interfaces/Item';
+import { roles } from '../interfaces/User';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { TicketHttpService } from "./ticket-http.service"
 

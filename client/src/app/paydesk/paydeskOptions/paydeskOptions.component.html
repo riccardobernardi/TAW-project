@@ -17,7 +17,10 @@
       <option *ngFor="let ord of this.roles" value="{{ord}}">{{ord}}</option>
     </select>
     <br>
-    <button type="submit" class="btn btn-primary" (click)="send(newusername.value, newuserpassword.value)">Submit</button>
+    <button type="submit" class="btn btn-primary" (click)="send(newusername.value, newuserpassword.value)" [disabled]="disableUserButtons || !this.newRoleSelected">
+      Submit
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" [hidden]="!disableUserButtons"></span>
+    </button>
   </form>
 
 </div>
@@ -34,7 +37,10 @@
     </select>
 
     <br>
-    <button type="submit" class="btn btn-primary" (click)="deleteUser(selDelUser)">Submit</button>
+    <button type="submit" class="btn btn-primary" (click)="deleteUser(selDelUser)" [disabled]="disableUserButtons || !selDelUser">
+      Submit
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" [hidden]="!disableUserButtons"></span>
+    </button>
   </form>
 
 </div>
@@ -56,7 +62,10 @@
     <input type="password" #newPwd id="newPwd" class="form-control" placeholder="Password" required>
 
     <br>
-    <button type="submit" class="btn btn-primary" (click)="this.changePasswordUser(selChangePwdUser,newPwd.value)">Submit</button>
+    <button type="submit" class="btn btn-primary" (click)="this.changePasswordUser(selChangePwdUser,newPwd.value)" [disabled]="!selChangePwdUser || disableUserButtons">
+      Submit
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" [hidden]="!disableUserButtons"></span>
+    </button>
   </form>
 
 </div>
@@ -74,7 +83,10 @@
         <input type="number" class="form-control" id="newtablemaxpeople" #newtablemaxpeople placeholder="Max people number">
       </div>
 
-      <button type="submit" class="btn btn-primary" (click)="add_Table(newtablenumber.value, newtablemaxpeople.value)">Submit</button>
+      <button type="submit" class="btn btn-primary" (click)="add_Table(newtablenumber.value, newtablemaxpeople.value)" [disabled]="disableTableButtons">
+        Submit
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" [hidden]="!disableTableButtons"></span>
+      </button>
     </form>
 </div>
 
@@ -85,13 +97,17 @@
 
   <form #formDelTable hidden="true" >
 
-    <label for="selTableDel">Seleziona un Utente</label>
+    <label for="selTableDel">Seleziona un tavolo</label>
     <select class="form-control" [(ngModel)]="selDelTable" name="selTableDel" id="selTableDel">
       <option *ngFor="let table of this.tables" [ngValue]="table.number">{{table.number}}</option>
     </select>
 
     <br>
-    <button type="submit" class="btn btn-primary" (click)="deleteTable(selDelTable)">Submit</button>
+    <button type="submit" class="btn btn-primary" (click)="deleteTable(selDelTable)" [disabled]="!selDelTable || disableTableButtons">
+      Submit
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" [hidden]="!disableTableButtons"></span>
+    </button>
+    
   </form>
 
 </div>
@@ -103,34 +119,32 @@
   <form #formEmitReceipt hidden="true">
 
     <label for="tables">Seleziona un Tavolo</label>
-    <select class="form-control" [(ngModel)]="selTicket" name="tables">
+    <select class="form-control" [(ngModel)]="selTicket" name="tables" (change)="createScontrino();">
       <option *ngFor="let tt of this.tickets" [ngValue]="tt">{{tt.table}}</option>
     </select>
 
-    <p>price: </p>
-
-    <div *ngIf="selTicket" #price>{{emitReceipt()}}</div>
+    <div style="margin: 10px 0px" *ngIf="selTicket" #price><b>Total: {{emitReceipt()}}</b></div>
 
     <p>orders: </p>
 
     <div *ngIf="selTicket">
       <div class="card">
         <div *ngFor="let ord of selTicket.orders">
-          <!--<div *ngIf="ord.table==selTable" class="card" style="margin: 5px" >-->
-            <!--<p class="card-text">{{ ord.table }}</p>-->
-            <!--<div *ngFor="let ss of ord.orders" class="card" style="margin: 5px" >-->
+        
             <div class="card">
               <div class="card-body">
-                <p class="card-text">{{ ord.name_item }}</p>
+                <p class="card-text">{{ ord.name_item }}, {{ord.price}} euro</p>
               </div>
             </div>
-            <!--</div>-->
         </div>
       </div>
     </div>
 
-    <!--<div class="btn btn-lg btn-primary btn-block" (click) = "close_ticket()">Close ticket</div>-->
-    <div *ngIf="selTicket" class="btn btn-lg btn-primary btn-block" (click)="close_ticket()" >Close</div>
+    <button *ngIf="selTicket" class="btn btn-lg btn-primary btn-block" (click)="close_ticket()" [disabled]="!selTicket || disableTicketsButtons">
+      Close
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" [hidden]="!disableTicketsButtons"></span>
+    </button>
+    
   </form>
 </div>
 <div class="card" style="margin: 5px" >
@@ -158,7 +172,10 @@
     {{day_insert}} / {{month_insert}} / {{year_insert}}
 
     <button class="btn btn-lg btn-primary btn-block" (click)="this.allGainOfDay()" > result : {{totalgain | async}}</button>
-    <button class="btn btn-lg btn-primary btn-block" (click)="this.create_daily_report()" >Insert daily report</button>
+    <button class="btn btn-lg btn-primary btn-block" (click)="this.create_daily_report()" [disabled]="disableTicketsButtons || !(day_insert && year_insert && month_insert)">
+      Insert daily report
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" [hidden]="!disableTicketsButtons"></span>
+    </button>
 
     <div class="date-action" style="display: inline-table">
 
@@ -207,7 +224,10 @@
         </table>
     </div>
 
-      <button [disabled]="!this.reportSelected" class="btn btn-lg btn-primary btn-block" (click)="this.delete_daily_report()" >Delete report</button>
+      <button [disabled]="!this.reportSelected || disableTicketsButtons" class="btn btn-lg btn-primary btn-block" (click)="this.delete_daily_report()" >
+        Delete report
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" [hidden]="!disableTicketsButtons"></span>
+      </button>
     
   </form>
 

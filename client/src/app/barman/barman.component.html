@@ -1,23 +1,22 @@
-<!--<p>
-  barman view
-</p>-->
-
-<div *ngFor="let ticket of this.tickets" class="card" style="margin: 5px" >
-  <div class="card-body">
-    <!--<h5 class="card-title"><i class="far fa-envelope"></i>&nbsp;{{ord.selMenuEntry}}</h5>-->
-    <!--<h6 class="card-subtitle mb-2 text-muted">{{ord.timestamp | date}} / {{ord.timestamp | date:'shortTime'}}</h6>-->
-    <p class="card-text">{{ ticket.table }}</p>
-    
-    <div *ngFor="let order of ticket.orders">
-      <p class="card-text">{{ order.name_item }}</p>
-      <form class="form-inline">
-        <div *ngIf="order.state == 'ordered'" class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="setOrderCompleted(ticket._id, order._id)">Completed</button></div>
-      </form>
+<div *ngIf="(tickets && tickets.length != 0) else loading">
+  <div *ngFor="let ticket of this.tickets" class="card" style="margin: 5px" >
+    <div class="card-body">
+      <p class="card-text">{{ ticket.table }}</p>
+      <div *ngFor="let order of ticket.orders">
+        <p class="card-text">{{ order.name_item }}</p>
+        <form class="form-inline">
+          <div *ngIf="order.state == 'ordered'" class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="setOrderCompleted(ticket._id, order._id)">Completed</button></div>
+        </form>
+      </div>
     </div>
-
-
-    <!--<span *ngFor="let tag of message.tags" class="badge badge-secondary tag">{{tag}}</span>-->
   </div>
+
+  <button id = "logout" class="btn btn-lg btn-primary btn-block" (click)="this.logout()" >Logout</button>
 </div>
 
-<button id = "logout" class="btn btn-lg btn-primary btn-block" (click)="this.logout()" >Logout</button>
+
+<ng-template #loading>
+    <div *ngIf="tickets && tickets.length != 0"></div>
+    <div *ngIf="!tickets" class="loading">Tables are loading...</div>
+    <div *ngIf="error" class="error">Error in loading tables...</div>
+</ng-template>
