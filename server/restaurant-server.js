@@ -220,6 +220,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
             /* if (update.associated_ticket)
                return next({ statusCode:401, error: true, errormessage: "Wrong format, associated_ticket not required" });
             */
+            update.associated_ticket = null;
             data.update(update).then(() => {
                 //notifico sul socket
                 socket.emitEvent("modified table");
