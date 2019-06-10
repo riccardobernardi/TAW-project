@@ -3,6 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API_Documentation.md" beforeDir="false" afterPath="$PROJECT_DIR$/API_Documentation.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Item.js" beforeDir="false" afterPath="$PROJECT_DIR$/Item.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report.js" beforeDir="false" afterPath="$PROJECT_DIR$/Report.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Table.js" beforeDir="false" afterPath="$PROJECT_DIR$/Table.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ticket.js" beforeDir="false" afterPath="$PROJECT_DIR$/Ticket.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/User.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.js" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.ts" afterDir="false" />
@@ -21,11 +27,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="410">
-              <caret line="579" column="7" lean-forward="true" selection-start-line="579" selection-start-column="7" selection-end-line="579" selection-end-column="7" />
+            <state relative-caret-position="349">
+              <caret line="1316" column="39" selection-start-line="1316" selection-start-column="39" selection-end-line="1316" selection-end-column="39" />
               <folding>
                 <element signature="e#168#194#0" expanded="true" />
                 <element signature="e#380#418#0" expanded="true" />
+                <element signature="e#1275#1308#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -57,7 +64,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/User.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1920">
+            <state relative-caret-position="1905">
               <caret line="128" column="12" selection-start-line="128" selection-start-column="12" selection-end-line="128" selection-end-column="12" />
               <folding>
                 <element signature="n#mongoose#0" expanded="true" />
@@ -182,11 +189,12 @@
       <workItem from="1560003898353" duration="1302000" />
       <workItem from="1560006004042" duration="341000" />
       <workItem from="1560007704533" duration="86000" />
+      <workItem from="1560163380996" duration="193000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15239000" />
+    <option name="totallyTimeSpent" value="15432000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="726" extended-state="0" />
@@ -241,11 +249,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="410">
-          <caret line="579" column="7" lean-forward="true" selection-start-line="579" selection-start-column="7" selection-end-line="579" selection-end-column="7" />
+        <state relative-caret-position="349">
+          <caret line="1316" column="39" selection-start-line="1316" selection-start-column="39" selection-end-line="1316" selection-end-column="39" />
           <folding>
             <element signature="e#168#194#0" expanded="true" />
             <element signature="e#380#418#0" expanded="true" />
+            <element signature="e#1275#1308#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -269,7 +278,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/User.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1920">
+        <state relative-caret-position="1905">
           <caret line="128" column="12" selection-start-line="128" selection-start-column="12" selection-end-line="128" selection-end-column="12" />
           <folding>
             <element signature="n#mongoose#0" expanded="true" />
