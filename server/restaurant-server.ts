@@ -128,6 +128,10 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
    if(!user.newUser(req.user).hasDeskRole())
       return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
 
+   if(req.params.username === "admin"){
+      return next({ statusCode:401, error: true, errormessage: "Unauthorized: cannot delete a desk"} );
+   }
+
    //query al DB
    user.getModel().deleteOne( {username: req.params.username } ).then( ()=> {
       socket.emitEvent("modified user");      
