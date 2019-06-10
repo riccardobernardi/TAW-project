@@ -1,5 +1,5 @@
 **NOTE SU RELAZIONI**
-Le relazioni sono le tre poste nella root directory. La documentazione tabellare delle API è unica per tutte e tre le relazioni e nominata API.pdf.
+Le relazioni sono le tre poste nella root directory. La documentazione tabellare delle API è unica per tutte e tre le relazioni e nominata API_Documentation.pdf.
 
 **AVVIO SERVER E DBMS**
 Dato che sia il client che il server sono hostati su delle piattaforme online (Heroku e MongoDB Atlas), non è necessario avviare ne' il server ne' il database in locale.
