@@ -6,7 +6,6 @@ import { TicketHttpService } from 'src/app/services/ticket-http.service';
 import {SocketioService} from '../services/socketio.service';
 import {Ticket} from '../interfaces/Ticket';
 import { ToastrService } from 'ngx-toastr';
-import { TicketOrder } from "../interfaces/TicketOrder";
 
 
 @Component({

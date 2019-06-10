@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {UserHttpService} from '../../services/user-http.service';
-import {ItemHttpService} from '../../services/item-http.service';
 import {TicketHttpService} from '../../services/ticket-http.service';
 import {SocketioService} from '../../services/socketio.service';
 import {TicketOrder} from '../../interfaces/TicketOrder';
@@ -54,7 +53,7 @@ export class PaydeskOptionsComponent implements OnInit {
   private disableTableButtons;
   private disableTicketsButtons;
 
-  constructor(private us: UserHttpService, private item: ItemHttpService, private ticket: TicketHttpService,
+  constructor(private us: UserHttpService, private ticket: TicketHttpService,
               private socketio: SocketioService, private router: Router,
               private table: TableHttpService, private toastr: ToastrService, private report: HttpReportService) {}
 

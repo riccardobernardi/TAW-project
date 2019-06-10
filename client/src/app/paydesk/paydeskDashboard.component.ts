@@ -9,10 +9,10 @@ import {UserHttpService} from '../services/user-http.service';
   styleUrls: ['./paydeskDashboard.component.css']
 })
 export class PaydeskDashboardComponent implements OnInit {
-  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router) { }
+  constructor(private us: UserHttpService) { }
 
   ngOnInit() {
-    if (this.us.get_token() == undefined || this.us.get_token() == '') {
+    if (this.us.get_token() == undefined || this.us.get_token() == '' || this.us.get_role() != "desk") {
       this.us.logout();
     }
   }

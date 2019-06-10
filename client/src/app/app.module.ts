@@ -22,7 +22,7 @@ import { PaydeskDashboardComponent } from "./paydesk/paydeskDashboard.component"
 import { PaydeskOptionsComponent } from './paydesk/paydeskOptions/paydeskOptions.component';
 import { ChartsModule } from "ng2-charts";
 import { StatisticsDashboardComponent } from './paydesk/statistics-dashboard/statistics-dashboard.component';
-import { WaiterStatisticsComponent } from './paydesk/statistics-dashboard/waiter-statistics/waiter-statistics.component';
+import { EmployeesStatisticsComponent } from './paydesk/statistics-dashboard/employees-statistics/employees-statistics.component';
 import { HttpInterceptorService } from './services/http-interceptor.service';
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { HistogramWithDatesComponent } from './paydesk/statistics-dashboard/histogram-with-dates/histogram-with-dates.component';
@@ -45,7 +45,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     TablesViewComponent,
     LogoutComponent,
     StatisticsDashboardComponent,
-    WaiterStatisticsComponent,
+    EmployeesStatisticsComponent,
     HistogramWithDatesComponent,
     StatsChartsComponent,
   ],
