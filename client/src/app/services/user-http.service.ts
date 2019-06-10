@@ -93,11 +93,7 @@ export class UserHttpService {
 
   register( user ): Observable<any> {
 
-    return this.http.post(this.endpoint, user)/*.pipe(
-      tap( (data) => {
-        console.log(JSON.stringify(data) );
-      })
-    )*/;
+    return this.http.post(this.endpoint, user);
 
   }
 
@@ -131,11 +127,7 @@ export class UserHttpService {
   deleteUser(selDelUser) {
     //console.log('deleted:' + selDelUser);
 
-    return this.http.delete(this.endpoint + "/" + selDelUser);/*.pipe(
-      tap( (data) => {
-        console.log(JSON.stringify(data) );
-      })
-    )*/
+    return this.http.delete(this.endpoint + "/" + selDelUser);
   }
 
   changePasswordUser(selUser, newPwd) {
@@ -146,10 +138,6 @@ export class UserHttpService {
     //console.log(this.endpoint + '/' + selUser);
 
     //console.log(user.role)
-    return this.http.put(this.endpoint + '/' + selUser.username, user);/*.pipe(
-      tap( (data) => {
-        console.log(options);
-        console.log(JSON.stringify(data) );
-      }));*/
+    return this.http.put(this.endpoint + '/' + selUser.username, user);
   }
 }

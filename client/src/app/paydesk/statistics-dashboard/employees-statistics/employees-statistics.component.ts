@@ -141,18 +141,19 @@ export class EmployeesStatisticsComponent implements OnInit {
   }*/
 
   private getStats() {
-    if(this.min_date && this.max_date && this.min_date <= this.max_date) {
+    if(this.min_date && this.max_date && this.min_date <= this.max_date) { //if dates range is valid
       this.report.get_reports({start: this.min_date.toISOString(), end: this.max_date.toISOString()}).toPromise().then((reports) => {
         //console.log(reports);
+        //if reports exist
         if(reports.length != 0) {
           this.statisticsXRoles = reports.map((report: Report) => {
-            return report.users_reports;
+            return report.users_reports; //take the user_reports
           }).reduce((user_report1, user_report2) => {
             for(let role in user_report1) {
-              if(role == "waiters") {
+              if(role == "waiters") { //if the role is waiters, change a little the computation
                 user_report1[role].forEach((dependant1) =>  {
-                  let dep = user_report2[role].filter((dependant2) => dependant1.username == dependant2.username);
-                  if(dep[0]) {
+                  let dep = user_report2[role].filter((dependant2) => dependant1.username == dependant2.username); //find in the sequent report the waiter, if exists
+                  if(dep[0]) { //update the stats for the waiter and remove
                     dependant1.customers_served += dep[0].customers_served;
                     dependant1.orders_served += dep[0].orders_served;
                     var i = user_report2[role].indexOf(dep[0]);
@@ -161,6 +162,7 @@ export class EmployeesStatisticsComponent implements OnInit {
                     }
                   }
                 });
+                //for each waiter not in the report1, change
                 user_report2[role].forEach((dependant2) => {
                   user_report1[role].push({
                     username: dependant2.username,
@@ -169,6 +171,7 @@ export class EmployeesStatisticsComponent implements OnInit {
                   })
                 });
               } else {
+                //same logic as waiter but with different stats
                 user_report1[role].forEach((dependant1) =>  {
                   let dep = user_report2[role].filter((dependant2) => dependant1.username == dependant2.username);
                   if(dep[0]) {

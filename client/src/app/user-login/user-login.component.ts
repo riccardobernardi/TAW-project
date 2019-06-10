@@ -10,9 +10,11 @@ import {UserHttpService} from '../services/user-http.service';
 export class UserLoginComponent implements OnInit {
 
   private errmessage = undefined;
-  constructor(private us: UserHttpService, private router: Router  ) { }
   private role = undefined
   private disableButton;
+
+  constructor(private us: UserHttpService, private router: Router  ) { }
+  
 
   ngOnInit() {
     this.disableButton = false;

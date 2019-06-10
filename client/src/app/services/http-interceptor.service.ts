@@ -3,7 +3,6 @@ import { environment } from "../../environments/environment";
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from "@angular/common/http";
 import { Observable } from 'rxjs';
 import { UserHttpService } from './user-http.service';
-import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'

@@ -162,7 +162,7 @@ export class PaydeskOptionsComponent implements OnInit {
 
   async allGainOfDay() {
 
-    this.totalgain = this.ticket.get_tickets({}).pipe(
+    this.totalgain = this.ticket.get_tickets({state: "closed"}).pipe(
       map((tickets : Ticket[] ) => {
         const ticketSup = [];
 
@@ -248,15 +248,15 @@ export class PaydeskOptionsComponent implements OnInit {
         this.disableTicketsButtons = false;
       })
       .catch((err) => {
-        let errmessage = err.error.errormessage || err.error.message;
-        this.signalError("Error: " + errmessage);
+        //let errmessage = err.error.errormessage || err.error.message;
+        this.signalError("Error: " + err/*message*/);
         this.disableTicketsButtons = false;
       });
   }
 
-  createScontrino() {
+  /*createScontrino() {
     console.log("AAAAA");
-  }
+  }*/
 
   getReport() {
     const date = new Date(this.year_delete, this.month_delete - 1, this.day_delete, 0, 0, 0, 0);
@@ -287,7 +287,7 @@ export class PaydeskOptionsComponent implements OnInit {
   }
 
   changePasswordUser(selChangePwdUser : User, newPwd: string) {
-    this.savetext();
+    //this.savetext();
     console.log(selChangePwdUser.username, newPwd);
     this.disableUserButtons = true;
     this.us.changePasswordUser(selChangePwdUser, newPwd).subscribe(() => {
@@ -327,7 +327,7 @@ export class PaydeskOptionsComponent implements OnInit {
     });
   }
 
-  savetext() {
+  /*savetext() {
     saveAs(new Blob(["AAAAAAA"], { type: "text/plain" }), 'prova.txt');
-  }
+  }*/
 }

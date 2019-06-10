@@ -25,13 +25,16 @@ export class OrdersServedComponent implements OnInit {
   constructor(private us: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService, private toastr: ToastrService) {}
 
   get_tickets() {
+    //if the role is desk, uses all the tickets opened, else use only the tickets for the waiter connected
     this.ticket.get_tickets((this.us.get_role() === roles[2]) ? {state: 'open'} : {state: 'open', waiter: this.us.get_nick()})
     .subscribe( (tickets: Ticket[]) => {
       //console.log(tickets);
       this.tickets = tickets;
+      //sort for table
       tickets.sort((ticket1: Ticket, ticket2: Ticket) => {
         return ticket1.table - ticket2.table;
       });
+      //sort the orders for type and states. At the top there are the orders not delivered, at the bottom the orders delivered.
       tickets.forEach( (ss) => {
         ss.orders.sort((ticket1: TicketOrder, ticket2: TicketOrder) => {
           if((ticket1.type_item == types[1] && ticket2.type_item == types[1]) || (ticket1.type_item != types[1] && ticket2.type_item != types[1])) {
@@ -64,9 +67,10 @@ export class OrdersServedComponent implements OnInit {
   }
 
   deliver(ticketIndex: number, orderIndex: number, checkbox: HTMLInputElement, spinner: HTMLElement) {
-    console.log(spinner);
+    //console.log(spinner);
     const ticket = this.tickets[ticketIndex];
     spinner.hidden = false;
+    //change order state in delivered and set the graphics element
     this.ticket.changeOrderState(ticket._id, ticket.orders[orderIndex]._id, 'delivered', null).toPromise().then((data) => {
       ticket.orders[orderIndex].state = 'delivered';
       this.error = false;
