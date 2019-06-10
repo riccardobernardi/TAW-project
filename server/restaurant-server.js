@@ -117,12 +117,12 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
     //console.log(user.roles.includes("desk"))
     console.log(req.body);
     //controllo formato
-    if (!req.body || !req.body.username || !req.body.password || !req.body.role || typeof (req.body.username) != 'string' || typeof (req.body.password) != 'string' || typeof (req.body.role) != 'string' || !user.roles.includes(req.body.role))
+    if (!req.body || !req.body.password || !req.body.role || typeof (req.body.password) != 'string' || typeof (req.body.role) != 'string' || !user.roles.includes(req.body.role))
         return next({ statusCode: 400, error: true, errormessage: "Wrong format" });
     console.log(req.body);
     //creo utente da inserire
     var newer = {};
-    newer["username"] = req.body.username;
+    newer["username"] = req.params.username;
     //newer.password = req.body.password;
     newer["role"] = req.body.role;
     var u = user.newUser(newer);
@@ -131,7 +131,7 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
     //query dal DB
     //errore strano con findOneAndReplace, poi vedere, altrimenti tenere findOneAndUpdate
     //occhio al setting dei campi, si può fare diversamente?
-    user.getModel().findOneAndUpdate({ username: req.params.username }, { $set: { username: req.body.username, password: req.body.password, role: req.body.role } }).then((data) => {
+    user.getModel().findOneAndUpdate({ username: req.params.username }, u).then((data) => {
         socket.emitEvent("modified user");
         return res.status(200).json({
             username: data.username,
