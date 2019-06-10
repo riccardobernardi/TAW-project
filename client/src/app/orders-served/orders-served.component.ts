@@ -3,7 +3,6 @@ import { Ticket } from '../interfaces/Ticket';
 import { TicketOrder, order_states } from '../interfaces/TicketOrder';
 import { types } from '../interfaces/Item';
 import { roles } from '../interfaces/User';
-import {ItemHttpService} from '../services/item-http.service';
 import {UserHttpService} from '../services/user-http.service';
 import { TicketHttpService } from 'src/app/services/ticket-http.service';
 import {SocketioService} from '../services/socketio.service';
@@ -24,7 +23,7 @@ export class OrdersServedComponent implements OnInit {
 
 
   constructor(private us: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService, private toastr: ToastrService) {
-    this.role = us.get_role();
+    this.role = this.us.get_role();
   }
 
   get_tickets() {
@@ -65,14 +64,19 @@ export class OrdersServedComponent implements OnInit {
     });
   }
 
-  deliver(ticketIndex: number, orderIndex: number, state: string) {
+  deliver(ticketIndex: number, orderIndex: number, checkbox: HTMLInputElement, spinner: HTMLElement) {
+    console.log(spinner);
     const ticket = this.tickets[ticketIndex];
+    spinner.hidden = false;
     this.ticket.changeOrderState(ticket._id, ticket.orders[orderIndex]._id, 'delivered', null).toPromise().then((data) => {
       ticket.orders[orderIndex].state = 'delivered';
       this.error = false;
+      spinner.hidden = true;
     }).catch((err) => {
       //console.log(err);
+      checkbox.checked = false;
       this.error = true;
+      spinner.hidden = true;
       this.toastr.error('Error: ' + err, 'Failure!', {
         timeOut: 3000
       });

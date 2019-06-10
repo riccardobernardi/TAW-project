@@ -58,25 +58,19 @@ export class BarmanComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  setOrderinProgress(ticketid: string, orderid: string) {
-    //console.log(ticketid, orderid);
-    this.ticket.changeOrderState(ticketid, orderid, 'preparation', undefined).toPromise().then(() => {
-      //console.log('Changing state to preparation OK');
-    }).catch((err) => {
-      this.toastr.error('Error: ' + err, 'Failure!', {
-        timeOut: 3000
-      });
-      //console.log('Changing state to prepation failed: ' + err);
-    });
-  }
-
-  setOrderCompleted(ticketid: string, orderid: string) {
+  setOrderCompleted(ticketid: string, orderid: string, button: HTMLButtonElement, spinner: HTMLElement) {
+    button.disabled = true;
+    spinner.hidden = false;
     this.ticket.changeOrderState(ticketid, orderid, 'ready', this.us.get_nick()).toPromise().then(() => {
       //console.log('Changing state to ready OK');
+      //button.disabled = false; non serve perchè se il tutto va a buon fine, l'ordine sparisce
+      spinner.hidden = true;
     }).catch((err) => {
       this.toastr.error('Error: ' + err, 'Failure!', {
         timeOut: 3000
       });
+      spinner.hidden = true;
+      button.disabled = false;
       //console.log('Changing state to ready failed: ' + err);
     });
   }

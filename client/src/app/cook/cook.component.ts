@@ -58,25 +58,33 @@ export class CookComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  setOrderinProgress(ticketid: string, orderid: string) {
+  setOrderinProgress(ticketid: string, orderid: string, button: HTMLButtonElement, spinner: HTMLElement) {
     //console.log(ticketid, orderid);
+    button.disabled = true;
+    spinner.hidden = false;
     this.ticket.changeOrderState(ticketid, orderid, 'preparation', this.us.get_nick()).toPromise().then(() => {
       //console.log('Changing state to preparation OK');
     }).catch((err) => {
       this.toastr.error('Error: ' + err, 'Failure!', {
         timeOut: 3000
       });
+      button.disabled = false;
+      spinner.hidden = true;
       //console.log('Changing state to prepation failed: ' + err);
     });
   }
 
-  setOrderCompleted(ticketid: string, orderid: string) {
+  setOrderCompleted(ticketid: string, orderid: string, button: HTMLButtonElement, spinner: HTMLElement) {
+    button.disabled = true;
+    spinner.hidden = false;
     this.ticket.changeOrderState(ticketid, orderid, 'ready', undefined).toPromise().then(() => {
       //console.log('Changing state to ready OK');
     }).catch((err) => {
       this.toastr.error('Error: ' + err, 'Failure!', {
         timeOut: 3000
       });
+      button.disabled = false;
+      spinner.hidden = true;
       //console.log('Changing state to ready failed: ' + err);
     });
   }

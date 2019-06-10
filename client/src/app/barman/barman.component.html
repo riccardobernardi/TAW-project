@@ -5,18 +5,21 @@
       <div *ngFor="let order of ticket.orders">
         <p class="card-text">{{ order.name_item }}</p>
         <form class="form-inline">
-          <div *ngIf="order.state == 'ordered'" class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="setOrderCompleted(ticket._id, order._id)">Completed</button></div>
+          <div *ngIf="order.state == 'ordered'" class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="setOrderCompleted(ticket._id, order._id, $event.target, $event.target.children[0])">
+            Completed
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden="{{true}}"></span>
+          </button></div>
         </form>
       </div>
     </div>
   </div>
-
-  <button id = "logout" class="btn btn-lg btn-primary btn-block" (click)="this.logout()" >Logout</button>
 </div>
 
 
 <ng-template #loading>
-    <div *ngIf="tickets && tickets.length != 0"></div>
-    <div *ngIf="!tickets" class="loading">Tables are loading...</div>
-    <div *ngIf="error" class="error">Error in loading tables...</div>
+    <div class="empty" *ngIf="tickets && tickets.length == 0">No orders...</div>
+    <div *ngIf="!tickets" class="loading">Orders are loading...</div>
+    <div *ngIf="error" class="error">Error in loading orders...</div>
 </ng-template>
+
+<app-logout></app-logout>

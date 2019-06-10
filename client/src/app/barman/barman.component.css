@@ -1,0 +1,18 @@
+.empty {
+    text-align: center;
+    border: 2px solid #007bff;
+    color: #007bff;
+    margin: 20px;
+}
+
+.loading {
+    text-align: center;
+    border: 2px solid #007bff;
+    color: #007bff
+}
+
+.error {
+    text-align: center;
+    border: 2px solid red;
+    color: red
+}
