@@ -31,7 +31,12 @@ export interface Order {
 export const orderState = ["ordered", "preparation", "ready", "delivered"];
 
 export const ticketState = ["open", "closed"]
-
+//controlla numero di cifre decimali
+var countDecimals = function(value) {
+    if (Math.floor(value) !== value)
+        return value.toString().split(".")[1].length || 0;
+    return 0;
+}
 var type = ["dish, beverage"]; 
 
 var ticketSchema = new mongoose.Schema( {
@@ -67,15 +72,28 @@ var ticketSchema = new mongoose.Schema( {
     },
     state: {
         type: mongoose.SchemaTypes.String,
-        required: false
+        required: false,
+        enum: ticketState
     },
     total: {
         type: mongoose.SchemaTypes.Number,
-        required: false
+        required: false,
+        validate: {
+            validator: function(value){
+                return countDecimals(value) <= 2;
+            },
+            message: "Total must have a precision of maximum 2 digits."
+        }
     },
     people_number : {
         type: mongoose.SchemaTypes.Number,
-        required: true
+        required: true,
+        validate: {
+            validator: function(value){
+                return countDecimals(value) == 0;
+            },
+            message: "People number must be an integer."
+        }
     }
 })
 

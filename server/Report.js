@@ -1,7 +1,7 @@
 "use strict";
-exports.__esModule = true;
-var mongoose = require("mongoose");
-var user = require("./User");
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose = require("mongoose");
+const user = require("./User");
 function isWaiterReport(arg) {
     return (arg.username && arg.costumers_served && arg.orders_served && typeof (arg.username) == "string" && typeof (arg.costumers_served) == "number" && typeof (arg.orders_served) == "number");
 }
@@ -15,17 +15,17 @@ exports.isCookerBartenderReport = isCookerBartenderReport;
 function isUsersReports(arg) {
     var user_report = true;
     if (arg.users_reports[user.roles[0]]) {
-        arg.users_reports[user.roles[0]].array.forEach(function (element) {
+        arg.users_reports[user.roles[0]].array.forEach(element => {
             user_report = user_report && isWaiterReport(element);
         });
     }
     if (arg.users_reports[user.roles[1]]) {
-        arg.users_reports[user.roles[1]].array.forEach(function (element) {
+        arg.users_reports[user.roles[1]].array.forEach(element => {
             user_report = user_report && isCookerBartenderReport(element);
         });
     }
     if (arg.users_reports[user.roles[3]]) {
-        arg.users_reports[user.roles[3]].array.forEach(function (element) {
+        arg.users_reports[user.roles[3]].array.forEach(element => {
             user_report = user_report && isCookerBartenderReport(element);
         });
     }
@@ -56,15 +56,28 @@ var reportSchema = new mongoose.Schema({
                 return countDecimals(value) <= 2;
             },
             message: "Price must have a precision of maximum 2 digits."
-        }
+        },
+        required: true
     },
     total_orders: {
         type: { dish: mongoose.SchemaTypes.Number, beverage: mongoose.SchemaTypes.Number },
-        required: true
+        required: true,
+        validate: {
+            validator: function (value) {
+                return countDecimals(value) == 0;
+            },
+            message: "Total orders must be an integer number."
+        }
     },
     total_customers: {
         type: mongoose.SchemaTypes.Number,
-        required: true
+        required: true,
+        validate: {
+            validator: function (value) {
+                return countDecimals(value) == 0;
+            },
+            message: "Total customers must be an integer number."
+        }
     },
     average_stay: {
         type: mongoose.SchemaTypes.Number,
@@ -72,14 +85,14 @@ var reportSchema = new mongoose.Schema({
     },
     users_reports: {
         type: {},
-        required: false
+        required: false,
     }
     /*il formato di users_reports è il seguente:
     {
-        user.roles[0]: [UserReport],
-        user.roles[1]: [UserReport],
-        user.roles[2]: [UserReport],
-        user.roles[3]: [UserReport],
+        user.roles[0]: [UsersReports],
+        user.roles[1]: [UsersReports],
+        user.roles[2]: [UsersReports],
+        user.roles[3]: [UsersReports],
     }
     non tutti i ruoli sono richiesti.
     */
@@ -95,3 +108,4 @@ function getModel() {
     return reportModel;
 }
 exports.getModel = getModel;
+//# sourceMappingURL=Report.js.map

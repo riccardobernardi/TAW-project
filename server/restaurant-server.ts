@@ -15,17 +15,13 @@ import passportHTTP = require('passport-http');  // implements Basic and Digest 
 import jsonwebtoken = require('jsonwebtoken');  // JWT generation
 import jwt = require('express-jwt');            // JWT parsing middleware for express
 import cors = require('cors');                  // Enable CORS middleware
-import io = require('socket.io');               // Socket.io websocket library
 import * as table from './Table';
 import * as user from './User';
 import * as ticket from './Ticket';
 import * as item from './Item';
 import * as report from './Report';
-
-
+import {MySocket} from './mysocket';
 var app = express();
-/*var http = require('http').Server(app);
-var ioss = require('socket.io')(http);*/
 
 // We create the JWT authentication middleware
 // provided by the express-jwt library.  
@@ -35,58 +31,16 @@ var ioss = require('socket.io')(http);*/
 // decoded to be used by later middleware for authorization and access control.
 //
 
-/*let server = http.createServer(app);
-var ioss = io(server);
-ioss.on('connection', function(client) {
-   console.log( "Socket.io client connected");
-});*/
 
 
 var auth = jwt( {secret: process.env.JWT_SECRET} );
 
 
-//strutture dati e funzione necessarie per il socket
-var ios = undefined;
+//variabile per il socket
+var socket: MySocket;
 
-var rooms = ["waiters", "cooks", "desks", "bartenders"];
-
-var socketEvents = {
-   "modified user": {
-      destRooms: [rooms[2]]
-   },
-   "modified table": {
-      destRooms: [rooms[0], rooms[2]]
-   },
-   
-   "ordered dish": {
-      destRooms: [rooms[1]]
-   },
-   "ordered drink":{
-      destRooms: [rooms[3]]
-   },
-   "dish in preparation": {
-      destRooms: [rooms[1]]
-   },
-   "beverage in preparation": {
-      destRooms: [rooms[3]]
-   },
-   "ready item - cooks": {
-      destRooms: [rooms[1]]
-   },
-   "ready item - bartenders": {
-      destRooms: [rooms[3]]
-   },
-   "ready item - waiters": {
-      destRooms: [rooms[0]]
-   },
-
-};
-
-function emitEvent(eventType){
-   socketEvents[eventType].destRooms.forEach(r => {
-      ios.emit(r);
-   });
-};
+//semaforo per tickets post
+var ticket_post_occupied = false;
 
 app.use( cors() );
 
@@ -114,12 +68,14 @@ res.status(200).json( {
    ios.emit("paydesks");
 })*/
 
-app.route("/mock").get( (req,res,next) => {
+//da togliere
+
+/*app.route("/mock").get( (req,res,next) => {
    ios.emit("cooks");
 
    return res.status(200).json( "bella vecchio" );
-});
-
+}); 
+*/
 app.route("/users").get(auth, (req,res,next) => {
    //da togliere
    console.log(JSON.stringify(req.headers));
@@ -155,7 +111,7 @@ app.route("/users").get(auth, (req,res,next) => {
 
    //query
    u.save().then( (data) => {
-      emitEvent("modified user");
+      socket.emitEvent("modified user");
       return res.status(200).json({ error: false, errormessage: "", id: data._id });
    }).catch( (reason) => {
    if( reason.code === 11000 )
@@ -174,7 +130,7 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
 
    //query al DB
    user.getModel().deleteOne( {username: req.params.username } ).then( ()=> {
-      emitEvent("modified user");      
+      socket.emitEvent("modified user");      
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason)=> {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
@@ -204,7 +160,7 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
    //errore strano con findOneAndReplace, poi vedere, altrimenti tenere findOneAndUpdate
    //occhio al setting dei campi, si può fare diversamente?
    user.getModel().findOneAndUpdate({username: req.params.username}, {$set : {username : req.body.username, password:req.body.password, role: req.body.role}}).then( (data : user.User)=> {
-      emitEvent("modified user");
+      socket.emitEvent("modified user");
       return res.status(200).json( {
          username: data.username,
          role: data.role
@@ -253,7 +209,7 @@ app.route("/tables").get(auth, (req, res, next) => {
    //query al DB
    (new Table(toInsert)).save().then( (data : table.Table) => {
       //notifico sul socket
-      emitEvent("modified table");
+      socket.emitEvent("modified table");
       return res.status(200).json( {
          number: data.number,
          max_people: data.max_people,
@@ -309,7 +265,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
          */
          data.update(update).then(() => {
             //notifico sul socket
-            emitEvent("modified table");
+            socket.emitEvent("modified table");
             return res.status(200).json( {
                number: data.number,
                max_people: data.number,
@@ -328,7 +284,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
          //modifico tavolo
          data.update(update).then(() => {
             //notifico sul socket
-            emitEvent("modified table");
+            socket.emitEvent("modified table");
             return res.status(200).json( {
                number: data.number,
                max_people: data.max_people,
@@ -345,7 +301,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
          //modifico tavolo
          data.update(update).then(() => {
             //notifico sul socket
-            emitEvent("modified table");
+            socket.emitEvent("modified table");
             return res.status(200).json( {
                number: data.number,
                max_people: data.max_people,
@@ -370,7 +326,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
    //query al DB
    table.getModel().findOneAndDelete({number: req.params.number}).then( () => {
       //notifico sul socket
-      emitEvent("modified table");
+      socket.emitEvent("modified table");
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
@@ -546,6 +502,14 @@ app.route("/tickets").get(auth, (req, res, next) => {
    if (!req.body || !req.body.waiter || !req.body.table || !req.body.start || typeof(req.body.waiter) != 'string' || typeof(req.body.table) != 'number' || startdate.toString() == 'Invalid Date' ){
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
+
+   //controllo semaforo
+   if (ticket_post_occupied)
+      return next({statusCode:429, error:true, errormessage: "Server is executing another /tickets POST"} );
+   //occupo semaforo
+   ticket_post_occupied = true;
+   
+
    //creo ticket da inserire
    var newer: any = {};
    newer.waiter = req.body.waiter;
@@ -557,20 +521,29 @@ app.route("/tickets").get(auth, (req, res, next) => {
    ticket.getModel().findOne({table: newer.table, state: ticket.ticketState[0]}).then((data) => {
       console.log("AAAAAAAAAAA" + data);
       if(!data) {
+         //libero semaforo
+         ticket_post_occupied = false;
          return table.getModel().findOne({number: newer.table})
       } else return next({statusCode:409, error:true, errormessage: "Ticket for this table already is open"} );
    }).then((data: table.Table) => {
 
-      if(!data)
+      if(!data){
+         //libero semaforo
+         ticket_post_occupied = false;
          return next({statusCode:409, error:true, errormessage: "Table associated doesn't exist."} );
-
+      }
          //controllo numero posti del tavolo
-      if (newer.people_number > data.max_people)
+      if (newer.people_number > data.max_people){
+         //libero semaforo
+         ticket_post_occupied = false;
          return next({statusCode:409, error:true, errormessage: "Table associated hasn't enought seats"} );
+      }
          //controllo che il tavolo sia libero
-      if (data.state == table.states[1])
+      if (data.state == table.states[1]){
+         //libero semaforo
+         ticket_post_occupied = false;
          return next({statusCode:409, error:true, errormessage: "Table is already taken"} );
-
+      }
       console.log({table: newer.table, state: ticket.ticketState[0]});
       
       var t = new (ticket.getModel()) (newer);
@@ -580,10 +553,16 @@ app.route("/tickets").get(auth, (req, res, next) => {
 
       return t.save();
    }, () => {
+      //libero semaforo
+      ticket_post_occupied = false;
       return next({statusCode:409, error:true, errormessage: "Table associated doesn't exist"} );
    }).then( (data) => {
+      //libero semaforo
+      ticket_post_occupied = false;
       return res.status(200).json({ error: false, errormessage: "", _id: data._id });
    }).catch((reason) => {
+      //libero semaforo
+      ticket_post_occupied = false;
       if( reason.code === 11000 )
          return next({statusCode:409, error:true, errormessage: "Ticket already exists"} );
       return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
@@ -674,10 +653,10 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
          //console.log("AAAAAAA:\n" + i + "\n");
          if (i.type == item.type[0]){
             console.log("DISH")
-            emitEvent("ordered dish");
+            socket.emitEvent("ordered dish");
          } else if (i.type == item.type[1]){
             console.log("DRINK");
-            emitEvent("ordered drink");
+            socket.emitEvent("ordered drink");
          }
          return res.status(200).json( {error:false, errormessage:""} );
       }).catch((err) => {
@@ -738,7 +717,7 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
          //console.log(item.type[0]);
          //var order = data.orders.filter((order) => order.id == req.params.idOrder)[0]
          //if(order.type_item == item.type[0]) {
-         emitEvent("dish in preparation");
+            socket.emitEvent("dish in preparation");
          console.log("emit dish in prepare");
          //} else {
          //   emitEvent("beverage in preparation", req.params.idTicket);
@@ -749,10 +728,10 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
          var order = data.orders.filter((order) => order.id == req.params.idOrder)[0];
          if(order.type_item == item.type[0]) {
             console.log("Emetto piatto pronto per cuochi");
-            emitEvent("ready item - cooks");
+            socket.emitEvent("ready item - cooks");
          } else {
             console.log("Emetto piatto pronto per cuochi");
-            emitEvent("ready item - bartenders");
+            socket.emitEvent("ready item - bartenders");
          }
          //controllo che tutti gli ordini dello stesso tipo e dello stesso ticket siano pronti
          var ordersList: Array<ticket.Order[]> = [];
@@ -765,7 +744,7 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
             console.log("Sto per emettere l'evento 'piatti pronti!'");
 
          if (req.body.state == ticket.orderState[2] && ordersList.length == 0){
-            emitEvent("ready item - waiters");
+            socket.emitEvent("ready item - waiters");
          }
       }
       return res.status(200).json( {error:false, errormessage:""} );
@@ -1315,10 +1294,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
 
 
    let server = http.createServer(app);
-   ios = io(server);
-   ios.on('connection', function(client) {
-      console.log( "Socket.io client connected");      
-   });
+   socket = new MySocket(server);
    // server.listen( 8080, () => console.log("HTTP Server started on port 8080") );
 
    console.log("aaaaaaaaaaaaaaaaaaa 1234" + process.env.PORT || 8080 );
