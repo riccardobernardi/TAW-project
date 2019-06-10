@@ -43,10 +43,11 @@ export class StatsChartsComponent implements OnInit {
     //console.log($event);
     //console.log(field);
     //console.log(this.statistics[field]);
-    if($event.min_date && $event.max_date) {
+    if($event.min_date && $event.max_date && $event.min_date <= $event.max_date) { //if dates exist get the reports
       this.report.get_reports({start: $event.min_date, end: $event.max_date}).toPromise().then((reports : Report[]) => {
         //console.log(reports);
-        if(field == "total_orders") 
+        //construct data and labels for the graphics
+        if(field == "total_orders") //if the field is total_orders, eleborates the data in a particular way for handling two types, food and beverage
           this.statistics[field] = {data : [{data: reports.map((report) => report[field].dish), label: this.labels[field].dish}, {data: reports.map((report) => report[field].beverage), label: this.labels[field].beverage}], dates: reports.map((report) => report.date)}
         else 
           this.statistics[field] = {data : [{data: reports.map((report) => report[field]), label: this.labels[field]}], dates: reports.map((report) => report.date)}

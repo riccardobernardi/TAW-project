@@ -3,9 +3,6 @@ import { UserHttpService } from './user-http.service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Ticket } from '../interfaces/Ticket';
 import { TicketOrder } from '../interfaces/TicketOrder';
-import { types } from '../interfaces/Item';
-import { Report } from '../interfaces/Report';
-import { roles } from '../interfaces/User';
 
 @Injectable({
   providedIn: 'root'

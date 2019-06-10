@@ -20,11 +20,11 @@ export const routes: Routes = [
   { path: 'waiter',
     component: WaiterDashboardComponent,
     children: [
-      /*{
+      {
         path:'',
         redirectTo: 'tables',
         pathMatch: 'full' 
-      },*/
+      },
       {
         path: 'tables',
         component:  TablesViewComponent
@@ -48,11 +48,11 @@ export const routes: Routes = [
   { path: 'desk',
     component: PaydeskDashboardComponent,
     children: [
-      /*{
+      {
         path:'',
         redirectTo: 'tables',
         pathMatch: 'full' 
-      },*/
+      },
       {
         path: 'tables',
         component:  TablesViewComponent
