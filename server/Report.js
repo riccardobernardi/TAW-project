@@ -64,7 +64,12 @@ var reportSchema = new mongoose.Schema({
         required: true,
         validate: {
             validator: function (value) {
-                return countDecimals(value) == 0;
+                let ret = true;
+                if (value.dish)
+                    ret = (countDecimals(value.dish) == 0);
+                if (value.beverage)
+                    ret = ret && (countDecimals(value.beverage) == 0);
+                return ret;
             },
             message: "Total orders must be an integer number."
         }
