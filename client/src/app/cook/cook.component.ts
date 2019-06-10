@@ -44,7 +44,7 @@ export class CookComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.us.get_token() === undefined || this.us.get_token() === '') {
+    if (this.us.get_token() === undefined || this.us.get_token() === '' || this.us.get_role() != "cook") {
       this.us.logout();
     }
     this.error = false;

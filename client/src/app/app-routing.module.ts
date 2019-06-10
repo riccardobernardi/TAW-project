@@ -11,7 +11,7 @@ import { TablesViewComponent } from './tables-view/tables-view.component';
 import { LogoutComponent } from './logout/logout.component';
 import { PaydeskDashboardComponent } from './paydesk/paydeskDashboard.component';
 import { StatisticsDashboardComponent } from './paydesk/statistics-dashboard/statistics-dashboard.component';
-import {WaiterStatisticsComponent} from './paydesk/statistics-dashboard/waiter-statistics/waiter-statistics.component';
+import {EmployeesStatisticsComponent} from './paydesk/statistics-dashboard/employees-statistics/employees-statistics.component';
 import { StatsChartsComponent } from "./paydesk/statistics-dashboard/stats-charts/stats-charts.component"
 
 export const routes: Routes = [
@@ -83,8 +83,8 @@ export const routes: Routes = [
             component: StatsChartsComponent
           },
           {
-            path: 'waiter-statistics',
-            component: WaiterStatisticsComponent
+            path: 'employees-statistics',
+            component: EmployeesStatisticsComponent
           }
         ]
       },

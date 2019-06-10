@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChange } from '@angular/core';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
-
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-histogram-with-dates',
@@ -27,12 +27,11 @@ export class HistogramWithDatesComponent implements OnInit {
     responsive: true
   };
 
-  constructor() {}
+  constructor( private toastr: ToastrService ) {}
 
   ngOnInit() { }
 
   ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
-   
     if(changes["barChartDates"].currentValue)
       this.barChartLabels = this.createLabels(changes["barChartDates"].currentValue);
   }
@@ -46,7 +45,11 @@ export class HistogramWithDatesComponent implements OnInit {
   }
 
   update() {
-    this.dateRange.emit({min_date: this.min_date, max_date: this.max_date});
+    if(this.min_date <= this.max_date) {
+      this.dateRange.emit({min_date: this.min_date, max_date: this.max_date});
+    } else this.toastr.error("Select a valid range!", "Success!", {
+      timeOut: 3000
+    });
   }
 
   createLabels(data) {

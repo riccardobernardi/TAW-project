@@ -13,11 +13,11 @@ import { HttpReportService } from 'src/app/services/http-report.service';
 
 
 @Component({
-  selector: 'app-waiter-statistics',
-  templateUrl: './waiter-statistics.component.html',
-  styleUrls: ['./waiter-statistics.component.css']
+  selector: 'app-employees-statistics',
+  templateUrl: './employees-statistics.component.html',
+  styleUrls: ['./employees-statistics.component.css']
 })
-export class WaiterStatisticsComponent implements OnInit {
+export class EmployeesStatisticsComponent implements OnInit {
 
   //private totalgain: Promise<number | any[] | never>;
 
@@ -141,7 +141,7 @@ export class WaiterStatisticsComponent implements OnInit {
   }*/
 
   private getStats() {
-    if(this.min_date && this.max_date) {
+    if(this.min_date && this.max_date && this.min_date <= this.max_date) {
       this.report.get_reports({start: this.min_date.toISOString(), end: this.max_date.toISOString()}).toPromise().then((reports) => {
         //console.log(reports);
         if(reports.length != 0) {
