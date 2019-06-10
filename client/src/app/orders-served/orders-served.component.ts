@@ -22,9 +22,7 @@ export class OrdersServedComponent implements OnInit {
   private order_states = order_states;
 
 
-  constructor(private us: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService, private toastr: ToastrService) {
-    this.role = this.us.get_role();
-  }
+  constructor(private us: UserHttpService, private ticket: TicketHttpService, private socketio: SocketioService, private toastr: ToastrService) {}
 
   get_tickets() {
     this.ticket.get_tickets((this.us.get_role() === roles[2]) ? {state: 'open'} : {state: 'open', waiter: this.us.get_nick()})
@@ -57,6 +55,7 @@ export class OrdersServedComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.role = this.us.get_role();
     this.get_tickets();
     this.socketio.get().on('waiters', () => {
       //console.log("Orders served event received");
