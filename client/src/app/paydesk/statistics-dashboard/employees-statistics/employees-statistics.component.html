@@ -28,7 +28,7 @@
 
 <div class="role-selection">
   <span style="width: 30%" class="label label-default" for="selRoles">Seleziona un ruolo per filtrare</span>
-  <select (change)="filterRoles()" style="width: 60%" class="form-control" [(ngModel)]="selRole" name="selRoles" id="selRoles">
+  <select style="width: 60%" class="form-control" [(ngModel)]="selRole" name="selRoles" id="selRoles">
     <option *ngFor="let role of roles" [ngValue]="role">{{role}}</option>
   </select>
 </div>
