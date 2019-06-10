@@ -1,8 +1,14 @@
 "use strict";
-exports.__esModule = true;
-var mongoose = require("mongoose");
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose = require("mongoose");
 exports.orderState = ["ordered", "preparation", "ready", "delivered"];
 exports.ticketState = ["open", "closed"];
+//controlla numero di cifre decimali
+var countDecimals = function (value) {
+    if (Math.floor(value) !== value)
+        return value.toString().split(".")[1].length || 0;
+    return 0;
+};
 var type = ["dish, beverage"];
 var ticketSchema = new mongoose.Schema({
     waiter: {
@@ -37,15 +43,28 @@ var ticketSchema = new mongoose.Schema({
     },
     state: {
         type: mongoose.SchemaTypes.String,
-        required: false
+        required: false,
+        enum: exports.ticketState
     },
     total: {
         type: mongoose.SchemaTypes.Number,
-        required: false
+        required: false,
+        validate: {
+            validator: function (value) {
+                return countDecimals(value) <= 2;
+            },
+            message: "Total must have a precision of maximum 2 digits."
+        }
     },
     people_number: {
         type: mongoose.SchemaTypes.Number,
-        required: true
+        required: true,
+        validate: {
+            validator: function (value) {
+                return countDecimals(value) == 0;
+            },
+            message: "People number must be an integer."
+        }
     }
 });
 //export function getOrderSchema() { return orderSchema; }
@@ -60,3 +79,4 @@ function getModel() {
     return ticketModel;
 }
 exports.getModel = getModel;
+//# sourceMappingURL=Ticket.js.map

@@ -21,7 +21,7 @@ export interface CookerBartenderReport extends mongoose.Document {
     items_served: number
 }
 
-export interface UserReport extends mongoose.Document {
+export interface UsersReports extends mongoose.Document {
     "waiter": Array<WaiterReport>,
     "cook": Array<CookerBartenderReport>,
     "bartender": Array<CookerBartenderReport>
@@ -35,7 +35,7 @@ export function isWaiterReport(arg: any): arg is WaiterReport {
 export function isCookerBartenderReport(arg: any): arg is CookerBartenderReport {
     return (arg.username && arg.items_served && typeof(arg.username) == "string" && typeof(arg.items_served) == "number")
 };
-export function isUsersReports(arg: any): arg is UserReport {
+export function isUsersReports(arg: any): arg is UsersReports {
     var user_report = true;
     if (arg.users_reports[user.roles[0]]){
         arg.users_reports[user.roles[0]].array.forEach(element => {
@@ -82,15 +82,28 @@ var reportSchema = new mongoose.Schema( {
                 return countDecimals(value) <= 2;
             },
             message: "Price must have a precision of maximum 2 digits."
-        }
+        },
+        required: true
     },
     total_orders: {
         type: {dish: mongoose.SchemaTypes.Number, beverage: mongoose.SchemaTypes.Number},
         required: true,
+        validate: {
+            validator: function(value){
+                return countDecimals(value) == 0;
+            },
+            message: "Total orders must be an integer number."
+        }
     },
     total_customers:  {
         type: mongoose.SchemaTypes.Number,
-        required: true
+        required: true,
+        validate: {
+            validator: function(value){
+                return countDecimals(value) == 0;
+            },
+            message: "Total customers must be an integer number."
+        }
     },
     average_stay: {
         type: mongoose.SchemaTypes.Number,
@@ -103,10 +116,10 @@ var reportSchema = new mongoose.Schema( {
     }
     /*il formato di users_reports è il seguente:
     {
-        user.roles[0]: [UserReport],
-        user.roles[1]: [UserReport],
-        user.roles[2]: [UserReport],
-        user.roles[3]: [UserReport],
+        user.roles[0]: [UsersReports],
+        user.roles[1]: [UsersReports],
+        user.roles[2]: [UsersReports],
+        user.roles[3]: [UsersReports],
     }
     non tutti i ruoli sono richiesti.
     */
