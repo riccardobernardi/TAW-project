@@ -16,6 +16,7 @@ export class WaiterDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log("WaiterDashboard istanciated!");
     if (this.us.get_token() == undefined || this.us.get_token() == '' /*|| this.us.get_role() != "waiter"*/) {
       console.log("Entrato per fare la logout!")
       this.us.logout();

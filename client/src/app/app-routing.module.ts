@@ -20,11 +20,11 @@ export const routes: Routes = [
   { path: 'waiter',
     component: WaiterDashboardComponent,
     children: [
-      {
+      /*{
         path:'',
         redirectTo: 'tables',
         pathMatch: 'full' 
-      },
+      },*/
       {
         path: 'tables',
         component:  TablesViewComponent
