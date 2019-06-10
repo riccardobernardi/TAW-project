@@ -12,8 +12,18 @@
             <td style="width:50%">{{ order.added }}</td>
             <td style="width:20%">
               <form class="form-inline">
-                <div *ngIf="order.state == 'ordered'" class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="setOrderinProgress(ticket._id, order._id)">In progress</button></div>
-                <div *ngIf="order.state == 'preparation'" class="form-group mb-2"><button type="submit" class="btn btn-primary mb-2" (click)="setOrderCompleted(ticket._id, order._id)">Completed</button></div>
+                <div *ngIf="order.state == 'ordered'" class="form-group mb-2">
+                  <button type="submit" class="btn btn-primary mb-2" (click)="setOrderinProgress(ticket._id, order._id, $event.target, $event.target.children[0])">
+                    In progress
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden="{{true}}"></span>
+                  </button>
+                </div>
+                <div *ngIf="order.state == 'preparation'" class="form-group mb-2">
+                  <button type="submit" class="btn btn-primary mb-2" (click)="setOrderCompleted(ticket._id, order._id, $event.target, $event.target.children[0])">
+                    Completed
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden="{{true}}"></span>
+                  </button>
+                </div>
               </form>
             </td>
           </tr>
@@ -21,12 +31,13 @@
       </table>
     </div>
   </div>
-  <button id = "logout" class="btn btn-lg btn-primary btn-block" (click)="this.logout()" >Logout</button>
 </div>
 
 
 <ng-template #loading>
-    <div *ngIf="tickets && tickets.length != 0"></div>
-    <div *ngIf="!tickets" class="loading">Tables are loading...</div>
-    <div *ngIf="error" class="error">Error in loading tables...</div>
+    <div class="empty" *ngIf="tickets && tickets.length == 0">No orders...</div>
+    <div *ngIf="!tickets" class="loading">Orders are loading...</div>
+    <div *ngIf="error" class="error">Error in loading orders...</div>
 </ng-template>
+
+<app-logout></app-logout>

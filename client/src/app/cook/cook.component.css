@@ -5,3 +5,16 @@
 .orders-list button {
     margin: 20px;
 }
+
+.empty, .loading {
+    text-align: center;
+    border: 2px solid #007bff;
+    color: #007bff;
+    margin: 20px;
+}
+
+.error {
+    text-align: center;
+    border: 2px solid red;
+    color: red
+}
