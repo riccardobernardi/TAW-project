@@ -24,8 +24,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-223">
-              <caret line="130" selection-start-line="130" selection-end-line="130" />
+            <state relative-caret-position="291">
+              <caret line="160" column="24" lean-forward="true" selection-start-line="160" selection-start-column="24" selection-end-line="160" selection-end-column="24" />
               <folding>
                 <element signature="e#168#194#0" expanded="true" />
                 <element signature="e#380#418#0" expanded="true" />
@@ -186,16 +186,15 @@
       <workItem from="1560007704533" duration="86000" />
       <workItem from="1560163380996" duration="193000" />
       <workItem from="1560193265017" duration="161000" />
-      <workItem from="1560236786777" duration="353000" />
+      <workItem from="1560236786777" duration="510000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15946000" />
+    <option name="totallyTimeSpent" value="16103000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -241,8 +240,8 @@
     <entry file="file://$PROJECT_DIR$/API_Documentation.md" />
     <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-223">
-          <caret line="130" selection-start-line="130" selection-end-line="130" />
+        <state relative-caret-position="291">
+          <caret line="160" column="24" lean-forward="true" selection-start-line="160" selection-start-column="24" selection-end-line="160" selection-end-column="24" />
           <folding>
             <element signature="e#168#194#0" expanded="true" />
             <element signature="e#380#418#0" expanded="true" />
