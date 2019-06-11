@@ -1,7 +1,7 @@
-import * as item from './Item';
-import * as table from './Table';
-import * as user from './User'
-import * as ticket from './Ticket'
+import * as item from './models/Item';
+import * as table from './models/Table';
+import * as user from './models/User'
+import * as ticket from './models/Ticket'
 
 export var itemsToInsert = [
     {

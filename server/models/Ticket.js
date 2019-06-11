@@ -1,6 +1,6 @@
 "use strict";
-exports.__esModule = true;
-var mongoose = require("mongoose");
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose = require("mongoose");
 exports.orderState = ["ordered", "preparation", "ready", "delivered"];
 exports.ticketState = ["open", "closed"];
 //controlla numero di cifre decimali
@@ -44,7 +44,7 @@ var ticketSchema = new mongoose.Schema({
     state: {
         type: mongoose.SchemaTypes.String,
         required: false,
-        "enum": exports.ticketState
+        enum: exports.ticketState
     },
     total: {
         type: mongoose.SchemaTypes.Number,
@@ -79,3 +79,4 @@ function getModel() {
     return ticketModel;
 }
 exports.getModel = getModel;
+//# sourceMappingURL=Ticket.js.map

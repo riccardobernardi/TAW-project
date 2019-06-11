@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const item = require("./models/Item");
 const table = require("./models/Table");
+const ticket = require("./models/Ticket");
 exports.itemsToInsert = [
     {
         name: "Bistecca alla griglia",
@@ -341,14 +342,14 @@ exports.ticketToInsert = [
                 price: 6,
                 added: ["Mozzarella"],
                 type_item: item.type[0],
-                required_time: 12
+                required_time: 12,
             }, {
                 name_item: "Bistecca alla griglia",
                 username_waiter: "waiter2",
                 state: ticket.orderState[0],
                 price: 9,
                 type_item: item.type[0],
-                required_time: 10
+                required_time: 10,
             },
             {
                 name_item: "Chinotto",
@@ -356,7 +357,7 @@ exports.ticketToInsert = [
                 state: ticket.orderState[0],
                 price: 2.5,
                 type_item: item.type[1],
-                required_time: 1
+                required_time: 1,
             },
             {
                 name_item: "Spaghetti al pomodoro",
@@ -438,7 +439,7 @@ exports.ticketToInsert = [
                 state: ticket.orderState[0],
                 price: 9,
                 type_item: item.type[0],
-                required_time: 10
+                required_time: 10,
             },
             {
                 name_item: "Chinotto",
@@ -446,7 +447,7 @@ exports.ticketToInsert = [
                 state: ticket.orderState[0],
                 price: 2.5,
                 type_item: item.type[1],
-                required_time: 1
+                required_time: 1,
             }],
         state: ticket.ticketState[0],
         total: 0,
@@ -530,3 +531,4 @@ exports.reportToInsert = [
         }
     }
 ];
+//# sourceMappingURL=toinsert.js.map
