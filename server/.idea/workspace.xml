@@ -2,12 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../client/src/app/barman/barman.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/barman/barman.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/cook/cook.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/cook/cook.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/insert-orders/insert-orders.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/insert-orders/insert-orders.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/interfaces/Table.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/interfaces/Table.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/interfaces/TicketOrder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/interfaces/TicketOrder.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/interfaces/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/interfaces/User.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Item.js" beforeDir="false" afterPath="$PROJECT_DIR$/Item.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Report.js" beforeDir="false" afterPath="$PROJECT_DIR$/Report.js" afterDir="false" />
@@ -193,12 +187,12 @@
       <workItem from="1560163380996" duration="193000" />
       <workItem from="1560193265017" duration="161000" />
       <workItem from="1560236786777" duration="801000" />
-      <workItem from="1560239928565" duration="237000" />
+      <workItem from="1560239928565" duration="252000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16631000" />
+    <option name="totallyTimeSpent" value="16646000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
