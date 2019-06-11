@@ -253,8 +253,11 @@ export class PaydeskOptionsComponent implements OnInit {
         this.disableTicketsButtons = false;
       })
       .catch((err) => {
-        // let errmessage = err.error.errormessage || err.error.message;
-        this.signalError('Error: ' + err/*message*/);
+        let errmessage;
+        if(err.error)
+          errmessage = err.error.errormessage || err.error.message;
+        else errmessage = err;
+        this.signalError('Error: ' + errmessage);
         this.disableTicketsButtons = false;
       });
   }
