@@ -470,9 +470,9 @@ export var reportToInsert = [
       },
       average_stay: 40,
       users_reports: {
-         waiters: [{username: "waiter1", customers_served: 20, orders_served: 66}, {username: "waiter2", customers_served: 40, orders_served: 120}],
-         bartenders: [{username: "bartender1", items_served: 60}],
-         cookers: [{username: "cook1", items_served: 60}]
+         waiter: [{username: "waiter1", customers_served: 20, orders_served: 66}, {username: "waiter2", customers_served: 40, orders_served: 120}],
+         bartender: [{username: "bartender1", items_served: 60}],
+         cook: [{username: "cook1", items_served: 60}]
       }
    },
    {
@@ -485,9 +485,9 @@ export var reportToInsert = [
       },
       average_stay: 90,
       users_reports: {
-         waiters: [{username: "waiter1", customers_served: 20, orders_served: 66}, {username: "waiter2", customers_served: 40, orders_served: 120}],
-         bartenders: [{username: "bartender1", items_served: 60}],
-         cookers: [{username: "cook1", items_served: 60}]
+         waiter: [{username: "waiter1", customers_served: 20, orders_served: 66}, {username: "waiter2", customers_served: 40, orders_served: 120}],
+         bartender: [{username: "bartender1", items_served: 60}],
+         cook: [{username: "cook1", items_served: 60}]
       }
    },
    {
@@ -500,9 +500,9 @@ export var reportToInsert = [
       },
       average_stay: 120,
       users_reports: {
-         waiters: [{username: "waiter1", customers_served: 80, orders_served: 912}, {username: "waiter2", customers_served: 40, orders_served: 305}],
-         bartenders: [{username: "bartender1", items_served: 400}, {username: "waiter2", items_served: 700}],
-         cookers: [{username: "cook1", items_served: 60}, {username: "cook2", items_served: 1110}]
+         waiter: [{username: "waiter1", customers_served: 80, orders_served: 912}, {username: "waiter2", customers_served: 40, orders_served: 305}],
+         bartender: [{username: "bartender1", items_served: 400}, {username: "waiter2", items_served: 700}],
+         cook: [{username: "cook1", items_served: 60}, {username: "cook2", items_served: 1110}]
       }
    },
    {
@@ -515,9 +515,9 @@ export var reportToInsert = [
       },
       average_stay: 120,
       users_reports: {
-         waiters: [{username: "waiter1", customers_served: 80, orders_served: 912}, {username: "waiter2", customers_served: 40, orders_served: 305}],
-         bartenders: [{username: "bartender1", items_served: 400}, {username: "waiter2", items_served: 700}],
-         cookers: [{username: "cook1", items_served: 60}, {username: "cook2", items_served: 1110}]
+         waiter: [{username: "waiter1", customers_served: 80, orders_served: 912}, {username: "waiter2", customers_served: 40, orders_served: 305}],
+         bartender: [{username: "bartender1", items_served: 400}, {username: "waiter2", items_served: 700}],
+         cook: [{username: "cook1", items_served: 60}, {username: "cook2", items_served: 1110}]
       }
    },
    {
@@ -530,9 +530,9 @@ export var reportToInsert = [
       },
       average_stay: 120,
       users_reports: {
-         waiters: [{username: "waiter1", customers_served: 80, orders_served: 912}, {username: "waiter2", customers_served: 40, orders_served: 305}],
-         bartenders: [{username: "bartender1", items_served: 400}, {username: "waiter2", items_served: 700}],
-         cookers: [{username: "cook1", items_served: 60}, {username: "cook2", items_served: 1110}]
+         waiter: [{username: "waiter1", customers_served: 80, orders_served: 912}, {username: "waiter2", customers_served: 40, orders_served: 305}],
+         bartender: [{username: "bartender1", items_served: 400}, {username: "waiter2", items_served: 700}],
+         cook: [{username: "cook1", items_served: 60}, {username: "cook2", items_served: 1110}]
       }
    }
 ]
