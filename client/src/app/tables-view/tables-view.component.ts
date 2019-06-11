@@ -43,6 +43,7 @@ export class TablesViewComponent implements OnInit {
         if(table.associated_ticket)
           component.ticket.get_ticket(table.associated_ticket).subscribe((ticket : Ticket) => {
             table.actual_people = ticket.people_number;
+            table["waiter"] = ticket.waiter;
           }, (err) => {
             this.error = true;
           });
