@@ -26,6 +26,8 @@ export class CookComponent implements OnInit {
       this.tickets.splice(0, this.tickets.length);
       tickets.forEach( (ticket) => {
         const orders = ticket.orders.filter((order: TicketOrder) =>
+          // filtro per hli ordini inProgress o ordered solo se hanno tipo food,
+          // se sono inProgress prendo solo quelli che hanno usernameExecuter uguale all' utente loggato ora
           order.state !== order_states[2] && order.state !== order_states[3] &&
           ((order.state === order_states[1]) ? order.username_executer === this.us.get_nick() : true ) &&
           order.type_item !== types[1]);

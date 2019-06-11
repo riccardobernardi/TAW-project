@@ -10,9 +10,9 @@ import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import {TableHttpService} from '../../services/table-http.service';
 import {map} from 'rxjs/operators';
 import { Report } from '../../interfaces/Report';
-import { User } from "../../interfaces/User";
+import { User } from '../../interfaces/User';
 import { ToastrService } from 'ngx-toastr';
-import { HttpReportService } from "../../services/http-report.service";
+import { HttpReportService } from '../../services/http-report.service';
 import { saveAs } from 'file-saver';
 
 
@@ -31,8 +31,8 @@ export class PaydeskOptionsComponent implements OnInit {
   private user = {username: '', password: '', role: ''};
   private selDelUser: any;
   private selTable: any;
-  private selDelTable : Table;
-  private users : User[];
+  private selDelTable: Table;
+  private users: User[];
   private selChangePwdUser: any;
   private socket;
   private tickets: Ticket[] = [];
@@ -47,7 +47,7 @@ export class PaydeskOptionsComponent implements OnInit {
   private year_delete: number;
   private gainofday = 0;
   private totalgain: Promise<any> | null = null;
-  private reportSelected : Report;
+  private reportSelected: Report;
 
   private disableUserButtons;
   private disableTableButtons;
@@ -57,7 +57,7 @@ export class PaydeskOptionsComponent implements OnInit {
               private socketio: SocketioService, private router: Router,
               private table: TableHttpService, private toastr: ToastrService, private report: HttpReportService) {}
 
-  private signalSuccess(message : string) {
+  private signalSuccess(message: string) {
     this.toastr.success(message, 'Success!', {
       timeOut: 3000
     });
@@ -72,19 +72,19 @@ export class PaydeskOptionsComponent implements OnInit {
   get_tickets() {
     this.ticket.get_tickets({state: 'open'}).subscribe((tickets: Ticket[]) => {
       this.tickets = tickets;
-      tickets.sort((ticket1 : Ticket, ticket2: Ticket) => {
+      tickets.sort((ticket1: Ticket, ticket2: Ticket) => {
         return ticket1.table - ticket2.table;
       });
-      //console.log(dd);
+      // console.log(dd);
       tickets.forEach((ss) => {
         ss.orders.sort((a: TicketOrder, b: TicketOrder) => {
           return (a.name_item < b.name_item) ? -1 : 1;
         });
       });
-      //console.log(this.tickets);
-      this.selTicket = this.tickets[0]
+      // console.log(this.tickets);
+      this.selTicket = this.tickets[0];
     });
-    //console.log(this.tickets);
+    // console.log(this.tickets);
   }
 
   ngOnInit() {
@@ -97,7 +97,7 @@ export class PaydeskOptionsComponent implements OnInit {
     this.get_tickets();
     this.get_users();
     this.get_tables();
-    this.socketio.get().on('waiters', () => {this.get_tickets()});
+    this.socketio.get().on('waiters', () => {this.get_tickets(); });
     this.socketio.get().on('desks', () => {
       this.get_tickets();
       this.get_users();
@@ -106,20 +106,20 @@ export class PaydeskOptionsComponent implements OnInit {
   }
 
   get_users() {
-    this.us.get_users().subscribe((data : User[]) => {
+    this.us.get_users().subscribe((data: User[]) => {
       this.users = data.sort((user1: User, user2: User) => {
         return (user1.username < user2.username) ? -1 : 1;
-      })
-      //console.log(this.users);
+      });
+      // console.log(this.users);
     });
   }
 
   get_tables() {
     this.table.get_tables().subscribe((data: Table[]) => {
       this.tables = data;
-      
-      this.tables.sort((table1: Table, table2 : Table) => table1.number - table2.number);
-    })
+
+      this.tables.sort((table1: Table, table2: Table) => table1.number - table2.number);
+    });
   }
 
   send(name, password) {
@@ -127,15 +127,15 @@ export class PaydeskOptionsComponent implements OnInit {
     this.user.password = password;
     this.user.role = this.newRoleSelected;
     this.disableUserButtons = true;
-    //console.log(this.user);
+    // console.log(this.user);
     this.us.register(this.user).subscribe((d) => {
-      //console.log('Registration ok: ' + JSON.stringify(d));
-      this.signalSuccess("Changing OK!");
+      // console.log('Registration ok: ' + JSON.stringify(d));
+      this.signalSuccess('Changing OK!');
       this.disableUserButtons = false;
     }, (err) => {
-      //console.log('Signup error: ' + JSON.stringify(err.error.errormessage));
-      let errmessage = err.error.errormessage || err.error.message;
-      //console.log(err);
+      // console.log('Signup error: ' + JSON.stringify(err.error.errormessage));
+      const errmessage = err.error.errormessage || err.error.message;
+      // console.log(err);
       this.signalError('Registration not OK: ' + errmessage);
       this.disableUserButtons = false;
     });
@@ -160,16 +160,18 @@ export class PaydeskOptionsComponent implements OnInit {
       .reduce((total, amount) => total + amount);
   }
 
+  // data una data ritorna tutto il guadagno della giornata
   async allGainOfDay() {
 
-    this.totalgain = this.ticket.get_tickets({state: "closed"}).pipe(
-      map((tickets : Ticket[] ) => {
+    this.totalgain = this.ticket.get_tickets({state: 'closed'}).pipe(
+      map((tickets: Ticket[] ) => {
         const ticketSup = [];
 
         tickets.forEach((ss) => {
           ticketSup.push(ss);
         });
 
+        // attenzione che i mesi vanno da 0 a 11
         let tickets_on_date = ticketSup.filter((oneTicket) => {
           return new Date(oneTicket.start).getDate() === this.day_insert
             && (new Date(oneTicket.start).getMonth() + 1) === this.month_insert
@@ -180,8 +182,10 @@ export class PaydeskOptionsComponent implements OnInit {
           return 0;
         }
 
+        // mappo tutti i tickets e tutti i relativi ordini poi riduco gli ordini ad un unico valore e tutti i tickets ad un unico valore,
+        // il risultato è il guadagno della giornata
         tickets_on_date = tickets_on_date.map((oneTicket) => {
-          return (oneTicket.orders.length != 0 ) ? oneTicket.orders.map((oneOrder) => {
+          return (oneTicket.orders.length !== 0 ) ? oneTicket.orders.map((oneOrder) => {
             return oneOrder.price;
           }).reduce((total, onePrice) => total + onePrice) : 0;
         }).reduce((total, nPrices) => total + nPrices);
@@ -205,8 +209,9 @@ export class PaydeskOptionsComponent implements OnInit {
   }
 
   add_Table(number: string, max_people: string) {
-    if(parseInt(number) <= 0 || parseInt(max_people) <= 0)
+    if (parseInt(number) <= 0 || parseInt(max_people) <= 0) {
       this.signalError('Parameters have to be positive!');
+    }
     else {
       console.log(number, max_people);
       this.disableTableButtons = true;
@@ -214,16 +219,16 @@ export class PaydeskOptionsComponent implements OnInit {
         this.signalSuccess('Add table OK');
         this.disableTableButtons = false;
       }, (err) => {
-        let errmessage = err.error.errormessage || err.error.message;
+        const errmessage = err.error.errormessage || err.error.message;
         this.signalError('Changing not OK : ' + errmessage);
         this.disableTableButtons = false;
-      })
+      });
     }
   }
 
   close_ticket() {
-    //console.log(this.emitReceipt())
-    //console.log(this.selTicket._id);
+    // console.log(this.emitReceipt())
+    // console.log(this.selTicket._id);
     this.disableTicketsButtons = true;
     this.ticket.close_ticket(this.selTicket._id, this.emitReceipt()).toPromise().then(() => {
       return this.table.change_table({number: this.selTicket.table, state: states[0]}, undefined).toPromise();
@@ -233,7 +238,7 @@ export class PaydeskOptionsComponent implements OnInit {
       this.disableTicketsButtons = false;
     })
     .catch((err) => {
-      let errmessage = err.error.errormessage || err.error.message;
+      const errmessage = err.error.errormessage || err.error.message;
       this.signalError('Changing not OK : ' + errmessage);
       this.disableTicketsButtons = false;
     });
@@ -244,12 +249,12 @@ export class PaydeskOptionsComponent implements OnInit {
     this.disableTicketsButtons = true;
     this.report.create_report({start: date, state: 'closed'})
       .then(() => {
-        this.signalSuccess("Report created!");
+        this.signalSuccess('Report created!');
         this.disableTicketsButtons = false;
       })
       .catch((err) => {
-        //let errmessage = err.error.errormessage || err.error.message;
-        this.signalError("Error: " + err/*message*/);
+        // let errmessage = err.error.errormessage || err.error.message;
+        this.signalError('Error: ' + err/*message*/);
         this.disableTicketsButtons = false;
       });
   }
@@ -263,55 +268,55 @@ export class PaydeskOptionsComponent implements OnInit {
     this.report.get_reports({start: date, end: date}).toPromise().then((data) => {
       this.reportSelected = data[0];
     }).catch((err) => {
-      let errmessage = err.error.errormessage || err.error.message;
-      this.signalError("Error: " + errmessage);
-    })
+      const errmessage = err.error.errormessage || err.error.message;
+      this.signalError('Error: ' + errmessage);
+    });
   }
 
   delete_daily_report() {
     const date = new Date(this.year_delete, this.month_delete - 1, this.day_delete, 0, 0, 0, 0);
-    if(this.reportSelected) {
+    if (this.reportSelected) {
       this.disableTicketsButtons = true;
       this.report.delete_report(this.reportSelected._id).toPromise()
       .then(() => {
-        this.signalSuccess("Report deleted!");
+        this.signalSuccess('Report deleted!');
         this.reportSelected = null;
         this.disableTicketsButtons = false;
       })
       .catch((err) => {
-        let errmessage = err.error.errormessage || err.error.message;
+        const errmessage = err.error.errormessage || err.error.message;
         this.signalError(errmessage);
         this.disableTicketsButtons = false;
       });
-    } else this.signalError("Report not selected!");
+    } else { this.signalError('Report not selected!'); }
   }
 
-  changePasswordUser(selChangePwdUser : User, newPwd: string) {
-    //this.savetext();
+  changePasswordUser(selChangePwdUser: User, newPwd: string) {
+    // this.savetext();
     console.log(selChangePwdUser.username, newPwd);
     this.disableUserButtons = true;
     this.us.changePasswordUser(selChangePwdUser, newPwd).subscribe(() => {
       this.signalSuccess('Changing OK');
       this.disableUserButtons = false;
       this.selChangePwdUser = null;
-    },(err) => {
-      let errmessage = err.error.errormessage || err.error.message;
+    }, (err) => {
+      const errmessage = err.error.errormessage || err.error.message;
       this.signalError('Changing not OK : ' + errmessage);
       this.disableUserButtons = false;
     });
   }
 
-  deleteUser(selDelUser : User) {
+  deleteUser(selDelUser: User) {
     this.disableUserButtons = true;
     this.us.deleteUser(selDelUser.username).subscribe(() => {
       this.signalSuccess('Deletion OK');
       this.selDelUser = null;
       this.disableUserButtons = false;
     }, (err) => {
-      let errmessage = err.error.errormessage || err.error.message;
+      const errmessage = err.error.errormessage || err.error.message;
       this.signalError('Deletion not OK: ' + errmessage);
       this.disableUserButtons = false;
-    })
+    });
   }
 
   deleteTable(number: number) {
@@ -321,8 +326,8 @@ export class PaydeskOptionsComponent implements OnInit {
       this.signalSuccess('Deletion OK');
       this.disableTableButtons = false;
     }, (err) => {
-      let errmessage = err.error.errormessage || err.error.message;
-      this.signalError("Error: " + errmessage);
+      const errmessage = err.error.errormessage || err.error.message;
+      this.signalError('Error: ' + errmessage);
       this.disableTableButtons = false;
     });
   }

@@ -11,5 +11,5 @@ export function isOrder(arg: any): arg is Item {
   return arg;
 }
 
-export const types = ["dish", "beverage"]; 
+export const types = ['dish', 'beverage'];
 

@@ -16,11 +16,11 @@ export class HistogramWithDatesComponent implements OnInit {
 
   public barChartLabels = null;
 
-  private min_date : Date;
-  private max_date : Date;
+  private min_date: Date;
+  private max_date: Date;
   private startDate = new Date();
 
-  private barChartType = "bar";
+  private barChartType = 'bar';
   private barChartLegend = true;
   private barChartOptions = {
     scaleShowVerticalLines: false,
@@ -32,31 +32,33 @@ export class HistogramWithDatesComponent implements OnInit {
   ngOnInit() { }
 
   ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
-    if(changes["barChartDates"].currentValue)
-      this.barChartLabels = this.createLabels(changes["barChartDates"].currentValue);
+    if (changes.barChartDates.currentValue) {
+      this.barChartLabels = this.createLabels(changes.barChartDates.currentValue);
+    }
   }
 
-  onMinDateSelect($event : NgbDate) {
+  onMinDateSelect($event: NgbDate) {
     this.min_date = new Date($event.year, $event.month - 1, $event.day, 0, 0, 0, 0);
   }
 
-  onMaxDateSelect($event : NgbDate) {
+  onMaxDateSelect($event: NgbDate) {
     this.max_date = new Date($event.year, $event.month - 1, $event.day, 0, 0, 0, 0);
   }
 
   update() {
-    if(this.min_date <= this.max_date) {
+    if (this.min_date <= this.max_date) {
       this.dateRange.emit({min_date: this.min_date, max_date: this.max_date});
-    } else this.toastr.error("Select a valid range!", "Success!", {
+    } else { this.toastr.error('Select a valid range!', 'Success!', {
       timeOut: 3000
     });
+    }
   }
 
   createLabels(data) {
     return data.map((date) => {
       console.log(date);
       date = new Date(date);
-      return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear()
+      return date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear();
     });
   }
 
