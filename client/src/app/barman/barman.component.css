@@ -16,3 +16,11 @@
     border: 2px solid red;
     color: red
 }
+
+.orders-list * {
+    display: inline-block;
+}
+
+.orders-list button {
+    margin: 20px;
+}

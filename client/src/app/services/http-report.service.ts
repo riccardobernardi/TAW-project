@@ -66,27 +66,31 @@ export class HttpReportService {
           ticketCount++; //ticketCounter for average_stay calc
           report.average_stay += Math.floor((new Date(ticket.end).getTime() - new Date(ticket.start).getTime()) / 60000); //calc minutes for average_stay
           //console.log(ticket.waiter);
-          if(!sup_dependants["waiters"][ticket.waiter]) { //if the waiter doesn't exist in the support object, insert
-            //console.log("New " + ticket.waiter)
-            sup_dependants["waiters"][ticket.waiter] = {};
-            sup_dependants["waiters"][ticket.waiter].customers_served = 0;
-            sup_dependants["waiters"][ticket.waiter].orders_served = 0;
+          if(ticket.waiter) {
+            if(!sup_dependants["waiters"][ticket.waiter]) { //if the waiter doesn't exist in the support object, insert
+              //console.log("New " + ticket.waiter)
+              sup_dependants["waiters"][ticket.waiter] = {};
+              sup_dependants["waiters"][ticket.waiter].customers_served = 0;
+              sup_dependants["waiters"][ticket.waiter].orders_served = 0;
+            }
+            //increment stats for waiter based on ticket numbers
+            sup_dependants["waiters"][ticket.waiter].customers_served += ticket.people_number
+            sup_dependants["waiters"][ticket.waiter].orders_served += ticket.orders.length
+            //console.log(sup_dependants["waiter"][ticket.waiter])
           }
-          //increment stats for waiter based on ticket numbers
-          sup_dependants["waiters"][ticket.waiter].customers_served += ticket.people_number
-          sup_dependants["waiters"][ticket.waiter].orders_served += ticket.orders.length
-          //console.log(sup_dependants["waiter"][ticket.waiter])
           var role;
           
           //create or increments stats for bartenders and cookers based of orders fields
           ticket.orders.forEach((order : TicketOrder) => {
             //console.log(order.username_executer);
             role = (order.type_item == types[0]) ? "cookers" : "bartenders";
-            if(!sup_dependants[role][order.username_executer]) {
-              sup_dependants[role][order.username_executer] = {};
-              sup_dependants[role][order.username_executer].items_served = 0;
-            }
-            sup_dependants[role][order.username_executer].items_served++;  
+            if(order.username_executer) {
+              if(!sup_dependants[role][order.username_executer]) {
+                sup_dependants[role][order.username_executer] = {};
+                sup_dependants[role][order.username_executer].items_served = 0;
+              }
+              sup_dependants[role][order.username_executer].items_served++;
+            }  
           });
         });
 
@@ -99,7 +103,6 @@ export class HttpReportService {
             orders_served: sup_dependants["waiters"][waiter].orders_served
           })
         }
-        console.log()
 
         //create mini-arrays for users_reports format
         for(let cook in sup_dependants["cookers"]) {

@@ -20,6 +20,7 @@ import * as user from './User';
 import * as ticket from './Ticket';
 import * as item from './Item';
 import * as report from './Report';
+import * as toInsert from './toinsert';
 import {MySocket} from './mysocket';
 var app = express();
 
@@ -1032,77 +1033,35 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
       console.log("Errore " + err);
    });
 
+
+   //inserisco tutti i tavoli
+   var tableToSave = [];   
+
    table.getModel().deleteMany({}).then(data => {
       console.log("Database tables pulito: " + data);
-
       var tableModel = table.getModel();
-      var t1 = (new tableModel({number : 1, max_people: 4, state: table.states[0]})).save();
-      var t2 = (new tableModel({number : 2, max_people: 4, state: table.states[0]})).save();
-      var t3 = (new tableModel({number : 3, max_people: 6, state: table.states[0]})).save();
-      var t4 = (new tableModel({number : 4, max_people: 6, state: table.states[0]})).save();
+      for (let i in toInsert.tablesToInsert){
+         tableToSave.push((new tableModel(toInsert.tablesToInsert[i])).save());
+      }
 
-      Promise.all([t1, t2, t3, t4]).then(function () {
-         console.log("Table saved");
+      Promise.all(tableToSave).then(function () {
+         console.log("table saved");
       }).catch(function (reason) {
-         console.log("Unable to save tables: " + reason);
+         console.log("Unable to save table: " + reason);
       });
-   }).catch(err => {
-      console.log("Errore nella pulizia del dataset tables: " + err);
    });
 
-   
-   
+
+   //inserisco tutti gli item
+   var itemToSave = [];   
 
    item.getModel().deleteMany({}).then(data => {
-      console.log("Dataset items pulito: " + data);
-      
       var itemModel = item.getModel();
-      var i1 = (new itemModel({
-         name: "Spaghetti al pomodoro",
-         type: item.type[0],
-         price: 5,
-         ingredients: ["spaghetti", "sugo di pomodoro"],
-         required_time: 12,
-         description: "Semplici spaghetti al pomodoro che Cecchini non può però mangiare a pranzo, perchè porta sempre il riso per cani."
-      })).save();
+      for (let i in toInsert.itemsToInsert){
+         itemToSave.push((new itemModel(toInsert.itemsToInsert[i])).save());
+      }
 
-      var i2 = (new itemModel({
-         name: "Spaghetti al ragù",
-         type: item.type[0],
-         price: 6,
-         ingredients: ["spaghetti", "sugo di pomodoro", "carne macinata"],
-         required_time: 12,
-         description: "Semplici spaghetti al ragù."
-      })).save();
-
-      var i3 = (new itemModel({
-         name: "Bistecca alla griglia",
-         type: item.type[0],
-         price: 8,
-         ingredients: ["bistecca"],
-         required_time: 10, 
-         description: "Forse è una bistecca?"
-      })).save();
-
-      var i4 = (new itemModel({
-         name: "Coca cola",
-         type: item.type[1],
-         price: 2.5,
-         ingredients: ["coca cola"],
-         required_time: 1, 
-         description: "Coca cola alla spina da 333ml"
-      })).save();
-
-      var i5 = (new itemModel({
-         name: "Chinotto",
-         type: item.type[1],
-         price: 2,
-         ingredients: ["coca cola"],
-         required_time: 1, 
-         description: "Chinotto in lattina da 333ml"
-      })).save();
-
-      Promise.all([i1, i2, i3, i4, i5]).then(function () {
+      Promise.all(itemToSave).then(function () {
          console.log("Items saved");
       }).catch(function (reason) {
          console.log("Unable to save items: " + reason);
