@@ -16,12 +16,14 @@
                         <th scope="col">Table</th>
                         <th scope="col">Max People</th>
                         <th scope="col">Actual people</th>
+                        <th scope="col">Waiter</th>
                     </thead>
                     <tbody>
                         <tr *ngFor="let table of tables">
                             <td>{{table.number}}</td>
                             <td>{{table.max_people}} </td>
                             <td>{{(table.actual_people) ? table.actual_people : "/"}}</td>
+                            <td>{{(table.waiter) ? table.waiter : "/"}}</td>
                         </tr> 
                     </tbody>
                 </table>

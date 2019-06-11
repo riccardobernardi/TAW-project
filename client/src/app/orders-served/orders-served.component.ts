@@ -66,6 +66,12 @@ export class OrdersServedComponent implements OnInit {
       // console.log("Orders served event received");
       this.get_tickets();
     });
+    if(this.role == "desk") {
+      this.socketio.get().on('desk', () => {
+        // console.log("Orders served event received");
+        this.get_tickets();
+      });
+    }
   }
 
   deliver(ticketIndex: number, orderIndex: number, checkbox: HTMLInputElement, spinner: HTMLElement) {

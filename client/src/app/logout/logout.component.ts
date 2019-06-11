@@ -12,5 +12,9 @@ export class LogoutComponent implements OnInit {
 
   ngOnInit() {}
 
-
+  private logout() {
+    if(confirm("Do you want to exit?")) {
+      this.us.logout();
+    }
+  }
 }
