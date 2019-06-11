@@ -15,11 +15,11 @@ import passportHTTP = require('passport-http');  // implements Basic and Digest 
 import jsonwebtoken = require('jsonwebtoken');  // JWT generation
 import jwt = require('express-jwt');            // JWT parsing middleware for express
 import cors = require('cors');                  // Enable CORS middleware
-import * as table from './Table';
-import * as user from './User';
-import * as ticket from './Ticket';
-import * as item from './Item';
-import * as report from './Report';
+import * as table from './models/Table';
+import * as user from './models/User';
+import * as ticket from './models/Ticket';
+import * as item from './models/Item';
+import * as report from './models/Report';
 import * as toInsert from './toinsert';
 import {MySocket} from './mysocket';
 var app = express();
@@ -58,29 +58,8 @@ res.status(200).json( {
 });
 
 
-/* da togliere
-- per l'approccio che utilizziamo, websocket del server invia solo (alle chiamate alle API) e websocket del client ascolta gli eventi e poi reinterroga il server (quindi non serve l'autenticazione, perchè se non è autenticato non può interrogare l'api)
-- endpoint /tickets?filter=orders per inviare gli ordini relativi ai tickets (magari con un ulteriore parametro filterOrders)
-*/
 
-
-/*app.route("mock").get((req,res,next) => {
-   console.log("trigger");
-   ios.emit("paydesks");
-})*/
-
-//da togliere
-
-/*app.route("/mock").get( (req,res,next) => {
-   ios.emit("cooks");
-
-   return res.status(200).json( "bella vecchio" );
-}); 
-*/
 app.route("/users").get(auth, (req,res,next) => {
-   //da togliere
-   console.log(JSON.stringify(req.headers));
-   console.log(typeof(req.body.date));
    
    //autenticazione
    if(!user.newUser(req.user).hasDeskRole())
@@ -123,7 +102,6 @@ app.route("/users").get(auth, (req,res,next) => {
 
 
 
-//cambiare username con id restituito da mongo e maagari aggiungere filtri su username in get users?
 app.route("/users/:username").delete(auth, (req, res, next) => {
    //autenticazione
    if(!user.newUser(req.user).hasDeskRole())
@@ -145,13 +123,12 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
    if(!user.newUser(req.user).hasDeskRole()){
       return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk"} );
    }
-   //console.log(user.roles.includes("desk"))
-   console.log(req.body);
+   
    //controllo formato
    if ( !req.body || !req.body.username || !req.body.password || !req.body.role || typeof(req.body.password) != 'string' || typeof(req.body.username) != 'string' || typeof(req.body.role) != 'string' || !user.roles.includes(req.body.role) )
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
 
-   console.log(req.body);
+   
    user.getModel().findOne({username: req.params.username}).then((data) => {
       data.username = req.body.username;
       data.setPassword(req.body.password);
@@ -204,10 +181,9 @@ app.route("/tables").get(auth, (req, res, next) => {
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
 
-   
-
    //tavolo libero di default
    toInsert.state = table.states[0];
+   
    //creo tavolo da aggiungere
    var Table = table.getModel();
    
@@ -250,9 +226,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
    //controllo formato
    if ( !req.body ||(req.body.max_people && isNaN(parseInt(req.body.max_people))) || (req.body.state && typeof(req.body.state) != 'string'))
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
-      console.log("Dentro tables API");
-      console.log(req.body);
-   
+      
    table.getModel().findOne({number: req.params.number}).then((data: table.Table) => {
       //creo oggetto per aggiornare il documento
       var update: any = {};
@@ -265,9 +239,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
       
       if (update.state == table.states[0]){
          //controllo che non ci sia un associated_ticket quando si cerca di liberare un tavolo
-         /* if (update.associated_ticket)
-            return next({ statusCode:401, error: true, errormessage: "Wrong format, associated_ticket not required" });
-         */
+         
          update.associated_ticket = null;
          data.update(update).then(() => {
             //notifico sul socket
@@ -315,7 +287,6 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
                associated_ticket: data.associated_ticket
             });
          });
-
       }
       else{
          return next({ statusCode:401, error: true, errormessage: "Wrong format" });
@@ -323,6 +294,7 @@ app.route("/tables/:number").get(auth, (req, res, next) => {
    }).catch((reason) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    });
+   
 }).delete(auth, (req, res, next) => {
    //autenticazione
    var sender = user.newUser(req.user);   
@@ -364,9 +336,6 @@ app.route("/items").get(auth, (req,res,next) => {
    //creo item da inserire
    var i = new (item.getModel()) (req.body);
    
-   //da togliere
-   console.log(i)
-
    //controllo formato
    if (!item.isItem(i))
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
@@ -382,7 +351,7 @@ app.route("/items").get(auth, (req,res,next) => {
    
 });
 
-/*DECIDERE SE UTILIZZARE ALTRI CAMPI o SEMPRE ID*/
+
 app.route("/items/:id").get(auth, (req,res,next) => {
    //autenticazione
    var sender = user.newUser(req.user);
@@ -414,6 +383,7 @@ app.route("/items/:id").get(auth, (req,res,next) => {
    }).catch( (reason) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
    })
+
 }).delete(auth, (req, res, next) => {
    //autenticazione
    if(!user.newUser(req.user).hasDeskRole()){
@@ -430,9 +400,6 @@ app.route("/items/:id").get(auth, (req,res,next) => {
 
 app.route("/tickets").get(auth, (req, res, next) => {
    
-   //da togliere
-   console.log("entro nella ticket api----");
-   
    //creo il filtro
    var filter: any = {}
    if(req.query.state)
@@ -442,20 +409,9 @@ app.route("/tickets").get(auth, (req, res, next) => {
    if(req.query.table)
       filter.table = req.query.table;
 
-   console.log(filter);
-
-   //TODO migliorare il controllo del formato
-
-
    //controllo formato della query sullo stato degli ordini
    if(req.query.orders && !ticket.orderState.filter((val) => val === req.query.orders))
       return next({ statusCode:400, error: true, errormessage: "The state of orders accepted are ordered, preparation, ready, delivered and all"})
-
-   //ioss.emit("cooks");
-   //ioss.emit("waiters");
-   //ioss.emit("paydesks");
-
-   console.log("GET tickets: " + req.params);
 
    //trovo i tickets
    ticket.getModel().find(filter).then( (ticketslist : ticket.Ticket[]) => {
@@ -477,15 +433,11 @@ app.route("/tickets").get(auth, (req, res, next) => {
       //filtro per la data (solo la data, non l'ora)
       if(req.query.start){
          var dateFilter = new Date(req.query.start);
-         console.log(dateFilter);
-         console.log(ticketslist);
          ticketslist = ticketslist.filter((t: ticket.Ticket) => { 
             t.start = new Date(t.start);
-            console.log(t.start.getFullYear(), dateFilter.getFullYear(), t.start.getMonth(), dateFilter.getMonth(), t.start.getDate(), dateFilter.getDate());
             return t.start.getFullYear() == dateFilter.getFullYear() && t.start.getMonth() == dateFilter.getMonth() && t.start.getDate() == dateFilter.getDate(); 
          });
       }
-      console.log(ticketslist);
       return res.status(200).json( ticketslist );
    }).catch( (reason) => {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+ reason });
@@ -498,12 +450,6 @@ app.route("/tickets").get(auth, (req, res, next) => {
 
    var startdate: Date = new Date(req.body.start);
    
-   //da togliere
-   //console.log(req.body) ;
-   //console.log(startdate.toString());
-   //console.log(typeof(req.body.table));
-   
-
    //controllo formato
    if (!req.body || !req.body.waiter || !req.body.table || !req.body.start || typeof(req.body.waiter) != 'string' || typeof(req.body.table) != 'number' || startdate.toString() == 'Invalid Date' ){
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
@@ -525,7 +471,7 @@ app.route("/tickets").get(auth, (req, res, next) => {
    newer.state = ticket.ticketState[0];
 
    ticket.getModel().findOne({table: newer.table, state: ticket.ticketState[0]}).then((data) => {
-      console.log("AAAAAAAAAAA" + data);
+      
       if(!data) {
          //libero semaforo
          ticket_post_occupied = false;
@@ -550,12 +496,8 @@ app.route("/tickets").get(auth, (req, res, next) => {
          ticket_post_occupied = false;
          return next({statusCode:409, error:true, errormessage: "Table is already taken"} );
       }
-      console.log({table: newer.table, state: ticket.ticketState[0]});
       
       var t = new (ticket.getModel()) (newer);
-
-      //da togliere
-      console.log(t);
 
       return t.save();
    }, () => {
@@ -597,13 +539,12 @@ app.route('/tickets/:id').get(auth, (req, res, next) => {
    }
 
    var enddate: Date = new Date(req.body.end); 
-   //console.log(enddate);
 
    //controllo formato
    if ( !req.body || (req.body.end && enddate.toString() == 'Invalid Date') || (req.body.state && typeof(req.body.state) != 'string') || (req.body.total != null && req.body.total != undefined && typeof(req.body.total) != 'number')){
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
    }
-   //console.log("Patch per ticket/id: " + req.body.total);
+   
    //creo oggeto utilizzato per modificare i campi del documento
    var update: any = {};
    if (req.body.end)
@@ -613,8 +554,6 @@ app.route('/tickets/:id').get(auth, (req, res, next) => {
    if(req.body.total != null && req.body.total != undefined)
       update.total = req.body.total;
 
-   console.log(req.params.id);
-   console.log(update);
    ticket.getModel().findOneAndUpdate( {_id: req.params.id}, { $set: update}, ).then( (data : ticket.Ticket) => {
       return res.status(200).json( {error:false, errormessage:""} );
    }).catch( (reason) => {
@@ -635,8 +574,6 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    if(!sender.hasDeskRole() && !sender.hasWaiterRole())
       return next({ statusCode:401, error: true, errormessage: "Unauthorized: user is not a desk or a waiter"} );
 
-   console.log(req.body);
-
    //controllo formato richiesta
    if (!req.body || !req.body.name_item  || !req.body.price || !req.body.required_time || /*req.body.added ||*/ typeof(req.body.name_item) != 'string' || typeof(req.body.price) != 'number' || typeof(req.body.required_time) != 'number'/*|| Array.isArray(req.body.added)*/){
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
@@ -656,12 +593,9 @@ app.route('/tickets/:id/orders').get(auth, (req, res, next) => {
    ticket.getModel().update( { _id: req.params.id}, { $push: { orders: newer } }).then( () => {
       //controllo il tipo di order inserito e mando un evento sulla stanza relativa
       item.getModel().findOne({ name: newer.name_item}).then( (i: item.Item) => {
-         //console.log("AAAAAAA:\n" + i + "\n");
-         if (i.type == item.type[0]){
-            console.log("DISH")
+        if (i.type == item.type[0]){
             socket.emitEvent("ordered dish");
          } else if (i.type == item.type[1]){
-            console.log("DRINK");
             socket.emitEvent("ordered drink");
          }
          return res.status(200).json( {error:false, errormessage:""} );
@@ -710,44 +644,25 @@ app.route('/tickets/:idTicket/orders/:idOrder').patch( auth, (req,res,next) => {
          return next({ statusCode:400, error: true, errormessage: "Username_executer not required"} );
       
       order_type = toChange[0].type_item;
-      console.log("BBBB: " + req.body);
-      console.log("AAAA: " + toChange[0]);
       return data.save();
       
    }).then((data) => {
-      //console.log(req.body.state);
-      //console.log(ticket.orderState[1]);
-      //console.log(data);
-
+      
       if(req.body.state == ticket.orderState[1]) {
-         //console.log(item.type[0]);
-         //var order = data.orders.filter((order) => order.id == req.params.idOrder)[0]
-         //if(order.type_item == item.type[0]) {
-            socket.emitEvent("dish in preparation");
-         console.log("emit dish in prepare");
-         //} else {
-         //   emitEvent("beverage in preparation", req.params.idTicket);
-         //   console.log("emit beverage in prepare");
-         //}
+         socket.emitEvent("dish in preparation");
       }
       if(req.body.state == ticket.orderState[2]) {
          var order = data.orders.filter((order) => order.id == req.params.idOrder)[0];
          if(order.type_item == item.type[0]) {
-            console.log("Emetto piatto pronto per cuochi");
             socket.emitEvent("ready item - cooks");
          } else {
-            console.log("Emetto piatto pronto per cuochi");
             socket.emitEvent("ready item - bartenders");
          }
          //controllo che tutti gli ordini dello stesso tipo e dello stesso ticket siano pronti
          var ordersList: Array<ticket.Order[]> = [];
          ordersList = data.orders.filter((order: ticket.Order) => {
-            console.log(order);
             return (order.state != ticket.orderState[2] && order.type_item ==  order_type && order.state != ticket.orderState[3]);
          });
-
-         if (req.body.state == ticket.orderState[2] && ordersList.length == 0) 
-            console.log("Sto per emettere l'evento 'piatti pronti!'");
 
          if (req.body.state == ticket.orderState[2] && ordersList.length == 0){
             socket.emitEvent("ready item - waiters");
@@ -802,9 +717,6 @@ app.route("/reports").get( auth, (req,res,next) => {
     var filter: any = {};
 		if(req.query.start || req.query.end) {
          filter.date = {}
-         console.log(filter);
-         console.log(req.query.start);
-         console.log(req.query.end);
          if(req.query.start) {
             filter.date["$gte"] = new Date(req.query.start);
             filter.date["$gte"].setHours(0,0,0,0);
@@ -815,9 +727,7 @@ app.route("/reports").get( auth, (req,res,next) => {
             filter.date["$lte"].setDate(filter.date["$lte"].getDate()+1);
             //ALTRIMENTI NON FUNZIA
          }
-         console.log(filter);
 		}
-		console.log(filter);
  
     //query
     report.getModel().find(filter).then( (reportslist) => {
@@ -832,9 +742,6 @@ app.route("/reports").get( auth, (req,res,next) => {
     
     //creo report da inserire
     var r = new (report.getModel()) (req.body);
-    
-    //da togliere
-    console.log(r)
  
     //controllo formato
     if (!report.isReport(r))
@@ -990,7 +897,6 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
       console.log("Admin user created");
       return user.getModel().count({});
    }).then((count) => {
-      console.log(count);
       if (count != 0) {
          console.log("Adding some test data into the database");
 
@@ -1100,7 +1006,6 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
    socket = new MySocket(server);
    // server.listen( 8080, () => console.log("HTTP Server started on port 8080") );
 
-   console.log("aaaaaaaaaaaaaaaaaaa 1234" + process.env.PORT || 8080 );
    server.listen(process.env.PORT || 8080, () => console.log("HTTP Server started on port " + process.env.PORT || 8080) );
 
 }, function onrejected() {
