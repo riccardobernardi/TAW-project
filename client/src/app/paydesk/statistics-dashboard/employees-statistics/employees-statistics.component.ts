@@ -43,6 +43,7 @@ export class EmployeesStatisticsComponent implements OnInit {
 
   ngOnInit() {}
 
+  // prende i valori salvati su un report e li somma per avere le statistiche sugli executers
   private getStats() {
     if (this.min_date && this.max_date && this.min_date <= this.max_date) { // if dates range is valid
       this.report.get_reports({start: this.min_date.toISOString(), end: this.max_date.toISOString()}).toPromise().then((reports) => {

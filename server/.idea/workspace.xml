@@ -2,6 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../client/src/app/paydesk/paydeskDashboard.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/paydesk/paydeskDashboard.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/paydesk/statistics-dashboard/employees-statistics/employees-statistics.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/paydesk/statistics-dashboard/employees-statistics/employees-statistics.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/paydesk/statistics-dashboard/stats-charts/stats-charts.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/paydesk/statistics-dashboard/stats-charts/stats-charts.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/services/http-interceptor.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/services/http-interceptor.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/services/http-report.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/services/http-report.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/services/ticket-http.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/services/ticket-http.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/services/user-http.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/services/user-http.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Item.js" beforeDir="false" afterPath="$PROJECT_DIR$/Item.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Report.js" beforeDir="false" afterPath="$PROJECT_DIR$/Report.js" afterDir="false" />
@@ -26,7 +33,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="291">
@@ -34,6 +41,18 @@
               <folding>
                 <element signature="e#168#194#0" expanded="true" />
                 <element signature="e#380#418#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Report.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="360">
+              <caret line="24" column="34" lean-forward="true" selection-start-line="24" selection-start-column="34" selection-end-line="24" selection-end-column="34" />
+              <folding>
+                <element signature="n#mongoose#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -104,7 +123,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+  <component name="ProjectFrameBounds" fullScreen="true">
     <option name="width" value="1280" />
     <option name="height" value="800" />
   </component>
@@ -188,14 +207,15 @@
       <workItem from="1560193265017" duration="161000" />
       <workItem from="1560236786777" duration="801000" />
       <workItem from="1560239928565" duration="252000" />
+      <workItem from="1560241311102" duration="422000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16646000" />
+    <option name="totallyTimeSpent" value="17068000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <frame x="0" y="0" width="1280" height="800" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
@@ -280,6 +300,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="7" column="14" selection-start-line="7" selection-start-column="14" selection-end-line="7" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Report.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="34" lean-forward="true" selection-start-line="24" selection-start-column="34" selection-end-line="24" selection-end-column="34" />
+          <folding>
+            <element signature="n#mongoose#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

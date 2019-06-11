@@ -18,41 +18,41 @@ export class UserHttpService {
 
   constructor( private http: HttpClient, private router: Router ) {
     console.log('User service instantiated');
-    //console.log(sessionStorage.getItem("restaurant_token"));
-    //console.log(this.token = sessionStorage.getItem("restaurant_token"));
+    // console.log(sessionStorage.getItem("restaurant_token"));
+    // console.log(this.token = sessionStorage.getItem("restaurant_token"));
     setTimeout(() => {
-      this.refreshAll()
-    }, 50)
+      this.refreshAll();
+    }, 50);
   }
 
   private set_token(token) {
     this.token = token;
     sessionStorage.setItem('restaurant_token', this.token );
-    let decoded_token = jwt_decode(this.token)
-    let exp_date = decoded_token.iat*1000 + Math.floor((decoded_token.exp - decoded_token.iat)*1000*0.9);
-    let now = new Date().getTime();
-    if(exp_date - now > 0) {
+    const decoded_token = jwt_decode(this.token);
+    const exp_date = decoded_token.iat * 1000 + Math.floor((decoded_token.exp - decoded_token.iat) * 1000 * 0.9);
+    const now = new Date().getTime();
+    if (exp_date - now > 0) {
       this.renew_clock_interval = exp_date - now;
       this.renew_clock = setInterval(() => {this.renew().subscribe((data) => {
-        let decoded_token = jwt_decode(data.token)
-        //console.log(new Date());
-        //console.log(new Date(decoded_token.iat*1000 + Math.floor((decoded_token.exp - decoded_token.iat)*1000)));
+        const decoded_token = jwt_decode(data.token);
+        // console.log(new Date());
+        // console.log(new Date(decoded_token.iat*1000 + Math.floor((decoded_token.exp - decoded_token.iat)*1000)));
         this.token = data.token;
-        sessionStorage.setItem("restaurant_token", data.token);
-      }, () => {this.logout();})}, this.renew_clock_interval);
-    } else this.logout();
+        sessionStorage.setItem('restaurant_token', data.token);
+      }, () => {this.logout(); }); }, this.renew_clock_interval);
+    } else { this.logout(); }
   }
 
   private refreshAll() {
     this.renew().subscribe((data) => {
-      //console.log("Renew in refreshAll")
-      this.set_token(data.token)
-    }, () => {this.logout()});
+      // console.log("Renew in refreshAll")
+      this.set_token(data.token);
+    }, () => {this.logout(); });
   }
 
   login( nick: string, password: string ): Observable<any> {
 
-    //console.log('Login: ' + nick + ' ' + password );
+    // console.log('Login: ' + nick + ' ' + password );
     const options = {
       headers: new HttpHeaders({
         authorization: 'Basic ' + btoa( nick + ':' + password),
@@ -61,7 +61,7 @@ export class UserHttpService {
 
     return this.http.get( /*this.url + */'login',  options ).pipe(
       tap( (data) => {
-        //console.log(JSON.stringify(data));
+        // console.log(JSON.stringify(data));
         this.set_token(data.token);
       })
     );
@@ -74,13 +74,13 @@ export class UserHttpService {
       return throwError({error: {errormessage: 'No token found in local storage'}});
     }
 
-    //console.log("Renewing token");
+    // console.log("Renewing token");
     return this.http.get('renew');
 
   }
 
   logout() {
-    //console.log('Logging out');
+    // console.log('Logging out');
     this.token = '';
     sessionStorage.removeItem('restaurant_token');
     clearInterval(this.renew_clock);
@@ -99,7 +99,7 @@ export class UserHttpService {
 
   get_token() {
     this.token = sessionStorage.getItem('restaurant_token');
-    //console.log(this.token);
+    // console.log(this.token);
     return this.token;
   }
 
@@ -111,7 +111,7 @@ export class UserHttpService {
     // console.log('lollo cazzaro: ' + jwt_decode(this.token).roles[0]);
     // console.log('lollo cazzaro: ' + (this.token));
     console.log(this.token);
-    //console.log(jwt_decode(this.token).role);
+    // console.log(jwt_decode(this.token).role);
     return jwt_decode(this.token).role.toLowerCase();
   }
 
@@ -125,19 +125,19 @@ export class UserHttpService {
   }
 
   deleteUser(selDelUser) {
-    //console.log('deleted:' + selDelUser);
+    // console.log('deleted:' + selDelUser);
 
-    return this.http.delete(this.endpoint + "/" + selDelUser);
+    return this.http.delete(this.endpoint + '/' + selDelUser);
   }
 
   changePasswordUser(selUser, newPwd) {
-    //console.log('new pwd is : ' + newPwd + 'for user : ' + selUser);
+    // console.log('new pwd is : ' + newPwd + 'for user : ' + selUser);
 
     const user = { username: selUser.username, password: newPwd, role: selUser.role };
 
-    //console.log(this.endpoint + '/' + selUser);
+    // console.log(this.endpoint + '/' + selUser);
 
-    //console.log(user.role)
+    // console.log(user.role)
     return this.http.put(this.endpoint + '/' + selUser.username, user);
   }
 }

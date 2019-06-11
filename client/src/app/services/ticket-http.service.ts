@@ -24,8 +24,8 @@ export class TicketHttpService {
   }
 
   close_ticket(ticketId: string, total: number) {
-    //console.log(total);
-    return this.http.patch<Ticket>(this.endpoint + '/' + ticketId, {state: 'closed', end: Date(), total: total}, this.create_options());
+    // console.log(total);
+    return this.http.patch<Ticket>(this.endpoint + '/' + ticketId, {state: 'closed', end: Date(), total}, this.create_options());
   }
 
   get_tickets(filters) {
@@ -33,11 +33,11 @@ export class TicketHttpService {
   }
 
   get_ticket(ticket_id) {
-    return this.http.get<Ticket>(this.endpoint + "/" + ticket_id);
+    return this.http.get<Ticket>(this.endpoint + '/' + ticket_id);
   }
 
   addOrders(ticketId, usernameWaiter, item, added, addedPrice) {
-    //console.log(addedPrice);
+    // console.log(addedPrice);
     let order: TicketOrder;
     order = {
       name_item : item.name,
@@ -50,13 +50,13 @@ export class TicketHttpService {
       type_item: item.type,
       required_time: item.required_time
     };
-    //console.log(ticketId, order);
-    return this.http.post(this.endpoint + "/" + ticketId + '/' + 'orders', order, this.create_options());
+    // console.log(ticketId, order);
+    return this.http.post(this.endpoint + '/' + ticketId + '/' + 'orders', order, this.create_options());
   }
 
   changeOrderState(ticketId, orderId, state, username_executer) {
-    //console.log(ticketId, orderId);
-    return this.http.patch(this.endpoint + '/' + ticketId + '/' + 'orders' + '/' + orderId, {state, username_executer: username_executer}, this.create_options());
+    // console.log(ticketId, orderId);
+    return this.http.patch(this.endpoint + '/' + ticketId + '/' + 'orders' + '/' + orderId, {state, username_executer}, this.create_options());
   }
 
 }

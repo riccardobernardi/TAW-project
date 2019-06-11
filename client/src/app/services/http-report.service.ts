@@ -5,7 +5,7 @@ import { TicketOrder } from '../interfaces/TicketOrder';
 import { types } from '../interfaces/Item';
 import { roles } from '../interfaces/User';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { TicketHttpService } from "./ticket-http.service"
+import { TicketHttpService } from './ticket-http.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,13 +21,13 @@ export class HttpReportService {
   }
 
   create_report(filters) {
-    let today = new Date();
-    today.setHours(0,0,0,0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     return this.ticket.get_tickets(filters).toPromise().then((data: Ticket[]) => {
-      if(data.length != 0) {
-      //console.log(data);
+      if (data.length != 0) {
+      // console.log(data);
 
-        //initial report
+        // initial report
         const report: Report = {
           date : today,
           total : 0,
@@ -36,105 +36,105 @@ export class HttpReportService {
           average_stay : 0,
           users_reports: {}
         };
-        //support variable for users_reports
-        var sup_dependants = {}
+        // support variable for users_reports
+        const sup_dependants = {};
 
-        //for each role, prepare the field in the support object for users_reports
+        // for each role, prepare the field in the support object for users_reports
         roles.forEach((role) => {
-          if(role != "desk") {
-            if(role == "cook") {
-              report.users_reports["cookers"] = [];
-              sup_dependants["cookers"] = {};
+          if (role != 'desk') {
+            if (role == 'cook') {
+              report.users_reports.cookers = [];
+              sup_dependants.cookers = {};
             } else {
-              report.users_reports[role + "s"] = [];
-              sup_dependants[role + "s"] = {};
+              report.users_reports[role + 's'] = [];
+              sup_dependants[role + 's'] = {};
             }
           }
         });
 
         let ticketCount = 0;
 
-        //console.log(report);
+        // console.log(report);
 
-        //work for every ticket
+        // work for every ticket
         data.forEach((ticket) => {
-          report.total += ticket.total; //increment total in the range of dates
+          report.total += ticket.total; // increment total in the range of dates
           report.total_customers += ticket.people_number; // increment people_number in the range of dates
           ticket.orders.forEach((order: TicketOrder) => {
-            report.total_orders[order.type_item] += 1; //increment total_orders in the range of dates
+            report.total_orders[order.type_item] += 1; // increment total_orders in the range of dates
           });
-          ticketCount++; //ticketCounter for average_stay calc
-          report.average_stay += Math.floor((new Date(ticket.end).getTime() - new Date(ticket.start).getTime()) / 60000); //calc minutes for average_stay
-          //console.log(ticket.waiter);
-          if(ticket.waiter) {
-            if(!sup_dependants["waiters"][ticket.waiter]) { //if the waiter doesn't exist in the support object, insert
-              //console.log("New " + ticket.waiter)
-              sup_dependants["waiters"][ticket.waiter] = {};
-              sup_dependants["waiters"][ticket.waiter].customers_served = 0;
-              sup_dependants["waiters"][ticket.waiter].orders_served = 0;
+          ticketCount++; // ticketCounter for average_stay calc
+          report.average_stay += Math.floor((new Date(ticket.end).getTime() - new Date(ticket.start).getTime()) / 60000); // calc minutes for average_stay
+          // console.log(ticket.waiter);
+          if (ticket.waiter) {
+            if (!sup_dependants.waiters[ticket.waiter]) { // if the waiter doesn't exist in the support object, insert
+              // console.log("New " + ticket.waiter)
+              sup_dependants.waiters[ticket.waiter] = {};
+              sup_dependants.waiters[ticket.waiter].customers_served = 0;
+              sup_dependants.waiters[ticket.waiter].orders_served = 0;
             }
-            //increment stats for waiter based on ticket numbers
-            sup_dependants["waiters"][ticket.waiter].customers_served += ticket.people_number
-            sup_dependants["waiters"][ticket.waiter].orders_served += ticket.orders.length
-            //console.log(sup_dependants["waiter"][ticket.waiter])
+            // increment stats for waiter based on ticket numbers
+            sup_dependants.waiters[ticket.waiter].customers_served += ticket.people_number;
+            sup_dependants.waiters[ticket.waiter].orders_served += ticket.orders.length;
+            // console.log(sup_dependants["waiter"][ticket.waiter])
           }
-          var role;
-          
-          //create or increments stats for bartenders and cookers based of orders fields
-          ticket.orders.forEach((order : TicketOrder) => {
-            //console.log(order.username_executer);
-            role = (order.type_item == types[0]) ? "cookers" : "bartenders";
-            if(order.username_executer) {
-              if(!sup_dependants[role][order.username_executer]) {
+          let role;
+
+          // create or increments stats for bartenders and cookers based of orders fields
+          ticket.orders.forEach((order: TicketOrder) => {
+            // console.log(order.username_executer);
+            role = (order.type_item == types[0]) ? 'cookers' : 'bartenders';
+            if (order.username_executer) {
+              if (!sup_dependants[role][order.username_executer]) {
                 sup_dependants[role][order.username_executer] = {};
                 sup_dependants[role][order.username_executer].items_served = 0;
               }
               sup_dependants[role][order.username_executer].items_served++;
-            }  
+            }
           });
         });
 
-        //console.log(sup_dependants);
-        //create mini-arrays for users_reports format
-        for(let waiter in sup_dependants["waiters"]) {
-          report.users_reports["waiters"].push({
+        // console.log(sup_dependants);
+        // create mini-arrays for users_reports format
+        for (const waiter in sup_dependants.waiters) {
+          report.users_reports.waiters.push({
             username: waiter,
-            customers_served: sup_dependants["waiters"][waiter].customers_served,
-            orders_served: sup_dependants["waiters"][waiter].orders_served
-          })
-        }
-
-        //create mini-arrays for users_reports format
-        for(let cook in sup_dependants["cookers"]) {
-          report.users_reports["cookers"].push({
-            username: cook,
-            items_served: sup_dependants["cookers"][cook].items_served,
+            customers_served: sup_dependants.waiters[waiter].customers_served,
+            orders_served: sup_dependants.waiters[waiter].orders_served
           });
         }
 
-        //create mini-arrays for users_reports format
-        for(let bartender in sup_dependants["bartenders"]) {
-          report.users_reports["bartenders"].push({
+        // create mini-arrays for users_reports format
+        for (const cook in sup_dependants.cookers) {
+          report.users_reports.cookers.push({
+            username: cook,
+            items_served: sup_dependants.cookers[cook].items_served,
+          });
+        }
+
+        // create mini-arrays for users_reports format
+        for (const bartender in sup_dependants.bartenders) {
+          report.users_reports.bartenders.push({
             username: bartender,
-            items_served: sup_dependants["bartenders"][bartender].items_served,
+            items_served: sup_dependants.bartenders[bartender].items_served,
           });
         }
 
         report.average_stay = Math.floor(report.average_stay / ticketCount);
         console.log(report);
-        return this.http.post("reports", report, this.create_options()).toPromise();
+        return this.http.post('reports', report, this.create_options()).toPromise();
       } else {
-        throw new Error("Impossibile to generate the report: zero tickets");
-      };
-    })
+        throw new Error('Impossibile to generate the report: zero tickets');
+      }
+    });
   }
 
   get_reports(filter) {
-    return this.http.get<Report[]>("reports", this.create_options(filter));
+    return this.http.get<Report[]>('reports', this.create_options(filter));
   }
 
-  delete_report(report_id : string) {
-    return this.http.delete<Report>("reports" + "/" + report_id);
+  delete_report(report_id: string) {
+    return this.http.delete<Report>('reports' + '/' + report_id);
   }
 
 }
