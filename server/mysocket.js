@@ -1,16 +1,18 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const io = require("socket.io"); // Socket.io websocket library
-class MySocket {
-    constructor(server) {
+exports.__esModule = true;
+var io = require("socket.io"); // Socket.io websocket library
+var MySocket = /** @class */ (function () {
+    function MySocket(server) {
         this.ios = io(server);
     }
-    emitEvent(eventType) {
-        socketEvents[eventType].destRooms.forEach((r) => {
-            this.ios.emit(r);
+    MySocket.prototype.emitEvent = function (eventType) {
+        var _this = this;
+        socketEvents[eventType].destRooms.forEach(function (r) {
+            _this.ios.emit(r);
         });
-    }
-}
+    };
+    return MySocket;
+}());
 exports.MySocket = MySocket;
 var rooms = ["waiters", "cooks", "desks", "bartenders"];
 var socketEvents = {
@@ -40,6 +42,5 @@ var socketEvents = {
     },
     "ready item - waiters": {
         destRooms: [rooms[0]]
-    },
+    }
 };
-//# sourceMappingURL=mysocket.js.map

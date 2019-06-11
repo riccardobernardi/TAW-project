@@ -1,7 +1,7 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose = require("mongoose");
-const user = require("./User");
+exports.__esModule = true;
+var mongoose = require("mongoose");
+var user = require("./User");
 function isWaiterReport(arg) {
     return (arg.username && arg.costumers_served && arg.orders_served && typeof (arg.username) == "string" && typeof (arg.costumers_served) == "number" && typeof (arg.orders_served) == "number");
 }
@@ -15,17 +15,17 @@ exports.isCookerBartenderReport = isCookerBartenderReport;
 function isUsersReports(arg) {
     var user_report = true;
     if (arg.users_reports[user.roles[0]]) {
-        arg.users_reports[user.roles[0]].array.forEach(element => {
+        arg.users_reports[user.roles[0]].array.forEach(function (element) {
             user_report = user_report && isWaiterReport(element);
         });
     }
     if (arg.users_reports[user.roles[1]]) {
-        arg.users_reports[user.roles[1]].array.forEach(element => {
+        arg.users_reports[user.roles[1]].array.forEach(function (element) {
             user_report = user_report && isCookerBartenderReport(element);
         });
     }
     if (arg.users_reports[user.roles[3]]) {
-        arg.users_reports[user.roles[3]].array.forEach(element => {
+        arg.users_reports[user.roles[3]].array.forEach(function (element) {
             user_report = user_report && isCookerBartenderReport(element);
         });
     }
@@ -64,7 +64,7 @@ var reportSchema = new mongoose.Schema({
         required: true,
         validate: {
             validator: function (value) {
-                let ret = true;
+                var ret = true;
                 if (value.dish)
                     ret = (countDecimals(value.dish) == 0);
                 if (value.beverage)
@@ -90,7 +90,7 @@ var reportSchema = new mongoose.Schema({
     },
     users_reports: {
         type: {},
-        required: false,
+        required: false
     }
     /*il formato di users_reports è il seguente:
     {
@@ -113,4 +113,3 @@ function getModel() {
     return reportModel;
 }
 exports.getModel = getModel;
-//# sourceMappingURL=Report.js.map

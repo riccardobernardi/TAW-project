@@ -1,6 +1,8 @@
-
 import * as item from './Item';
 import * as table from './Table';
+import * as user from './User'
+import * as ticket from './Ticket'
+
 export var itemsToInsert = [
     {
         name: "Bistecca alla griglia",
@@ -177,3 +179,360 @@ export var tablesToInsert = [
     {number : 9, max_people: 5, state: table.states[0]},
     {number : 10, max_people: 7, state: table.states[0]}
 ];
+
+export var usersToInsert = [
+   {username: "waiter1", password: "waiter1", role: "waiter"},
+   {username: "waiter2", password: "waiter2", role: "waiter"},
+   {username: "waiter3", password: "waiter3", role: "waiter"},
+   {username: "waiter4", password: "waiter4", role: "waiter"},
+   {username: "waiter5", password: "waiter5", role: "waiter"},
+   {username: "bartender1", password: "bartender1", role: "bartender"},
+   {username: "bartender2", password: "bartender2", role: "bartender"},
+   {username: "bartender3", password: "bartender3", role: "bartender"},
+   {username: "cook1", password: "cook1", role: "cook"},
+   {username: "cook2", password: "cook2", role: "cook"},
+   {username: "cook3", password: "cook3", role: "cook"},
+]
+
+export var ticketToInsert = [
+      {  
+         waiter: "waiter1",
+         table: 1,
+         start: new Date(),
+         orders: [{
+            //id_order: new ObjectID(),
+            name_item: "Bistecca alla griglia",
+            username_waiter: "waiter1",
+            state: ticket.orderState[0],
+            price: 9,
+            type_item: item.type[0],
+            required_time: 10
+         },
+         {
+            name_item: "Coca cola",
+            username_waiter: "waiter1",
+            state: ticket.orderState[0],
+            price: 2.5,
+            type_item: item.type[1],
+            required_time: 1
+         },
+         {
+            name_item: "Spaghetti al pomodoro",
+            username_waiter: "waiter1",
+            state: ticket.orderState[0],
+            price: 6,
+            added: ["Mozzarella"],
+            type_item: item.type[0],
+            required_time: 12
+         }, {
+            name_item: "Bistecca alla griglia",
+            username_waiter: "waiter1",
+            state: ticket.orderState[0],
+            price: 9,
+            type_item: item.type[0],
+            required_time: 10
+         },
+         {
+            name_item: "Chinotto",
+            username_waiter: "waiter1",
+            state: ticket.orderState[0],
+            price: 2.5,
+            type_item: item.type[1],
+            required_time: 1
+         }],
+         state: ticket.ticketState[0],
+         total: 0,
+         people_number: 2
+      },
+      {
+         waiter: "waiter1",
+         table: 3,
+         start: new Date(),
+         orders: [{
+            //id_order: new ObjectID(),
+            name_item: "Bistecca alla griglia",
+            username_waiter: "waiter1",
+            state: ticket.orderState[0],
+            price: 9,
+            type_item: item.type[0],
+            required_time: 10
+         },
+         {
+            name_item: "Ravioli ai porcini",
+            username_waiter: "waiter1",
+            state: ticket.orderState[0],
+            price: 6,
+            added: ["Mozzarella"],
+            type_item: item.type[0],
+            required_time: 12
+         }, {
+            name_item: "Bistecca alla griglia",
+            username_waiter: "waiter1",
+            state: ticket.orderState[0],
+            price: 9,
+            type_item: item.type[0],
+            required_time: 10
+         },
+         {
+            name_item: "Chinotto",
+            username_waiter: "waiter3",
+            state: ticket.orderState[0],
+            price: 2.5,
+            type_item: item.type[1],
+            required_time: 1
+         }],
+         state: ticket.ticketState[0],
+         total: 0,
+         people_number: 5
+      },
+      {
+         waiter: "waiter2",
+         table: 2,
+         start: new Date(),
+         orders: [{
+            //id_order: new ObjectID(),
+            name_item: "Spaghetti al pomodoro",
+            username_waiter: "waiter2",
+            state: ticket.orderState[0],
+            price: 6,
+            added: ["Mozzarella"],
+            type_item: item.type[0],
+            required_time: 12
+         }, {
+            //id_order: new ObjectID(),
+            name_item: "Bistecca alla griglia",
+            username_waiter: "waiter2",
+            state: ticket.orderState[0],
+            price: 9,
+            type_item: item.type[0],
+            required_time: 10
+         },
+         {
+            name_item: "Chinotto",
+            username_waiter: "waiter2",
+            state: ticket.orderState[0],
+            price: 2.5,
+            type_item: item.type[1],
+            required_time: 1
+         },
+         {
+            name_item: "Spaghetti al pomodoro",
+            username_waiter: "waiter2",
+            state: ticket.orderState[0],
+            price: 6,
+            added: ["Mozzarella"],
+            type_item: item.type[0],
+            required_time: 12
+         }, {
+            name_item: "Bistecca alla griglia",
+            username_waiter: "waiter2",
+            state: ticket.orderState[0],
+            price: 9,
+            type_item: item.type[0],
+            required_time: 10
+         },
+         {
+            name_item: "Chinotto",
+            username_waiter: "waiter2",
+            state: ticket.orderState[0],
+            price: 2.5,
+            type_item: item.type[1],
+            required_time: 1
+         },
+         {
+            name_item: "Spaghetti al pomodoro",
+            username_waiter: "waiter2",
+            state: ticket.orderState[0],
+            price: 6,
+            added: ["Mozzarella"],
+            type_item: item.type[0],
+            required_time: 12,
+         }, {
+            name_item: "Bistecca alla griglia",
+            username_waiter: "waiter2",
+            state: ticket.orderState[0],
+            price: 9,
+            type_item: item.type[0],
+            required_time: 10,
+         },
+         {
+            name_item: "Chinotto",
+            username_waiter: "waiter2",
+            state: ticket.orderState[0],
+            price: 2.5,
+            type_item: item.type[1],
+            required_time: 1,
+         },
+         {
+            name_item: "Spaghetti al pomodoro",
+            username_waiter: "waiter2",
+            state: ticket.orderState[0],
+            price: 6,
+            added: ["Mozzarella"],
+            type_item: item.type[0],
+            required_time: 12
+         }, {
+            name_item: "Frittura mista di pesce",
+            username_waiter: "waiter2",
+            state: ticket.orderState[0],
+            price: 9,
+            type_item: item.type[0],
+            required_time: 10
+         },
+         {
+            name_item: "Chinotto",
+            username_waiter: "waiter2",
+            state: ticket.orderState[0],
+            price: 2.5,
+            type_item: item.type[1],
+            required_time: 1
+         }],
+         state: ticket.ticketState[0],
+         total: 0,
+         people_number: 2
+      },
+      {
+         waiter: "waiter4",
+         table: 6,
+         start: new Date(),
+         orders: [{
+            name_item: "Ravioli ai porcini",
+            username_waiter: "waiter4",
+            state: ticket.orderState[0],
+            price: 6,
+            added: ["Mozzarella"],
+            type_item: item.type[0],
+            required_time: 12         
+         },
+         {
+            name_item: "Bistecca alla griglia",
+            username_waiter: "waiter4",
+            state: ticket.orderState[0],
+            price: 9,
+            type_item: item.type[0],
+            required_time: 10
+         },
+         {
+            name_item: "Chinotto",
+            username_waiter: "waiter4",
+            state: ticket.orderState[0],
+            price: 2.5,
+            type_item: item.type[1],
+            required_time: 1
+         }],
+         state: ticket.ticketState[0],
+         total: 0,
+         people_number: 2
+      },
+      {
+         waiter: "waiter3",
+         table: 9,
+         start: "2019-05-27T00:00:00.000Z",
+         orders: [{
+            name_item: "Spaghetti al pomodoro",
+            username_waiter: "waiter3",
+            state: ticket.orderState[0],
+            price: 6,
+            added: ["Mozzarella"],
+            type_item: item.type[0],
+            required_time: 12
+         },
+         {
+            name_item: "Bistecca alla griglia",
+            username_waiter: "waiter3",
+            state: ticket.orderState[0],
+            price: 9,
+            type_item: item.type[0],
+            required_time: 10,
+         },
+         {
+            name_item: "Chinotto",
+            username_waiter: "waiter3",
+            state: ticket.orderState[0],
+            price: 2.5,
+            type_item: item.type[1],
+            required_time: 1,
+         }],
+         state: ticket.ticketState[0],
+         total: 0,
+         people_number: 2
+      }
+]
+
+export var reportToInsert = [
+   {
+      date: "2019-05-28T00:00:00.000Z",
+      total: 175,
+      total_customers: 18,
+      total_orders: {
+          dish: 24,
+          beverage: 30
+      },
+      average_stay: 40,
+      users_reports: {
+         waiters: [{username: "waiter1", customers_served: 20, orders_served: 66}, {username: "waiter2", customers_served: 40, orders_served: 120}],
+         bartenders: [{username: "bartender1", items_served: 60}],
+         cookers: [{username: "cook1", items_served: 60}]
+      }
+   },
+   {
+      date: "2019-05-27T00:00:00.000Z",
+      total: 320,
+      total_customers: 40,
+      total_orders: {
+            dish: 50,
+            beverage: 112
+      },
+      average_stay: 90,
+      users_reports: {
+         waiters: [{username: "waiter1", customers_served: 20, orders_served: 66}, {username: "waiter2", customers_served: 40, orders_served: 120}],
+         bartenders: [{username: "bartender1", items_served: 60}],
+         cookers: [{username: "cook1", items_served: 60}]
+      }
+   },
+   {
+      date: "2019-05-29T00:00:00.000Z",
+      total: 5600,
+      total_customers: 120,
+      total_orders: {
+            dish: 350,
+            beverage: 712
+      },
+      average_stay: 120,
+      users_reports: {
+         waiters: [{username: "waiter1", customers_served: 80, orders_served: 912}, {username: "waiter2", customers_served: 40, orders_served: 305}],
+         bartenders: [{username: "bartender1", items_served: 400}, {username: "waiter2", items_served: 700}],
+         cookers: [{username: "cook1", items_served: 60}, {username: "cook2", items_served: 1110}]
+      }
+   },
+   {
+      date: "2019-05-30T00:00:00.000Z",
+      total: 5600,
+      total_customers: 120,
+      total_orders: {
+            dish: 350,
+            beverage: 712
+      },
+      average_stay: 120,
+      users_reports: {
+         waiters: [{username: "waiter1", customers_served: 80, orders_served: 912}, {username: "waiter2", customers_served: 40, orders_served: 305}],
+         bartenders: [{username: "bartender1", items_served: 400}, {username: "waiter2", items_served: 700}],
+         cookers: [{username: "cook1", items_served: 60}, {username: "cook2", items_served: 1110}]
+      }
+   },
+   {
+      date: "2019-06-03T00:00:00.000Z",
+      total: 5600,
+      total_customers: 120,
+      total_orders: {
+            dish: 350,
+            beverage: 712
+      },
+      average_stay: 120,
+      users_reports: {
+         waiters: [{username: "waiter1", customers_served: 80, orders_served: 912}, {username: "waiter2", customers_served: 40, orders_served: 305}],
+         bartenders: [{username: "bartender1", items_served: 400}, {username: "waiter2", items_served: 700}],
+         cookers: [{username: "cook1", items_served: 60}, {username: "cook2", items_served: 1110}]
+      }
+   }
+]

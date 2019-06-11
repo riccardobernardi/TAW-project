@@ -993,35 +993,29 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
       console.log(count);
       if (count != 0) {
          console.log("Adding some test data into the database");
-         var user1 = user.newUser({
-            username: "waiter1"
-         })
-         user1.setWaiter();
-         user1.setPassword("waiter1");
-         var pr1 = user1.save();
-         
-         var user2 = user.newUser({
-            username: "cook1"
-         })
-         user2.setCook();
-         user2.setPassword("cook1");
-         var pr2 = user2.save();
 
-         var user3 = user.newUser({
-            username: "bartender1"
-         })
-         user3.setBartender();
-         user3.setPassword("bartender1");
-         var pr3 = user3.save();
+         var usersToSave = [];
 
-         var user4 = user.newUser({
-            username: "waiter2"
+         toInsert.usersToInsert.forEach((userti) => {
+            var userti1 = user.newUser({
+               username: userti.username
+            })
+            switch(userti.role) {
+               case "waiter":
+                  userti1.setWaiter();
+                  break;
+               case "bartender":
+                  userti1.setBartender();
+                  break;
+               case "cook":
+                  userti1.setCook();
+                  break;
+            }
+            userti1.setPassword(userti.password);
+            usersToSave.push(userti1.save())
          })
-         user4.setWaiter();
-         user4.setPassword("waiter2");
-         var pr4 = user4.save();
 
-         Promise.all([pr1, pr2, pr3, pr4])
+         Promise.all(usersToSave)
             .then(function () {
             console.log("Users saved");
          })
@@ -1072,187 +1066,32 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
    ticket.getModel().deleteMany({}).then(data => {
       var ticketModel = ticket.getModel();
 
-      var ti1 = new ticketModel({
-         waiter: "waiter1",
-         table: 1,
-         start: new Date(),
-         orders: [{
-            //id_order: new ObjectID(),
-            name_item: "Bistecca alla griglia",
-            username_waiter: "waiter1",
-            state: ticket.orderState[0],
-            price: 9,
-            type_item: item.type[0],
-            required_time: 10
-         },
-         {
-            name_item: "Coca cola",
-            username_waiter: "waiter1",
-            state: ticket.orderState[0],
-            price: 2.5,
-            type_item: item.type[1],
-            required_time: 1
-         }],
-         state: ticket.ticketState[0],
-         total: 0,
-         people_number: 2
-      }).save().then((data) => {
-         console.log(data);
-         table.getModel().findOneAndUpdate({number: 1}, {$set: {state: table.states[1], associated_ticket: data._id}}).then();
-      });
+      let ticketToSave = [];
 
+      toInsert.ticketToInsert.forEach((ticket) => {
+         ticketToSave.push(new ticketModel(ticket).save());
+      })
       
-
-      var ti3 = new ticketModel({
-         waiter: "waiter1",
-         table: 3,
-         start: new Date(),
-         orders: [{
-            //id_order: new ObjectID(),
-            name_item: "Bistecca alla griglia",
-            username_waiter: "waiter1",
-            state: ticket.orderState[0],
-            price: 9,
-            type_item: item.type[0],
-            required_time: 10
-         }],
-         state: ticket.ticketState[0],
-         total: 0,
-         people_number: 5
-      }).save().then((data) => {
-         table.getModel().findOneAndUpdate({number: 3}, {$set: {state: table.states[1],associated_ticket: data._id}}).then();
+      ticketToSave.forEach((promise: Promise<ticket.Ticket>) => {
+         promise.then((ticket) => {
+            return table.getModel().findOneAndUpdate({number: ticket.table},{$set: {state: table.states[1], associated_ticket: ticket._id}});
+         }, (err) => {
+            console.log(err + "in saving tables!");
+         }).then().catch((err) => console.log("Error in update table: " + err));
       });
-
-      var ti2 = new ticketModel({
-         waiter: "waiter2",
-         table: 2,
-         start: new Date(),
-         orders: [{
-            //id_order: new ObjectID(),
-            name_item: "Spaghetti al pomodoro",
-            username_waiter: "waiter2",
-            state: ticket.orderState[0],
-            price: 6,
-            added: ["Mozzarella"],
-            type_item: item.type[0],
-            required_time: 12
-         }, {
-            //id_order: new ObjectID(),
-            name_item: "Bistecca alla griglia",
-            username_waiter: "waiter1",
-            state: ticket.orderState[0],
-            price: 9,
-            type_item: item.type[0],
-            required_time: 10
-         },
-         {
-            name_item: "Chinotto",
-            username_waiter: "waiter1",
-            state: ticket.orderState[0],
-            price: 2.5,
-            type_item: item.type[1],
-            required_time: 1
-         }],
-         state: ticket.ticketState[0],
-         total: 0,
-         people_number: 2
-      }).save().then((data) => {
-         table.getModel().findOneAndUpdate({number: 2},{$set: {state: table.states[1], associated_ticket: data._id}}).then();
-      });
-
-      //fine inizializzazione DB
-      Promise.all([ti1, ti2, ti3]).then(function () {
-         console.log("Tickets saved");
-      }).catch(function (reason) {
-         console.log("Unable to save tickets: " + reason);
-      });  
        
    });
 
    report.getModel().deleteMany({}).then(() => {
       var reportModel = report.getModel();
 
-      var r1 = new reportModel({
-         date: "2019-05-28T00:00:00.000Z",
-         total: 175,
-         total_customers: 18,
-         total_orders: {
-             dish: 24,
-             beverage: 30
-         },
-         average_stay: 40,
-         users_reports: {
-            waiters: [{username: "waiter1", customers_served: 20, orders_served: 66}, {username: "waiter2", customers_served: 40, orders_served: 120}],
-            bartenders: [{username: "bartender1", items_served: 60}],
-            cookers: [{username: "cook1", items_served: 60}]
-         }
-      }).save().then(data => console.log(data["bartenders"], data["cookers"] ));
+      let reportToSave = [];
 
-      var r2 = new reportModel({
-         date: "2019-05-27T00:00:00.000Z",
-         total: 320,
-         total_customers: 40,
-         total_orders: {
-               dish: 50,
-               beverage: 112
-         },
-         average_stay: 90,
-         users_reports: {
-            waiters: [{username: "waiter1", customers_served: 20, orders_served: 66}, {username: "waiter2", customers_served: 40, orders_served: 120}],
-            bartenders: [{username: "bartender1", items_served: 60}],
-            cookers: [{username: "cook1", items_served: 60}]
-         }
-      }).save().then(data => console.log(data["waiters"] ));
+      toInsert.reportToInsert.forEach((report) => {
+         reportToSave.push((new reportModel(report)).save());
+      })
 
-      var r3 = new reportModel({
-         date: "2019-05-29T00:00:00.000Z",
-         total: 5600,
-         total_customers: 120,
-         total_orders: {
-               dish: 350,
-               beverage: 712
-         },
-         average_stay: 120,
-         users_reports: {
-            waiters: [{username: "waiter1", customers_served: 80, orders_served: 912}, {username: "waiter2", customers_served: 40, orders_served: 305}],
-            bartenders: [{username: "bartender1", items_served: 400}, {username: "waiter2", items_served: 700}],
-            cookers: [{username: "cook1", items_served: 60}, {username: "cook2", items_served: 1110}]
-         }
-      }).save()/*.then(data => console.log(data["waiters"] ))*/;
-
-      var r4 = new reportModel({
-         date: "2019-05-30T00:00:00.000Z",
-         total: 5600,
-         total_customers: 120,
-         total_orders: {
-               dish: 350,
-               beverage: 712
-         },
-         average_stay: 120,
-         users_reports: {
-            waiters: [{username: "waiter1", customers_served: 80, orders_served: 912}, {username: "waiter2", customers_served: 40, orders_served: 305}],
-            bartenders: [{username: "bartender1", items_served: 400}, {username: "waiter2", items_served: 700}],
-            cookers: [{username: "cook1", items_served: 60}, {username: "cook2", items_served: 1110}]
-         }
-      }).save()/*.then(data => console.log(data["waiters"] ))*/;
-
-      var r5 = new reportModel({
-         date: "2019-06-03T00:00:00.000Z",
-         total: 5600,
-         total_customers: 120,
-         total_orders: {
-               dish: 350,
-               beverage: 712
-         },
-         average_stay: 120,
-         users_reports: {
-            waiters: [{username: "waiter1", customers_served: 80, orders_served: 912}, {username: "waiter2", customers_served: 40, orders_served: 305}],
-            bartenders: [{username: "bartender1", items_served: 400}, {username: "waiter2", items_served: 700}],
-            cookers: [{username: "cook1", items_served: 60}, {username: "cook2", items_served: 1110}]
-         }
-      }).save()/*.then(data => console.log(data["waiters"] ))*/;
-
-      Promise.all([r1,r2, r3, r4, r5]).then().catch((err) => console.log("Save of report not completed: " + err));
+      Promise.all(reportToSave).then().catch((err) => console.log("Save of report not completed: " + err));
    })
 
 
