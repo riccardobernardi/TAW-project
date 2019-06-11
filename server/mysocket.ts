@@ -23,22 +23,22 @@ var socketEvents = {
    },
    
    "ordered dish": {
-      destRooms: [rooms[1]]
+      destRooms: [rooms[1], rooms[2]]
    },
    "ordered drink":{
-      destRooms: [rooms[3]]
+      destRooms: [rooms[3], rooms[2]]
    },
    "dish in preparation": {
-      destRooms: [rooms[1]]
+      destRooms: [rooms[1], rooms[2]]
    },
    "beverage in preparation": {
-      destRooms: [rooms[3]]
+      destRooms: [rooms[3], rooms[2]]
    },
    "ready item - cooks": {
-      destRooms: [rooms[1]]
+      destRooms: [rooms[1], rooms[2]]
    },
    "ready item - bartenders": {
-      destRooms: [rooms[3]]
+      destRooms: [rooms[3], rooms[2]]
    },
    "ready item - waiters": {
       destRooms: [rooms[0]]
