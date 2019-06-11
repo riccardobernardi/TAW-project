@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Report.js" beforeDir="false" afterPath="$PROJECT_DIR$/Report.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Report.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/Report.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Report.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Report.ts" afterDir="false" />
@@ -23,8 +24,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="371">
-              <caret line="131" column="91" selection-start-line="131" selection-start-column="91" selection-end-line="131" selection-end-column="91" />
+            <state relative-caret-position="-223">
+              <caret line="130" selection-start-line="130" selection-end-line="130" />
               <folding>
                 <element signature="e#168#194#0" expanded="true" />
                 <element signature="e#380#418#0" expanded="true" />
@@ -185,17 +186,18 @@
       <workItem from="1560007704533" duration="86000" />
       <workItem from="1560163380996" duration="193000" />
       <workItem from="1560193265017" duration="161000" />
+      <workItem from="1560236786777" duration="353000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15593000" />
+    <option name="totallyTimeSpent" value="15946000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -230,6 +232,8 @@
         <option value="$PROJECT_DIR$/Table.js.map" />
         <option value="$PROJECT_DIR$/restaurant-server.js.map" />
         <option value="$PROJECT_DIR$/Ticket.js.map" />
+        <option value="$PROJECT_DIR$/toinsert.js.map" />
+        <option value="$PROJECT_DIR$/toinsert.js" />
       </list>
     </option>
   </component>
@@ -237,8 +241,8 @@
     <entry file="file://$PROJECT_DIR$/API_Documentation.md" />
     <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="371">
-          <caret line="131" column="91" selection-start-line="131" selection-start-column="91" selection-end-line="131" selection-end-column="91" />
+        <state relative-caret-position="-223">
+          <caret line="130" selection-start-line="130" selection-end-line="130" />
           <folding>
             <element signature="e#168#194#0" expanded="true" />
             <element signature="e#380#418#0" expanded="true" />
