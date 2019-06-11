@@ -2,11 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../client/src/environments/environment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/environments/environment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/barman/barman.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/barman/barman.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/cook/cook.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/cook/cook.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/insert-orders/insert-orders.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/insert-orders/insert-orders.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/interfaces/Table.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/interfaces/Table.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/interfaces/TicketOrder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/interfaces/TicketOrder.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/app/interfaces/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/interfaces/User.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Item.js" beforeDir="false" afterPath="$PROJECT_DIR$/Item.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Report.js" beforeDir="false" afterPath="$PROJECT_DIR$/Report.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Report.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/Report.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Report.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Report.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Table.js" beforeDir="false" afterPath="$PROJECT_DIR$/Table.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ticket.js" beforeDir="false" afterPath="$PROJECT_DIR$/Ticket.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/User.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysocket.js" beforeDir="false" afterPath="$PROJECT_DIR$/mysocket.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.js" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.ts" afterDir="false" />
@@ -100,7 +110,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
     <option name="width" value="1280" />
     <option name="height" value="800" />
   </component>
@@ -183,14 +193,16 @@
       <workItem from="1560163380996" duration="193000" />
       <workItem from="1560193265017" duration="161000" />
       <workItem from="1560236786777" duration="801000" />
+      <workItem from="1560239928565" duration="237000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16394000" />
+    <option name="totallyTimeSpent" value="16631000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -234,6 +246,7 @@
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/API_Documentation.md" />
+    <entry file="file://$PROJECT_DIR$/Order.js" />
     <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="291">
@@ -258,9 +271,6 @@
           <caret column="24" selection-start-column="24" selection-end-column="24" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Order.js">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/User.ts">
       <provider selected="true" editor-type-id="text-editor">

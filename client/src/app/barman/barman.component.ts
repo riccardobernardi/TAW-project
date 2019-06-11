@@ -4,8 +4,8 @@ import {Router} from '@angular/router';
 import {UserHttpService} from '../services/user-http.service';
 import {HttpClient} from '@angular/common/http';
 import { Ticket } from '../interfaces/Ticket';
-import { types } from "../interfaces/Item";
-import { order_states } from "../interfaces/TicketOrder"
+import { types } from '../interfaces/Item';
+import { order_states } from '../interfaces/TicketOrder';
 import {TicketOrder } from '../interfaces/TicketOrder';
 import { TicketHttpService } from '../services/ticket-http.service';
 import { ToastrService } from 'ngx-toastr';
@@ -21,15 +21,18 @@ export class BarmanComponent implements OnInit {
   private error;
   private tickets: Ticket[] = [];
 
-  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private http: HttpClient, private socketio: SocketioService, private ticket: TicketHttpService, private toastr: ToastrService  ) {}
+  constructor(private sio: SocketioService, private us: UserHttpService, private router: Router, private http: HttpClient,
+              private socketio: SocketioService, private ticket: TicketHttpService, private toastr: ToastrService  ) {}
 
   get_tickets() {
     this.ticket.get_tickets({state: 'open'}).subscribe( (tickets: Ticket[]) => {
       this.tickets.splice(0, this.tickets.length);
-      //console.log(tickets);
+      // console.log(tickets);
       tickets.forEach( (ticket) => {
-        //console.log(ticket.orders);
-        let orders = ticket.orders.filter((order: TicketOrder) => order.state != order_states[2] && order.state != order_states[3] && order.type_item != types[0]);
+        // console.log(ticket.orders);
+        // filtro per cercare solo gli ordini che sono inProgress oppure ordered e che abbiano tipo beverage
+        const orders = ticket.orders.filter((order: TicketOrder) => order.state != order_states[2] &&
+          order.state != order_states[3] && order.type_item != types[0]);
         if (orders.length != 0) {
           this.tickets.push(ticket);
           orders.sort((order1: TicketOrder, order2: TicketOrder) => {
@@ -38,19 +41,19 @@ export class BarmanComponent implements OnInit {
           ticket.orders = orders;
         }
       });
-      //console.log(this.tickets);
+      // console.log(this.tickets);
     }, () => {
       this.error = true;
     });
   }
 
   ngOnInit() {
-    if (this.us.get_token() === undefined || this.us.get_token() === '' || this.us.get_role() != "bartender") {
+    if (this.us.get_token() === undefined || this.us.get_token() === '' || this.us.get_role() != 'bartender') {
       this.us.logout();
     }
     this.error = false;
     this.get_tickets();
-    this.socketio.get().on('bartenders', () => { this.get_tickets() });
+    this.socketio.get().on('bartenders', () => { this.get_tickets(); });
   }
 
   logout() {
@@ -62,8 +65,8 @@ export class BarmanComponent implements OnInit {
     button.disabled = true;
     spinner.hidden = false;
     this.ticket.changeOrderState(ticketid, orderid, 'ready', this.us.get_nick()).toPromise().then(() => {
-      //console.log('Changing state to ready OK');
-      //button.disabled = false; non serve perchè se il tutto va a buon fine, l'ordine sparisce
+      // console.log('Changing state to ready OK');
+      // button.disabled = false; non serve perchè se il tutto va a buon fine, l'ordine sparisce
       spinner.hidden = true;
     }).catch((err) => {
       this.toastr.error('Error: ' + err, 'Failure!', {
@@ -71,7 +74,7 @@ export class BarmanComponent implements OnInit {
       });
       spinner.hidden = true;
       button.disabled = false;
-      //console.log('Changing state to ready failed: ' + err);
+      // console.log('Changing state to ready failed: ' + err);
     });
   }
 

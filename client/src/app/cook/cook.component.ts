@@ -6,8 +6,8 @@ import { Ticket } from '../interfaces/Ticket';
 import {TicketOrder } from '../interfaces/TicketOrder';
 import { TicketHttpService } from '../services/ticket-http.service';
 import {HttpClient} from '@angular/common/http';
-import { order_states } from "../interfaces/TicketOrder";
-import { types } from "../interfaces/Item";
+import { order_states } from '../interfaces/TicketOrder';
+import { types } from '../interfaces/Item';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -26,7 +26,9 @@ export class CookComponent implements OnInit {
       this.tickets.splice(0, this.tickets.length);
       tickets.forEach( (ticket) => {
         const orders = ticket.orders.filter((order: TicketOrder) =>
-          order.state !== order_states[2] && order.state !== order_states[3] && ((order.state == order_states[1]) ? order.username_executer === this.us.get_nick() : true ) && order.type_item !== types[1]);
+          order.state !== order_states[2] && order.state !== order_states[3] &&
+          ((order.state === order_states[1]) ? order.username_executer === this.us.get_nick() : true ) &&
+          order.type_item !== types[1]);
         if (orders.length !== 0) {
           this.tickets.push(ticket);
           orders.sort((order1: TicketOrder, order2: TicketOrder) => {
@@ -35,21 +37,21 @@ export class CookComponent implements OnInit {
           ticket.orders = orders;
         }
       });
-      this.tickets.sort((ticket1 : Ticket, ticket2 : Ticket) => {
+      this.tickets.sort((ticket1: Ticket, ticket2: Ticket) => {
         return ticket1.table - ticket2.table;
-      })
+      });
     }, () => {
       this.error = true;
     });
   }
 
   ngOnInit() {
-    if (this.us.get_token() === undefined || this.us.get_token() === '' || this.us.get_role() != "cook") {
+    if (this.us.get_token() === undefined || this.us.get_token() === '' || this.us.get_role() != 'cook') {
       this.us.logout();
     }
     this.error = false;
     this.get_tickets();
-    this.socketio.get().on('cooks', () => {this.get_tickets();});
+    this.socketio.get().on('cooks', () => {this.get_tickets(); });
   }
 
 
@@ -59,18 +61,18 @@ export class CookComponent implements OnInit {
   }
 
   setOrderinProgress(ticketid: string, orderid: string, button: HTMLButtonElement, spinner: HTMLElement) {
-    //console.log(ticketid, orderid);
+    // console.log(ticketid, orderid);
     button.disabled = true;
     spinner.hidden = false;
     this.ticket.changeOrderState(ticketid, orderid, 'preparation', this.us.get_nick()).toPromise().then(() => {
-      //console.log('Changing state to preparation OK');
+      // console.log('Changing state to preparation OK');
     }).catch((err) => {
       this.toastr.error('Error: ' + err, 'Failure!', {
         timeOut: 3000
       });
       button.disabled = false;
       spinner.hidden = true;
-      //console.log('Changing state to prepation failed: ' + err);
+      // console.log('Changing state to prepation failed: ' + err);
     });
   }
 
@@ -78,14 +80,14 @@ export class CookComponent implements OnInit {
     button.disabled = true;
     spinner.hidden = false;
     this.ticket.changeOrderState(ticketid, orderid, 'ready', undefined).toPromise().then(() => {
-      //console.log('Changing state to ready OK');
+      // console.log('Changing state to ready OK');
     }).catch((err) => {
       this.toastr.error('Error: ' + err, 'Failure!', {
         timeOut: 3000
       });
       button.disabled = false;
       spinner.hidden = true;
-      //console.log('Changing state to ready failed: ' + err);
+      // console.log('Changing state to ready failed: ' + err);
     });
   }
 }

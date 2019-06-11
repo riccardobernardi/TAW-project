@@ -6,7 +6,7 @@ export interface Table {
     actual_people?: number;
 }
 
-export var states: string[] = ["free", "taken"];
+export let states: string[] = ['free', 'taken'];
 
 
 // User defined type guard
