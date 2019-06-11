@@ -44,7 +44,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor = "let waiter of statisticsXRoles['waiters']">
+        <tr *ngFor = "let waiter of statisticsXRoles['waiter']">
           <td>{{waiter.username}}</td>
           <td>{{waiter.customers_served}}</td>
           <td>{{waiter.orders_served}}</td>
@@ -60,7 +60,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor = "let cooker of statisticsXRoles['cookers']">
+        <tr *ngFor = "let cooker of statisticsXRoles['cook']">
           <td>{{cooker.username}}</td>
           <td>{{cooker.items_served}}</td>
         </tr>
@@ -75,7 +75,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor = "let bartender of statisticsXRoles['bartenders']">
+        <tr *ngFor = "let bartender of statisticsXRoles['bartender']">
           <td>{{bartender.username}}</td>
           <td>{{bartender.items_served}}</td>
         </tr>

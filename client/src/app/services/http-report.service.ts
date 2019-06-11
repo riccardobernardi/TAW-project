@@ -93,26 +93,26 @@ export class HttpReportService {
         // console.log(sup_dependants);
         // create mini-arrays for users_reports format
         for (const waiter in sup_dependants["waiter"]) {
-          report.users_reports[waiter].push({
+          report.users_reports["waiter"].push({
             username: waiter,
-            customers_served: sup_dependants[waiter].customers_served,
-            orders_served: sup_dependants[waiter].orders_served
+            customers_served: sup_dependants["waiter"][waiter].customers_served,
+            orders_served: sup_dependants["waiter"][waiter].orders_served
           });
         }
 
         // create mini-arrays for users_reports format
         for (const cook in sup_dependants["cook"]) {
-          report.users_reports[cook].push({
+          report.users_reports["cook"].push({
             username: cook,
-            items_served: sup_dependants[cook].items_served,
+            items_served: sup_dependants["cook"][cook].items_served,
           });
         }
 
         // create mini-arrays for users_reports format
         for (const bartender in sup_dependants["bartender"]) {
-          report.users_reports[bartender].push({
+          report.users_reports["bartender"].push({
             username: bartender,
-            items_served: sup_dependants[bartender].items_served,
+            items_served: sup_dependants["bartender"][bartender].items_served,
           });
         }
 
