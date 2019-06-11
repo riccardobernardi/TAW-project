@@ -42,13 +42,9 @@ export class HttpReportService {
         // for each role, prepare the field in the support object for users_reports
         roles.forEach((role) => {
           if (role != 'desk') {
-            if (role == 'cook') {
-              report.users_reports.cookers = [];
-              sup_dependants.cookers = {};
-            } else {
-              report.users_reports[role + 's'] = [];
-              sup_dependants[role + 's'] = {};
-            }
+            report.users_reports[role] = [];
+            sup_dependants[role] = {};
+            
           }
         });
 
@@ -67,15 +63,15 @@ export class HttpReportService {
           report.average_stay += Math.floor((new Date(ticket.end).getTime() - new Date(ticket.start).getTime()) / 60000); // calc minutes for average_stay
           // console.log(ticket.waiter);
           if (ticket.waiter) {
-            if (!sup_dependants.waiters[ticket.waiter]) { // if the waiter doesn't exist in the support object, insert
+            if (!sup_dependants["waiter"][ticket.waiter]) { // if the waiter doesn't exist in the support object, insert
               // console.log("New " + ticket.waiter)
-              sup_dependants.waiters[ticket.waiter] = {};
-              sup_dependants.waiters[ticket.waiter].customers_served = 0;
-              sup_dependants.waiters[ticket.waiter].orders_served = 0;
+              sup_dependants["waiter"][ticket.waiter] = {};
+              sup_dependants["waiter"][ticket.waiter].customers_served = 0;
+              sup_dependants["waiter"][ticket.waiter].orders_served = 0;
             }
             // increment stats for waiter based on ticket numbers
-            sup_dependants.waiters[ticket.waiter].customers_served += ticket.people_number;
-            sup_dependants.waiters[ticket.waiter].orders_served += ticket.orders.length;
+            sup_dependants["waiter"][ticket.waiter].customers_served += ticket.people_number;
+            sup_dependants["waiter"][ticket.waiter].orders_served += ticket.orders.length;
             // console.log(sup_dependants["waiter"][ticket.waiter])
           }
           let role;
@@ -83,7 +79,7 @@ export class HttpReportService {
           // create or increments stats for bartenders and cookers based of orders fields
           ticket.orders.forEach((order: TicketOrder) => {
             // console.log(order.username_executer);
-            role = (order.type_item == types[0]) ? 'cookers' : 'bartenders';
+            role = (order.type_item == types[0]) ? 'cook' : 'bartender';
             if (order.username_executer) {
               if (!sup_dependants[role][order.username_executer]) {
                 sup_dependants[role][order.username_executer] = {};
@@ -96,27 +92,27 @@ export class HttpReportService {
 
         // console.log(sup_dependants);
         // create mini-arrays for users_reports format
-        for (const waiter in sup_dependants.waiters) {
-          report.users_reports.waiters.push({
+        for (const waiter in sup_dependants["waiter"]) {
+          report.users_reports[waiter].push({
             username: waiter,
-            customers_served: sup_dependants.waiters[waiter].customers_served,
-            orders_served: sup_dependants.waiters[waiter].orders_served
+            customers_served: sup_dependants[waiter].customers_served,
+            orders_served: sup_dependants[waiter].orders_served
           });
         }
 
         // create mini-arrays for users_reports format
-        for (const cook in sup_dependants.cookers) {
-          report.users_reports.cookers.push({
+        for (const cook in sup_dependants["cook"]) {
+          report.users_reports[cook].push({
             username: cook,
-            items_served: sup_dependants.cookers[cook].items_served,
+            items_served: sup_dependants[cook].items_served,
           });
         }
 
         // create mini-arrays for users_reports format
-        for (const bartender in sup_dependants.bartenders) {
-          report.users_reports.bartenders.push({
+        for (const bartender in sup_dependants["bartender"]) {
+          report.users_reports[bartender].push({
             username: bartender,
-            items_served: sup_dependants.bartenders[bartender].items_served,
+            items_served: sup_dependants[bartender].items_served,
           });
         }
 

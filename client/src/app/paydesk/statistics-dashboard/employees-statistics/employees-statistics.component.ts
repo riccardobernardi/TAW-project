@@ -23,7 +23,7 @@ export class EmployeesStatisticsComponent implements OnInit {
 
   // private userStatistics;
   private statisticsXRoles;
-  private roles = ['waiters', 'cookers', 'bartenders'];
+  private roles = ['waiter', 'cook', 'bartender'];
   private selRole = roles[0];
 
   private min_date: Date;
@@ -54,7 +54,7 @@ export class EmployeesStatisticsComponent implements OnInit {
             return report.users_reports; // take the user_reports
           }).reduce((user_report1, user_report2) => {
             for (const role in user_report1) {
-              if (role === 'waiters') { // if the role is waiters, change a little the computation
+              if (role === 'waiter') { // if the role is waiters, change a little the computation
                 user_report1[role].forEach((dependant1) =>  {
                   // find in the sequent report the waiter, if exists
                   const dep = user_report2[role].filter((dependant2) => dependant1.username == dependant2.username);
