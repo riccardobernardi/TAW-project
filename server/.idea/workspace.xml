@@ -2,13 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cef8e7a4-1e90-4c25-85c7-0b0afd399c73" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../client/src/app/paydesk/paydeskDashboard.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/paydesk/paydeskDashboard.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/paydesk/statistics-dashboard/employees-statistics/employees-statistics.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/paydesk/statistics-dashboard/employees-statistics/employees-statistics.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/paydesk/statistics-dashboard/stats-charts/stats-charts.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/paydesk/statistics-dashboard/stats-charts/stats-charts.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/services/http-interceptor.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/services/http-interceptor.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/services/http-report.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/services/http-report.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/services/ticket-http.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/services/ticket-http.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/app/services/user-http.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/app/services/user-http.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Item.js" beforeDir="false" afterPath="$PROJECT_DIR$/Item.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Report.js" beforeDir="false" afterPath="$PROJECT_DIR$/Report.js" afterDir="false" />
@@ -207,12 +200,12 @@
       <workItem from="1560193265017" duration="161000" />
       <workItem from="1560236786777" duration="801000" />
       <workItem from="1560239928565" duration="252000" />
-      <workItem from="1560241311102" duration="422000" />
+      <workItem from="1560241311102" duration="805000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17068000" />
+    <option name="totallyTimeSpent" value="17451000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="6" />
