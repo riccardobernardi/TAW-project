@@ -920,7 +920,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
             users_reports: {
                 waiter: [{ username: "waiter1", customers_served: 20, orders_served: 66 }, { username: "waiter2", customers_served: 40, orders_served: 120 }],
                 bartender: [{ username: "bartender1", items_served: 60 }],
-                cooker: [{ username: "cook1", items_served: 60 }]
+                cook: [{ username: "cook1", items_served: 60 }]
             }
         }).save().then();
         var r2 = new reportModel({
@@ -935,7 +935,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
             users_reports: {
                 waiter: [{ username: "waiter1", customers_served: 20, orders_served: 66 }, { username: "waiter2", customers_served: 40, orders_served: 120 }],
                 bartender: [{ username: "bartender1", items_served: 60 }],
-                cooker: [{ username: "cook1", items_served: 60 }]
+                cook: [{ username: "cook1", items_served: 60 }]
             }
         }).save().then();
         var r3 = new reportModel({
@@ -950,7 +950,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
             users_reports: {
                 waiter: [{ username: "waiter1", customers_served: 80, orders_served: 912 }, { username: "waiter2", customers_served: 40, orders_served: 305 }],
                 bartender: [{ username: "bartender1", items_served: 400 }, { username: "waiter2", items_served: 700 }],
-                cooker: [{ username: "cook1", items_served: 60 }, { username: "cook2", items_served: 1110 }]
+                cook: [{ username: "cook1", items_served: 60 }, { username: "cook2", items_served: 1110 }]
             }
         }).save();
         var r4 = new reportModel({
@@ -965,7 +965,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
             users_reports: {
                 waiter: [{ username: "waiter1", customers_served: 80, orders_served: 912 }, { username: "waiter2", customers_served: 40, orders_served: 305 }],
                 bartender: [{ username: "bartender1", items_served: 400 }, { username: "waiter2", items_served: 700 }],
-                cooker: [{ username: "cook1", items_served: 60 }, { username: "cook2", items_served: 1110 }]
+                cook: [{ username: "cook1", items_served: 60 }, { username: "cook2", items_served: 1110 }]
             }
         }).save();
         var r5 = new reportModel({
@@ -980,7 +980,7 @@ mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/re
             users_reports: {
                 waiter: [{ username: "waiter1", customers_served: 80, orders_served: 912 }, { username: "waiter2", customers_served: 40, orders_served: 305 }],
                 bartender: [{ username: "bartender1", items_served: 400 }, { username: "waiter2", items_served: 700 }],
-                cooker: [{ username: "cook1", items_served: 60 }, { username: "cook2", items_served: 1110 }]
+                cook: [{ username: "cook1", items_served: 60 }, { username: "cook2", items_served: 1110 }]
             }
         }).save();
         Promise.all([r1, r2, r3, r4, r5]).then().catch((err) => console.log("Save of report not completed: " + err));
