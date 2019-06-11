@@ -21,15 +21,17 @@ export class HttpReportService {
   }
 
   create_report(filters) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    /*const today = new Date();
+    today.setHours(0, 0, 0, 0);*/
+
     return this.ticket.get_tickets(filters).toPromise().then((data: Ticket[]) => {
       if (data.length != 0) {
       // console.log(data);
 
+        filters["start"].setDate(filters["start"].getDate()+1);
         // initial report
         const report: Report = {
-          date : today,
+          date : filters["start"],
           total : 0,
           total_customers : 0,
           total_orders : {dish: 0, beverage: 0},

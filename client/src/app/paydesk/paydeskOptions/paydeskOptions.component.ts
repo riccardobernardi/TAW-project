@@ -247,7 +247,7 @@ export class PaydeskOptionsComponent implements OnInit {
   create_daily_report() {
     const date = new Date(this.year_insert, this.month_insert - 1, this.day_insert, 0, 0, 0, 0);
     this.disableTicketsButtons = true;
-    this.report.create_report({start: date, state: 'closed'})
+    this.report.create_report({start: date, end: date, state: 'closed'})
       .then(() => {
         this.signalSuccess('Report created!');
         this.disableTicketsButtons = false;
@@ -275,6 +275,7 @@ export class PaydeskOptionsComponent implements OnInit {
 
   delete_daily_report() {
     const date = new Date(this.year_delete, this.month_delete - 1, this.day_delete, 0, 0, 0, 0);
+    console.log(date);
     if (this.reportSelected) {
       this.disableTicketsButtons = true;
       this.report.delete_report(this.reportSelected._id).toPromise()
