@@ -67,7 +67,7 @@ export class OrdersServedComponent implements OnInit {
       this.get_tickets();
     });
     if(this.role == "desk") {
-      this.socketio.get().on('desk', () => {
+      this.socketio.get().on('desks', () => {
         // console.log("Orders served event received");
         this.get_tickets();
       });
