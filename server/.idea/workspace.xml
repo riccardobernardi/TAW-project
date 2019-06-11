@@ -18,18 +18,10 @@
       <change beforePath="$PROJECT_DIR$/User.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/User.js.map" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/User.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/Item.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/Item.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/Report.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/Report.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/Table.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/Table.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/Ticket.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/Ticket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/User.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mysocket.js" beforeDir="false" afterPath="$PROJECT_DIR$/mysocket.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/provacazzaromerda.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.js" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/toinsert.js" beforeDir="false" afterPath="$PROJECT_DIR$/toinsert.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/toinsert.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/toinsert.js.map" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -183,16 +175,15 @@
       <workItem from="1560193265017" duration="161000" />
       <workItem from="1560236786777" duration="801000" />
       <workItem from="1560239928565" duration="252000" />
-      <workItem from="1560241311102" duration="806000" />
+      <workItem from="1560241311102" duration="886000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17452000" />
+    <option name="totallyTimeSpent" value="17532000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
