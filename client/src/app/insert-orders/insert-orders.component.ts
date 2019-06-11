@@ -53,7 +53,7 @@ export class InsertOrdersComponent implements OnInit {
     this.tickets = null;
     const filter = {state: 'open'};
     if (this.us.get_role() != 'desk') {
-      filter.waiter = this.us.get_nick();
+      filter["waiter"] = this.us.get_nick();
     }
     this.ticket.get_tickets(filter).toPromise().then((dd) => {
       dd.sort((ticket1: Ticket, ticket2: Ticket) => (ticket1.table < ticket2.table) ? -1 : 1);
