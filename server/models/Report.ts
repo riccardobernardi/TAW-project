@@ -5,7 +5,6 @@ export interface Report extends mongoose.Document {
     date: Date,
     total: number,
     total_orders: {dish: number, beverage: number},
-    //le chiavi di total_order sono le stringe contenute in item.type, ricordarsi di usare quelle
     total_customers: number,
     average_stay: number; //minuti
 }

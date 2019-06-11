@@ -1,6 +1,6 @@
 
-import * as item from './Item';
-import * as table from './Table';
+import * as item from './models/Item';
+import * as table from './models/Table';
 export var itemsToInsert = [
     {
         name: "Bistecca alla griglia",
@@ -40,7 +40,7 @@ export var itemsToInsert = [
         price: 5,
         ingredients: ["spaghetti", "sugo di pomodoro"],
         required_time: 12,
-        description: "Semplici spaghetti al pomodoro che Cecchini non può però mangiare a pranzo, perchè porta sempre il riso per cani."
+        description: "Semplici spaghetti al pomodoro."
      },
     {
     name: "Pasticcio al ragù ",
