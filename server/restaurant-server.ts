@@ -144,32 +144,32 @@ app.route("/users/:username").delete(auth, (req, res, next) => {
    //console.log(user.roles.includes("desk"))
    console.log(req.body);
    //controllo formato
-   if ( !req.body || !req.body.password || !req.body.role || typeof(req.body.password) != 'string' || typeof(req.body.role) != 'string' || !user.roles.includes(req.body.role) )
+   if ( !req.body || !req.body.username || !req.body.password || !req.body.role || typeof(req.body.password) != 'string' || typeof(req.body.username) != 'string' || typeof(req.body.role) != 'string' || !user.roles.includes(req.body.role) )
       return next({ statusCode:400, error: true, errormessage: "Wrong format"} );
 
    console.log(req.body);
-   //creo utente da inserire
-   var newer = {};
-   newer["username"] = req.params.username;
-   //newer.password = req.body.password;
-   newer["role"] = req.body.role;
-   var u = user.newUser( newer );
-   u.setPassword(req.body.password);
-
-   console.log(newer);
-   //query dal DB
-   //errore strano con findOneAndReplace, poi vedere, altrimenti tenere findOneAndUpdate
-   //occhio al setting dei campi, si può fare diversamente?
-   user.getModel().findOneAndUpdate({username: req.params.username}, u).then( (data : user.User)=> {
-      socket.emitEvent("modified user");
+   user.getModel().findOne({username: req.params.username}).then((data) => {
+      data.username = req.body.username;
+      data.setPassword(req.body.password);
+      if (req.body.role == user.roles[0])
+         data.setWaiter();
+      else if (req.body.role == user.roles[1])
+         data.setCook();
+      else if (req.body.role == user.roles[2])
+         data.setDesk();
+      else if (req.body.role == user.roles[3])
+         data.setBartender();
+      
+      return data.save()
+   }).then((data) => { 
       return res.status(200).json( {
          username: data.username,
          role: data.role
       });
-   }).catch( (reason)=> {
+   }, (reason)=> {
       return next({ statusCode:500, error: true, errormessage: "DB error: "+reason });
    });
-
+   
 });
 
 app.route("/tables").get(auth, (req, res, next) => {
