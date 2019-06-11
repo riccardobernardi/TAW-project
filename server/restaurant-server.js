@@ -739,8 +739,8 @@ app.use(function (err, req, res, next) {
 app.use((req, res, next) => {
     res.status(404).json({ statusCode: 404, error: true, errormessage: "Invalid endpoint" });
 });
-//mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/restaurant-server?retryWrites=true&w=majority').then(function onconnected() {
-mongoose.connect('mongodb://localhost:27017/restaurant-server').then(function onconnected() {
+mongoose.connect('mongodb+srv://lollocazzaro:prova@cluster0-9fnor.mongodb.net/restaurant-server?retryWrites=true&w=majority').then(function onconnected() {
+    // mongoose.connect('mongodb://localhost:27017/restaurant-server').then(function onconnected() {
     console.log("Connected to MongoDB");
     //inizializzazione DB
     user.getModel().deleteMany({}).then(data => {

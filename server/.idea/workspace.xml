@@ -18,6 +18,9 @@
       <change beforePath="$PROJECT_DIR$/User.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/User.js.map" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/User.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysocket.js" beforeDir="false" afterPath="$PROJECT_DIR$/mysocket.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysocket.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/mysocket.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysocket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mysocket.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/provacazzaromerda.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.js" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-server.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-server.js.map" afterDir="false" />
@@ -37,8 +40,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="137" column="24" selection-start-line="137" selection-start-column="24" selection-end-line="137" selection-end-column="24" />
+            <state relative-caret-position="305">
+              <caret line="892" column="9" lean-forward="true" selection-start-line="892" selection-start-column="9" selection-end-line="892" selection-end-column="9" />
               <folding>
                 <element signature="e#168#194#0" expanded="true" />
                 <element signature="e#380#418#0" expanded="true" />
@@ -77,6 +80,7 @@
       <find>ioss</find>
       <find>emitEvent</find>
       <find>tickets</find>
+      <find>conn</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -101,7 +105,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -113,6 +116,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -177,14 +181,16 @@
       <workItem from="1560239928565" duration="252000" />
       <workItem from="1560241311102" duration="886000" />
       <workItem from="1560242996724" duration="5000" />
+      <workItem from="1560256041413" duration="128000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17537000" />
+    <option name="totallyTimeSpent" value="17665000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -234,8 +240,8 @@
     <entry file="file://$PROJECT_DIR$/Report.ts" />
     <entry file="file://$PROJECT_DIR$/restaurant-server.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="137" column="24" selection-start-line="137" selection-start-column="24" selection-end-line="137" selection-end-column="24" />
+        <state relative-caret-position="305">
+          <caret line="892" column="9" lean-forward="true" selection-start-line="892" selection-start-column="9" selection-end-line="892" selection-end-column="9" />
           <folding>
             <element signature="e#168#194#0" expanded="true" />
             <element signature="e#380#418#0" expanded="true" />
