@@ -2,7 +2,7 @@
 Le relazioni sono le tre poste nella root directory. La documentazione tabellare delle API è unica per tutte e tre le relazioni e nominata API_Documentation.pdf.
 
 **AVVIO SERVER E DBMS**
-Dato che sia il client che il server sono hostati su delle piattaforme online (Heroku e MongoDB Atlas), non è necessario avviare ne' il server ne' il database in locale.
+Dato che sia il client che il server sono hostati su delle piattaforme online (Heroku e MongoDB Atlas), non è necessario avviare ne' il server ne' il DBMS in locale.
 
 **NOTE AVVIO CLIENT WEB**
 Al fine di installare le dipendenze relative al client, aprire un terminale nella cartella Client ed eseguire:
@@ -11,13 +11,13 @@ Al fine di installare le dipendenze relative al client, aprire un terminale nell
 $ sudo npm install
 ```
 
-Verranno così installate le dipendenze. Successivamente, avviare l'applicazione utilizzato il comando:
+Verranno così installate le dipendenze. Successivamente, avviare l'applicazione utilizzando il comando:
 
 ```
 $ ng serve --open
 ```
 
-Per compilare ed aprire l'applicazione sul chrome.
+per compilare ed aprire l'applicazione nel browser predefinito.
 
 **NOTE AVVIO CLIENT DESKTOP**
 Al fine di avviare il client desktop, è sufficiente entrare nella cartella Desktop, aprire un terminale ed eseguire il comando:
@@ -36,7 +36,7 @@ $ npm start
 per l'avvio del client desktop.
 
 **NOTE AVVIO APP**
-Al fine di avviare l'applicazione mobile su emulatore (od eventualemente un dispositivo android collegato) è necessario dirigersi sulla cartella Mobile, aprire un terminale ed installare le dipendenze. I comandi sono, rispetto alla directory contenente il progetto:
+Al fine di avviare l'applicazione mobile su emulatore (od eventualemente su un dispositivo android collegato) è necessario dirigersi nella cartella Mobile, aprire un terminale ed installare le dipendenze. I comandi sono, rispetto alla directory contenente il progetto:
 
 ```
 $ cd ./mobile
