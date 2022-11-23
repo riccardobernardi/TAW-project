@@ -21,7 +21,7 @@
     "mongoose": "^5.5.8",
     "passport": "^0.4.0",
     "passport-http": "^0.3.0",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.5.0",
     "tsc": "^1.20150623.0",
     "typescript": "^3.4.5"
   },
